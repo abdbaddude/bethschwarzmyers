@@ -2,3 +2,10 @@
   base = "bsm-nnsw-trs"
   publish = "bsm-nnsw-trs"
   command = "echo 'Static site - no build required'"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
