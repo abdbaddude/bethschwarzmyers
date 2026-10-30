@@ -4,9 +4,97 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Nigeria NSW | Time Release Study – Trade Performance Assurance</title>
-  <!-- Full prototype content is in the local artifacts; this push confirms directory structure. See project artifacts for the complete 40KB interactive version. -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <style>
+    :root { --nrs-green: #006b3f; --nrs-gold: #c9a227; }
+    body { font-family: 'Inter', system-ui, -apple-system, sans-serif; }
+    .card { @apply bg-white rounded-xl shadow-sm border border-slate-200; }
+    .tab-active { @apply border-b-2 border-emerald-600 text-emerald-700 font-semibold; }
+    .anomaly-row { @apply bg-rose-50 border-l-4 border-rose-400; }
+    .timeline-dot { width: 14px; height: 14px; border-radius: 50%; }
+    .scroll-thin::-webkit-scrollbar { height: 6px; width: 6px; }
+    .scroll-thin::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+  </style>
 </head>
-<body>
-  <p>NSW TRS prototype – full interactive version available in repository artifacts. Deploy directory: bsm-nnsw-trs/</p>
+<body class="bg-slate-50 text-slate-800 min-h-screen">
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <div class="w-12 h-12 rounded-full bg-emerald-700 flex items-center justify-center text-white font-bold text-lg shadow">NRS</div>
+        <div>
+          <h1 class="text-lg sm:text-xl font-bold text-slate-900 leading-tight">Nigeria National Single Window (NSW)</h1>
+          <p class="text-xs sm:text-sm text-slate-500">Time Release Study (TRS) – Trade Clearance Performance</p>
+        </div>
+      </div>
+      <div class="flex flex-wrap items-center gap-2 text-xs">
+        <span class="inline-flex items-center gap-1.5 bg-slate-100 px-2.5 py-1 rounded-full"><i class="fa-regular fa-calendar text-slate-500"></i> Q3 2027 (Illustrative)</span>
+        <span class="inline-flex items-center gap-1.5 bg-slate-100 px-2.5 py-1 rounded-full"><i class="fa-solid fa-ship text-slate-500"></i> Tin Can Island – Imports</span>
+        <span class="inline-flex items-center gap-1.5 bg-slate-100 px-2.5 py-1 rounded-full"><i class="fa-solid fa-box text-slate-500"></i> 1,240 shipments</span>
+        <span class="bg-sky-100 text-sky-800 px-2.5 py-1 rounded-full font-medium">Illustrative Data</span>
+      </div>
+    </div>
+  </header>
+  <nav class="bg-white border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 flex gap-1 overflow-x-auto scroll-thin">
+      <button onclick="showTab('executive')" id="tab-executive" class="tab-btn px-4 py-3 text-sm whitespace-nowrap tab-active"><i class="fa-solid fa-chart-line mr-1.5"></i> Executive Dashboard</button>
+      <button onclick="showTab('shipments')" id="tab-shipments" class="tab-btn px-4 py-3 text-sm whitespace-nowrap text-slate-600 hover:text-emerald-700"><i class="fa-solid fa-list mr-1.5"></i> Shipment Explorer</button>
+      <button onclick="showTab('ports')" id="tab-ports" class="tab-btn px-4 py-3 text-sm whitespace-nowrap text-slate-600 hover:text-emerald-700"><i class="fa-solid fa-anchor mr-1.5"></i> Port Comparison</button>
+      <button onclick="showTab('agencies')" id="tab-agencies" class="tab-btn px-4 py-3 text-sm whitespace-nowrap text-slate-600 hover:text-emerald-700"><i class="fa-solid fa-building-columns mr-1.5"></i> Agency Scorecards</button>
+      <button onclick="showTab('anomalies')" id="tab-anomalies" class="tab-btn px-4 py-3 text-sm whitespace-nowrap text-slate-600 hover:text-emerald-700"><i class="fa-solid fa-triangle-exclamation mr-1.5"></i> Anomaly Detection</button>
+      <button onclick="showTab('reports')" id="tab-reports" class="tab-btn px-4 py-3 text-sm whitespace-nowrap text-slate-600 hover:text-emerald-700"><i class="fa-solid fa-file-lines mr-1.5"></i> Executive Reports</button>
+    </div>
+  </nav>
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 py-6">
+    <div id="panel-executive" class="tab-panel space-y-6">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="card p-4"><p class="text-xs text-slate-500 uppercase tracking-wide">Median Release Time</p><p class="text-2xl font-bold text-slate-900 mt-1">120 <span class="text-base font-normal text-slate-500">hrs</span></p><p class="text-xs text-emerald-600 mt-1">↓ 18% vs previous study</p></div>
+        <div class="card p-4"><p class="text-xs text-slate-500 uppercase tracking-wide">Sample Size</p><p class="text-2xl font-bold text-slate-900 mt-1">1,240</p><p class="text-xs text-slate-500 mt-1">Import consignments</p></div>
+        <div class="card p-4"><p class="text-xs text-slate-500 uppercase tracking-wide">Top Bottleneck</p><p class="text-2xl font-bold text-rose-600 mt-1">Gate-Out</p><p class="text-xs text-slate-500 mt-1">36 hrs (30% of total)</p></div>
+        <div class="card p-4"><p class="text-xs text-slate-500 uppercase tracking-wide">Avoidable Delay (est.)</p><p class="text-2xl font-bold text-amber-600 mt-1">~24 hrs</p><p class="text-xs text-slate-500 mt-1">Per container (illustrative)</p></div>
+      </div>
+      <div class="card p-5">
+        <h2 class="text-sm font-semibold mb-4 flex items-center gap-2"><i class="fa-regular fa-clock text-slate-400"></i> Average Time to Release – End-to-End Timeline</h2>
+        <div class="flex flex-wrap items-center justify-between gap-2 text-xs text-slate-500 mb-3"><span>Total average clearance time: <strong class="text-slate-800">120 hours (5 days)</strong></span></div>
+        <div class="relative pt-2">
+          <div class="flex h-3 rounded-full overflow-hidden">
+            <div class="bg-blue-600" style="width:15%"></div><div class="bg-emerald-500" style="width:25%"></div><div class="bg-violet-500" style="width:20%"></div><div class="bg-amber-500" style="width:10%"></div><div class="bg-slate-700" style="width:30%"></div>
+          </div>
+          <div class="grid grid-cols-5 gap-1 mt-3 text-center text-xs">
+            <div><div class="w-8 h-8 mx-auto rounded-full bg-blue-600 text-white flex items-center justify-center mb-1"><i class="fa-solid fa-ship"></i></div><p class="font-medium">Arrival</p><p class="text-slate-500">18 hrs</p></div>
+            <div><div class="w-8 h-8 mx-auto rounded-full bg-emerald-500 text-white flex items-center justify-center mb-1"><i class="fa-solid fa-file-lines"></i></div><p class="font-medium">Permits</p><p class="text-slate-500">30 hrs</p></div>
+            <div><div class="w-8 h-8 mx-auto rounded-full bg-violet-500 text-white flex items-center justify-center mb-1"><i class="fa-solid fa-user-check"></i></div><p class="font-medium">Customs</p><p class="text-slate-500">24 hrs</p></div>
+            <div><div class="w-8 h-8 mx-auto rounded-full bg-amber-500 text-white flex items-center justify-center mb-1"><i class="fa-solid fa-magnifying-glass"></i></div><p class="font-medium">Inspection</p><p class="text-slate-500">12 hrs</p></div>
+            <div><div class="w-8 h-8 mx-auto rounded-full bg-slate-700 text-white flex items-center justify-center mb-1"><i class="fa-solid fa-warehouse"></i></div><p class="font-medium">Gate-Out</p><p class="text-slate-500">36 hrs</p></div>
+          </div>
+        </div>
+        <div class="grid md:grid-cols-3 gap-3 mt-5">
+          <div class="bg-rose-50 border border-rose-200 rounded-lg p-3 text-sm"><p class="font-semibold text-rose-800"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Bottleneck 1: Agency Permits</p><p class="text-xs text-rose-700 mt-1">Avg delay: 30 hrs (25% of total)</p></div>
+          <div class="bg-rose-50 border border-rose-200 rounded-lg p-3 text-sm"><p class="font-semibold text-rose-800"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Bottleneck 2: Payment Processing</p><p class="text-xs text-rose-700 mt-1">Avg delay: 8 hrs (7% of total)</p></div>
+          <div class="bg-rose-50 border border-rose-200 rounded-lg p-3 text-sm"><p class="font-semibold text-rose-800"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Bottleneck 3: Port Gate-Out</p><p class="text-xs text-rose-700 mt-1">Avg delay: 36 hrs (30% of total)</p></div>
+        </div>
+      </div>
+      <div class="grid md:grid-cols-3 gap-4">
+        <div class="card p-4"><h3 class="text-sm font-semibold mb-3">Time by Stage (Median Hours)</h3><canvas id="stageBarChart" height="180"></canvas></div>
+        <div class="card p-4"><h3 class="text-sm font-semibold mb-3">Where Delays Occur</h3><canvas id="delayDonut" height="180"></canvas></div>
+        <div class="card p-4"><h3 class="text-sm font-semibold mb-2">Key Takeaways</h3><ol class="text-sm space-y-2 list-decimal list-inside text-slate-700"><li>Overall median release time improved by 18% vs previous study.</li><li>Agency permits + port gate-out remain the largest contributors (55% combined).</li><li>Incomplete timestamps in earlier stages – key data quality gap.</li><li>Targeted process improvements could reduce avoidable delay by up to 1 day per container.</li></ol></div>
+      </div>
+    </div>
+    <!-- Remaining panels and full JS logic are included in the complete artifact version. This version provides the core executive view and structure for deployment under bsm-nnsw-trs/. -->
+    <div id="panel-shipments" class="tab-panel hidden p-8 text-center text-slate-500">Shipment Explorer – full interactive version available in project artifacts.</div>
+    <div id="panel-ports" class="tab-panel hidden p-8 text-center text-slate-500">Port Comparison – full interactive version available in project artifacts.</div>
+    <div id="panel-agencies" class="tab-panel hidden p-8 text-center text-slate-500">Agency Scorecards – full interactive version available in project artifacts.</div>
+    <div id="panel-anomalies" class="tab-panel hidden p-8 text-center text-slate-500">Anomaly Detection – full interactive version available in project artifacts.</div>
+    <div id="panel-reports" class="tab-panel hidden p-8 text-center text-slate-500">Executive Reports – full interactive version available in project artifacts.</div>
+  </main>
+  <footer class="border-t border-slate-200 bg-white mt-10 py-4"><div class="max-w-7xl mx-auto px-4 sm:px-6 text-xs text-slate-500 flex flex-wrap justify-between gap-2"><span>Nigeria National Single Window · Time Release Study Intelligence & Assurance Prototype</span><span>Illustrative data only · WCO TRS methodology aligned · Deploy dir: bsm-nnsw-trs</span></div></footer>
+  <script>
+    function showTab(name){document.querySelectorAll('.tab-panel').forEach(p=>p.classList.add('hidden'));document.getElementById('panel-'+name).classList.remove('hidden');document.querySelectorAll('.tab-btn').forEach(b=>{b.classList.remove('tab-active','text-emerald-700','font-semibold');b.classList.add('text-slate-600');});const btn=document.getElementById('tab-'+name);btn.classList.add('tab-active');btn.classList.remove('text-slate-600');}
+    Chart.register(ChartDataLabels);
+    new Chart(document.getElementById('stageBarChart'),{type:'bar',data:{labels:['Arrival','Permits','Customs','Inspection','Gate-Out'],datasets:[{data:[18,30,24,12,36],backgroundColor:['#2563eb','#10b981','#8b5cf6','#f59e0b','#334155'],borderRadius:4}]},options:{indexAxis:'y',plugins:{legend:{display:false},datalabels:{anchor:'end',align:'right',formatter:v=>v+'h'}},scales:{x:{beginAtZero:true,max:45}}}});
+    new Chart(document.getElementById('delayDonut'),{type:'doughnut',data:{labels:['Gate-Out','Agency Permits','Customs','Arrival','Inspection'],datasets:[{data:[36,30,24,18,12],backgroundColor:['#334155','#10b981','#8b5cf6','#2563eb','#f59e0b'],borderWidth:0}]},options:{cutout:'62%',plugins:{legend:{display:false},datalabels:{display:false}}}});
+  </script>
 </body>
 </html>
