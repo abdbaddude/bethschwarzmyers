@@ -49,7 +49,45 @@
     <button onclick="showTab('anomalies')" id="tab-anomalies" class="tab-btn px-3 py-2.5 whitespace-nowrap text-slate-600"><i class="fa-solid fa-triangle-exclamation mr-1"></i>Anomalies</button>
   </div>
 </nav>
-<main class="px-4 py-4 space-y-4">
+<main class="px-4 py-4 space-y-4" id="mainContent">
+  <!-- Content rendered by JS -->
+</main>
+<footer class="px-4 py-6 text-center text-[10px] text-slate-400 border-t border-slate-200 mt-4">
+  <span id="footerDisclaimer">NNSW TRS Intelligence Prototype · Illustrative data · Not official statistics</span>
+</footer>
+</div>
+<script>
+/* Full interactive TRS prototype - loads data/*.json */
+let META, PORT_DATA={}, SHIPMENTS=[], currentPort='tincan', currentQuarter='2026-Q2';
+let stageBarChart, delayDonut;
+Chart.register(ChartDataLabels);
+
+async function boot(){
+  try{
+    const [meta,tincan,lekki,onne,ships]=await Promise.all([
+      fetch('data/meta.json').then(r=>r.json()),
+      fetch('data/tincan.json').then(r=>r.json()),
+      fetch('data/lekki.json').then(r=>r.json()),
+      fetch('data/onne.json').then(r=>r.json()),
+      fetch('data/shipments.json').then(r=>r.json())
+    ]);
+    META=meta;PORT_DATA={tincan,lekki,onne};SHIPMENTS=ships.shipments||ships;
+    const portSel=document.getElementById('portSelect');
+    const qSel=document.getElementById('quarterSelect');
+    META.ports.forEach(p=>{const o=document.createElement('option');o.value=p.id;o.textContent=p.name;portSel.appendChild(o);});
+    META.quarters.forEach(q=>{const o=document.createElement('option');o.value=q;o.textContent=q;qSel.appendChild(o);});
+    portSel.value=currentPort;qSel.value=currentQuarter;
+    document.getElementById('hdrTitle').textContent=META.title;
+    document.getElementById('hdrSub').textContent=META.subtitle;
+    document.getElementById('footerDisclaimer').textContent=META.disclaimer;
+    buildShell();
+    renderAll();
+  }catch(err){
+    document.getElementById('mainContent').innerHTML='<div class="card p-6 text-center text-rose-600"><p class="font-semibold">Failed to load data files</p><p class="text-xs mt-2">'+err.message+'</p><p class="text-xs mt-2 text-slate-500">Serve over HTTP (Netlify). file:// will not work with fetch.</p></div>';
+  }
+}
+function buildShell(){
+  document.getElementById('mainContent').innerHTML=`
   <section id="panel-executive" class="tab-panel space-y-4">
     <div class="grid grid-cols-2 gap-2.5">
       <div class="card p-3"><p class="text-[10px] text-slate-500 uppercase">Median Release</p><p class="text-xl font-bold mt-0.5" id="kpiTotal">-</p><p class="text-[10px] mt-0.5" id="kpiDelta">-</p></div>
@@ -58,31 +96,41 @@
       <div class="card p-3"><p class="text-[10px] text-slate-500 uppercase">Anomalies</p><p class="text-xl font-bold text-amber-600 mt-0.5" id="kpiAnomaly">-</p><p class="text-[10px] text-slate-500 mt-0.5">Flagged shipments</p></div>
     </div>
     <div class="card p-4">
-      <h2 class="text-xs font-semibold mb-3"><i class="fa-regular fa-clock text-slate-400"></i> Average Time to Release - End-to-End</h2>
+      <h2 class="text-xs font-semibold mb-2"><i class="fa-regular fa-clock text-slate-400"></i> Average Time to Release - End-to-End</h2>
       <p class="text-[11px] text-slate-500 mb-2">Total average clearance: <strong id="timelineTotal">-</strong></p>
-      <div class="h-48"><canvas id="chartTimeline"></canvas></div>
+      <div class="h-3 rounded-full overflow-hidden flex mb-3" id="timelineBar"></div>
+      <div class="grid grid-cols-5 gap-1 text-center text-[10px]" id="timelineStages"></div>
     </div>
     <div class="card p-4">
-      <h2 class="text-xs font-semibold mb-3"><i class="fa-solid fa-chart-pie text-slate-400"></i> Bottleneck Attribution</h2>
-      <div class="h-44"><canvas id="chartBottleneck"></canvas></div>
+      <h2 class="text-xs font-semibold mb-3">Stage Hours (bar)</h2>
+      <div class="h-40"><canvas id="stageBarChart"></canvas></div>
     </div>
     <div class="card p-4">
-      <h2 class="text-xs font-semibold mb-2"><i class="fa-solid fa-lightbulb text-amber-500"></i> AI Insights</h2>
-      <ul class="text-xs space-y-1.5 text-slate-600" id="aiInsights"></ul>
+      <h2 class="text-xs font-semibold mb-2">Delay Share</h2>
+      <div class="flex gap-3 items-center">
+        <div class="w-28 h-28"><canvas id="delayDonut"></canvas></div>
+        <div class="text-[10px] space-y-1 flex-1" id="donutLegend"></div>
+      </div>
+    </div>
+    <div class="card p-4 space-y-2" id="bottleneckCards"></div>
+    <div class="card p-4">
+      <h2 class="text-xs font-semibold mb-2"><i class="fa-solid fa-lightbulb text-amber-500"></i> Key Takeaways</h2>
+      <ul class="text-xs space-y-1 text-slate-600 list-disc pl-4" id="takeawaysList"></ul>
+      <p class="text-xs text-slate-500 mt-2 italic" id="aiInsight"></p>
     </div>
     <div class="card p-4">
-      <h2 class="text-xs font-semibold mb-2">WCO TRS Alignment</h2>
-      <p class="text-[11px] text-slate-500">Stages follow WCO Time Release Study methodology. Metrics are illustrative for prototype purposes only.</p>
+      <h2 class="text-xs font-semibold mb-2">Regional Benchmarks</h2>
+      <div class="grid grid-cols-3 gap-2 text-center text-xs" id="benchCards"></div>
     </div>
   </section>
   <section id="panel-shipments" class="tab-panel hidden space-y-3">
     <div class="flex flex-wrap gap-2 items-center">
       <input id="shipSearch" type="text" placeholder="Search BL / Container..." class="border border-slate-300 rounded-lg px-2 py-1 text-sm flex-1 min-w-[140px]" oninput="renderShipments()" />
       <select id="shipFilter" class="border border-slate-300 rounded-lg px-2 py-1 text-sm" onchange="renderShipments()">
-        <option value="all">All status</option>
-        <option value="cleared">Cleared</option>
+        <option value="all">All</option>
+        <option value="Released">Released</option>
         <option value="anomaly">Anomaly</option>
-        <option value="pending">Pending</option>
+        <option value="On Hold">On Hold</option>
       </select>
     </div>
     <div id="shipList" class="space-y-2"></div>
@@ -91,141 +139,67 @@
     <div id="agencyCards" class="grid gap-2.5"></div>
   </section>
   <section id="panel-anomalies" class="tab-panel hidden space-y-3">
-    <div class="card p-3 text-xs text-slate-600">Rules: release time &gt; 2× median, stage &gt; benchmark + 24h, missing events, multi-agency hold.</div>
+    <div class="card p-3 text-xs text-slate-600">Rules: release time > 2× median, elevated stage hours, holds, multi-agency friction.</div>
     <div id="anomalyTable" class="space-y-2"></div>
-  </section>
-</main>
-<footer class="px-4 py-6 text-center text-[10px] text-slate-400 border-t border-slate-200 mt-4">
-  NNSW TRS Intelligence Prototype · Illustrative data · Not official statistics
-</footer>
-</div>
-<script>
-let META = null, PORT_DATA = {}, SHIPMENTS = [], charts = {};
-const PORT_FILES = { tincan: 'data/tincan.json', lekki: 'data/lekki.json', onne: 'data/onne.json' };
-
-async function loadAll() {
-  META = await (await fetch('data/meta.json')).json();
-  const ports = META.ports || [];
-  for (const p of ports) {
-    const key = p.id || p.key || p.code?.toLowerCase();
-    if (PORT_FILES[key]) PORT_DATA[key] = await (await fetch(PORT_FILES[key])).json();
-  }
-  try { SHIPMENTS = await (await fetch('data/shipments.json')).json(); } catch(e) { SHIPMENTS = []; }
-  initSelectors();
-  onFilterChange();
+  </section>`;
 }
-
-function initSelectors() {
-  const ps = document.getElementById('portSelect');
-  const qs = document.getElementById('quarterSelect');
-  ps.innerHTML = (META.ports || []).map(p => `<option value="${p.id || p.key}">${p.name || p.label}</option>`).join('');
-  const qlist = META.quarters || [];
-  qs.innerHTML = qlist.map(q => `<option value="${q.id || q}">${q.label || q}</option>`).join('');
-  if (qlist.length) qs.value = qlist[qlist.length-1].id || qlist[qlist.length-1];
+function getQ(){return PORT_DATA[currentPort].quarters[currentQuarter];}
+function onFilterChange(){currentPort=document.getElementById('portSelect').value;currentQuarter=document.getElementById('quarterSelect').value;renderAll();}
+function renderAll(){
+  const q=getQ(),stages=META.stages,hours=stages.map(s=>q.stageHours[s.id]),total=q.totalHours,prior=q.priorTotalHours;
+  const delta=prior?Math.round((1-total/prior)*100):0;
+  document.getElementById('hdrQuarter').textContent=currentQuarter;
+  document.getElementById('hdrPort').textContent=PORT_DATA[currentPort].portName;
+  document.getElementById('hdrSample').textContent=q.sampleSize.toLocaleString()+' shipments';
+  document.getElementById('kpiTotal').innerHTML=total+' <span class="text-sm font-normal text-slate-500">hrs</span>';
+  document.getElementById('kpiDelta').innerHTML=delta>0?'<span class="text-emerald-600">\u2193 '+delta+'% vs prior quarter</span>':'vs prior '+prior+' hrs';
+  document.getElementById('kpiSample').textContent=q.sampleSize.toLocaleString();
+  const topBn=q.bottlenecks[0];
+  document.getElementById('kpiBottleneck').textContent=topBn?topBn.title.split(' ').pop():'-';
+  document.getElementById('kpiBottleneckDetail').textContent=topBn?topBn.delayHours+' hrs ('+topBn.pct+'%)':'-';
+  document.getElementById('kpiAnomaly').textContent=q.anomalyCount;
+  document.getElementById('timelineBar').innerHTML=stages.map((s,i)=>'<div style="width:'+(hours[i]/total*100).toFixed(1)+'%;background:'+s.color+'"></div>').join('');
+  document.getElementById('timelineTotal').textContent=total+' hours ('+(total/24).toFixed(1)+' days)';
+  const icons=['fa-ship','fa-file-lines','fa-user-check','fa-magnifying-glass','fa-warehouse'];
+  document.getElementById('timelineStages').innerHTML=stages.map((s,i)=>'<div><div class="w-7 h-7 mx-auto rounded-full text-white flex items-center justify-center mb-0.5 text-[9px]" style="background:'+s.color+'"><i class="fa-solid '+icons[i]+'"></i></div><p class="font-medium">'+s.short+'</p><p class="text-slate-500">'+hours[i]+' hrs</p></div>').join('');
+  document.getElementById('bottleneckCards').innerHTML=q.bottlenecks.map(b=>'<div class="bg-rose-50 border border-rose-200 rounded-lg p-2.5 text-xs"><p class="font-semibold text-rose-800"><i class="fa-solid fa-triangle-exclamation mr-1"></i> '+b.title+'</p><p class="text-[10px] text-rose-700 mt-0.5">'+b.desc+'</p><p class="text-[10px] text-rose-600 mt-0.5">Avg delay: '+b.delayHours+' hrs ('+b.pct+'% of total)</p></div>').join('');
+  if(stageBarChart)stageBarChart.destroy();
+  stageBarChart=new Chart(document.getElementById('stageBarChart'),{type:'bar',data:{labels:stages.map(s=>s.short),datasets:[{data:hours,backgroundColor:stages.map(s=>s.color),borderRadius:3}]},options:{indexAxis:'y',plugins:{legend:{display:false},datalabels:{anchor:'end',align:'right',font:{size:10,weight:'600'},formatter:v=>v+'h'}},scales:{x:{beginAtZero:true,max:Math.max(...hours)+10},y:{grid:{display:false}}}}});
+  if(delayDonut)delayDonut.destroy();
+  const donutOrder=[4,1,2,0,3];
+  delayDonut=new Chart(document.getElementById('delayDonut'),{type:'doughnut',data:{labels:donutOrder.map(i=>stages[i].short),datasets:[{data:donutOrder.map(i=>hours[i]),backgroundColor:donutOrder.map(i=>stages[i].color),borderWidth:0}]},options:{cutout:'60%',plugins:{legend:{display:false},datalabels:{display:false}}}});
+  document.getElementById('donutLegend').innerHTML=donutOrder.map(i=>'<div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-sm" style="background:'+stages[i].color+'"></span>'+stages[i].short+': '+hours[i]+'h ('+Math.round(hours[i]/total*100)+'%)</div>').join('');
+  document.getElementById('takeawaysList').innerHTML=q.takeaways.map(t=>'<li>'+t+'</li>').join('');
+  document.getElementById('aiInsight').textContent=q.aiInsight;
+  const bm=q.benchmarks;
+  document.getElementById('benchCards').innerHTML=`<div class="card p-2"><p class="text-slate-500">Lomé</p><p class="font-bold">${bm.lome}h</p></div><div class="card p-2"><p class="text-slate-500">Tema</p><p class="font-bold">${bm.tema}h</p></div><div class="card p-2"><p class="text-slate-500">North Star</p><p class="font-bold text-emerald-600">${bm.northStar}h</p></div>`;
+  renderShipments(); renderAgencies(); renderAnomalies();
 }
-
-function getCurrent() {
-  const port = document.getElementById('portSelect').value;
-  const q = document.getElementById('quarterSelect').value;
-  const pdata = PORT_DATA[port] || {};
-  const quarters = pdata.quarters || pdata.data || [];
-  const qdata = quarters.find(x => (x.id || x.quarter) === q) || quarters[quarters.length-1] || {};
-  return { port, q, pdata, qdata };
+function renderShipments(){
+  const q=(document.getElementById('shipSearch').value||'').toLowerCase();
+  const st=document.getElementById('shipFilter').value;
+  let list=(SHIPMENTS||[]).filter(s=>s.port===currentPort);
+  if(q) list=list.filter(s=>(s.bl||'').toLowerCase().includes(q)||(s.container||'').toLowerCase().includes(q));
+  if(st==='anomaly') list=list.filter(s=>s.anomaly);
+  else if(st!=='all') list=list.filter(s=>s.status===st);
+  document.getElementById('shipList').innerHTML=list.slice(0,40).map(s=>`<div class="card p-3 text-xs ${s.anomaly?'anomaly-row':''}"><div class="flex justify-between"><span class="font-semibold">${s.bl}</span><span class="text-slate-500">${s.container}</span></div><div class="mt-1 text-slate-600">${s.cargo} · ${s.total}h · ${s.status}</div></div>`).join('')||'<p class="text-xs text-slate-500">No shipments match.</p>';
 }
-
-function onFilterChange() {
-  const { port, q, qdata } = getCurrent();
-  document.getElementById('hdrQuarter').textContent = q || '-';
-  document.getElementById('hdrPort').textContent = (META.ports||[]).find(p=>(p.id||p.key)===port)?.name || port;
-  document.getElementById('hdrSample').textContent = (qdata.sampleSize || qdata.n || '-') + ' samples';
-  renderExecutive(qdata);
-  renderShipments();
-  renderAgencies(qdata);
-  renderAnomalies(qdata);
+function renderAgencies(){
+  const q=getQ();
+  document.getElementById('agencyCards').innerHTML=(q.agencies||[]).map(a=>`<div class="card p-3"><div class="flex justify-between"><h3 class="text-sm font-semibold">${a.name}</h3><span class="text-xs font-bold ${a.status==='Good'?'text-emerald-600':a.status==='Critical'?'text-rose-600':'text-amber-600'}">${a.status}</span></div><p class="text-[11px] text-slate-500 mt-1">Avg ${a.avgHours}h · share ${a.share}%</p></div>`).join('')||'<p class="text-xs text-slate-500">No agency data.</p>';
 }
-
-function fmtH(h) { if (h==null) return '-'; const d=Math.floor(h/24), hr=Math.round(h%24); return d? `${d}d ${hr}h` : `${hr}h`; }
-
-function renderExecutive(q) {
-  const stages = q.stageHours || q.stages || {};
-  const total = q.medianRelease || q.totalHours || Object.values(stages).reduce((a,b)=>a+(+b||0),0);
-  document.getElementById('kpiTotal').textContent = fmtH(total);
-  const delta = q.deltaVsPrior;
-  document.getElementById('kpiDelta').innerHTML = delta!=null ? `<span class="${delta<=0?'text-emerald-600':'text-rose-600'}">${delta<=0?'↓':'↑'} ${Math.abs(delta)}h vs prior</span>` : '-';
-  document.getElementById('kpiSample').textContent = q.sampleSize || q.n || '-';
-  const bn = q.bottlenecks || [];
-  document.getElementById('kpiBottleneck').textContent = bn[0]?.stage || bn[0]?.name || '-';
-  document.getElementById('kpiBottleneckDetail').textContent = bn[0] ? fmtH(bn[0].hours) : '-';
-  document.getElementById('kpiAnomaly').textContent = q.anomalyCount ?? (q.anomalies?.length) ?? '-';
-  document.getElementById('timelineTotal').textContent = fmtH(total);
-  const labels = Object.keys(stages);
-  const vals = labels.map(k => +stages[k] || 0);
-  if (charts.tl) charts.tl.destroy();
-  charts.tl = new Chart(document.getElementById('chartTimeline'), {
-    type: 'bar',
-    data: { labels, datasets: [{ label: 'Hours', data: vals, backgroundColor: '#059669' }] },
-    options: { indexAxis: 'y', plugins: { legend: { display: false }, datalabels: { anchor: 'end', align: 'right', formatter: v => v+'h', font: { size: 10 } } }, scales: { x: { beginAtZero: true } } },
-    plugins: [ChartDataLabels]
-  });
-  const bLabels = bn.map(b => b.stage || b.name);
-  const bVals = bn.map(b => b.share || b.pct || b.hours);
-  if (charts.bn) charts.bn.destroy();
-  charts.bn = new Chart(document.getElementById('chartBottleneck'), {
-    type: 'doughnut',
-    data: { labels: bLabels, datasets: [{ data: bVals, backgroundColor: ['#f43f5e','#f59e0b','#3b82f6','#8b5cf6','#64748b'] }] },
-    options: { plugins: { legend: { position: 'right', labels: { font: { size: 10 } } }, datalabels: { color: '#fff', font: { size: 9 }, formatter: (v,ctx) => { const t=ctx.dataset.data.reduce((a,b)=>a+b,0); return t? Math.round(100*v/t)+'%':''; } } } },
-    plugins: [ChartDataLabels]
-  });
-  const insights = q.aiInsights || q.insights || ['No insights for this quarter.'];
-  document.getElementById('aiInsights').innerHTML = insights.map(i => `<li>• ${i}</li>`).join('');
+function renderAnomalies(){
+  const list=(SHIPMENTS||[]).filter(s=>s.port===currentPort&&s.anomaly);
+  document.getElementById('anomalyTable').innerHTML=list.map(s=>`<div class="card p-3 anomaly-row text-xs"><div class="font-semibold">${s.bl} · ${s.container}</div><div class="text-slate-600 mt-0.5">${s.cargo} · ${s.total}h · ${s.status}</div></div>`).join('')||'<p class="text-xs text-slate-500">No anomalies in sample for this port.</p>';
 }
-
-function renderShipments() {
-  const { port } = getCurrent();
-  const q = (document.getElementById('shipSearch').value || '').toLowerCase();
-  const st = document.getElementById('shipFilter').value;
-  let list = (SHIPMENTS || []).filter(s => !port || s.port === port || s.portId === port);
-  if (q) list = list.filter(s => (s.bl||'').toLowerCase().includes(q) || (s.container||'').toLowerCase().includes(q));
-  if (st !== 'all') list = list.filter(s => (s.status||'').toLowerCase() === st || (st==='anomaly' && s.anomaly));
-  document.getElementById('shipList').innerHTML = list.slice(0,40).map(s => `
-    <div class="card p-3 text-xs ${s.anomaly?'anomaly-row':''}">
-      <div class="flex justify-between gap-2"><span class="font-semibold">${s.bl||s.id}</span><span class="text-slate-500">${s.container||''}</span></div>
-      <div class="mt-1 text-slate-600">${s.commodity||''} · ${fmtH(s.releaseHours)} · ${s.status||''}</div>
-      <div class="mt-1 text-[10px] text-slate-400">${(s.timeline||[]).join(' → ') || ''}</div>
-    </div>`).join('') || '<p class="text-xs text-slate-500">No shipments match.</p>';
-}
-
-function renderAgencies(q) {
-  const ags = q.agencies || [];
-  document.getElementById('agencyCards').innerHTML = ags.map(a => `
-    <div class="card p-3">
-      <div class="flex justify-between items-start"><h3 class="text-sm font-semibold">${a.name}</h3><span class="text-xs font-bold ${a.score>=80?'text-emerald-600':a.score>=60?'text-amber-600':'text-rose-600'}">${a.score??'-'}</span></div>
-      <p class="text-[11px] text-slate-500 mt-1">Median touch: ${fmtH(a.medianHours)} · SLA: ${a.slaMet??'-'}%</p>
-      <p class="text-[10px] text-slate-400 mt-0.5">${a.note||''}</p>
-    </div>`).join('') || '<p class="text-xs text-slate-500">No agency data.</p>';
-}
-
-function renderAnomalies(q) {
-  const ans = q.anomalies || [];
-  document.getElementById('anomalyTable').innerHTML = ans.map(a => `
-    <div class="card p-3 anomaly-row text-xs">
-      <div class="font-semibold">${a.id || a.bl}</div>
-      <div class="text-slate-600 mt-0.5">${a.reason || a.rule}</div>
-      <div class="text-[10px] text-slate-400 mt-0.5">${a.detail || ''}</div>
-    </div>`).join('') || '<p class="text-xs text-slate-500">No anomalies flagged for this quarter.</p>';
-}
-
-function showTab(name) {
-  document.querySelectorAll('.tab-panel').forEach(el => el.classList.add('hidden'));
+function showTab(name){
+  document.querySelectorAll('.tab-panel').forEach(el=>el.classList.add('hidden'));
   document.getElementById('panel-'+name).classList.remove('hidden');
-  document.querySelectorAll('.tab-btn').forEach(b => { b.classList.remove('tab-active'); b.classList.add('text-slate-600'); });
-  const btn = document.getElementById('tab-'+name);
-  btn.classList.add('tab-active'); btn.classList.remove('text-slate-600');
+  document.querySelectorAll('.tab-btn').forEach(b=>{b.classList.remove('tab-active');b.classList.add('text-slate-600');});
+  const btn=document.getElementById('tab-'+name);
+  btn.classList.add('tab-active');btn.classList.remove('text-slate-600');
 }
-
-loadAll().catch(err => {
-  document.querySelector('main').innerHTML = '<div class="card p-6 text-center text-rose-600"><p class="font-semibold">Failed to load data files</p><p class="text-xs mt-2">'+err.message+'</p><p class="text-xs mt-2 text-slate-500">Serve over HTTP (Netlify). file:// will not work with fetch.</p></div>';
-});
+boot();
 </script>
 </body>
 </html>
