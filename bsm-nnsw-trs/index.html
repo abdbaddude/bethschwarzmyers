@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nigeria NSW | Time Release Study – Trade Performance Assurance</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <style>
+    :root { --nrs-green: #006b3f; --nrs-gold: #c9a227; }
+    body { font-family: 'Inter', system-ui, -apple-system, sans-serif; }
+    .card { @apply bg-white rounded-xl shadow-sm border border-slate-200; }
+    .tab-active { @apply border-b-2 border-emerald-600 text-emerald-700 font-semibold; }
+    .anomaly-row { @apply bg-rose-50 border-l-4 border-rose-400; }
+    .timeline-dot { width: 14px; height: 14px; border-radius: 50%; }
+    .scroll-thin::-webkit-scrollbar { height: 6px; width: 6px; }
+    .scroll-thin::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen">
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <div class="w-12 h-12 rounded-full bg-emerald-700 flex items-center justify-center text-white font-bold text-lg shadow">NRS</div>
+        <div>
+          <h1 class="text-lg sm:text-xl font-bold text-slate-900 leading-tight">Nigeria National Single Window (NSW)</h1>
+          <p class="text-xs sm:text-sm text-slate-500">Time Release Study (TRS) – Trade Clearance Performance</p>
+        </div>
+      </div>
+      <div class="flex flex-wrap items-center gap-2 text-xs">
+        <span class="inline-flex items-center gap-1.5 bg-slate-100 px-2.5 py-1 rounded-full"><i class="fa-regular fa-calendar text-slate-500"></i> Q3 2027 (Illustrative)</span>
+        <span class="inline-flex items-center gap-1.5 bg-slate-100 px-2.5 py-1 rounded-full"><i class="fa-solid fa-ship text-slate-500"></i> Tin Can Island – Imports</span>
+        <span class="inline-flex items-center gap-1.5 bg-slate-100 px-2.5 py-1 rounded-full"><i class="fa-solid fa-box text-slate-500"></i> 1,240 shipments</span>
+        <span class="bg-sky-100 text-sky-800 px-2.5 py-1 rounded-full font-medium">Illustrative Data</span>
+      </div>
+    </div>
+  </header>
+  <nav class="bg-white border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 flex gap-1 overflow-x-auto scroll-thin">
+      <button onclick="showTab('executive')" id="tab-executive" class="tab-btn px-4 py-3 text-sm whitespace-nowrap tab-active"><i class="fa-solid fa-chart-line mr-1.5"></i> Executive Dashboard</button>
+      <button onclick="showTab('shipments')" id="tab-shipments" class="tab-btn px-4 py-3 text-sm whitespace-nowrap text-slate-600 hover:text-emerald-700"><i class="fa-solid fa-list mr-1.5"></i> Shipment Explorer</button>
+      <button onclick="showTab('ports')" id="tab-ports" class="tab-btn px-4 py-3 text-sm whitespace-nowrap text-slate-600 hover:text-emerald-700"><i class="fa-solid fa-anchor mr-1.5"></i> Port Comparison</button>
+      <button onclick="showTab('agencies')" id="tab-agencies" class="tab-btn px-4 py-3 text-sm whitespace-nowrap text-slate-600 hover:text-emerald-700"><i class="fa-solid fa-building-columns mr-1.5"></i> Agency Scorecards</button>
+      <button onclick="showTab('anomalies')" id="tab-anomalies" class="tab-btn px-4 py-3 text-sm whitespace-nowrap text-slate-600 hover:text-emerald-700"><i class="fa-solid fa-triangle-exclamation mr-1.5"></i> Anomaly Detection</button>
+      <button onclick="showTab('reports')" id="tab-reports" class="tab-btn px-4 py-3 text-sm whitespace-nowrap text-slate-600 hover:text-emerald-700"><i class="fa-solid fa-file-lines mr-1.5"></i> Executive Reports</button>
+    </div>
+  </nav>
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 py-6">
+    <div id="panel-executive" class="tab-panel space-y-6">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="card p-4"><p class="text-xs text-slate-500 uppercase tracking-wide">Median Release Time</p><p class="text-2xl font-bold text-slate-900 mt-1">120 <span class="text-base font-normal text-slate-500">hrs</span></p><p class="text-xs text-emerald-600 mt-1">↓ 18% vs previous study</p></div>
+        <div class="card p-4"><p class="text-xs text-slate-500 uppercase tracking-wide">Sample Size</p><p class="text-2xl font-bold text-slate-900 mt-1">1,240</p><p class="text-xs text-slate-500 mt-1">Import consignments</p></div>
+        <div class="card p-4"><p class="text-xs text-slate-500 uppercase tracking-wide">Top Bottleneck</p><p class="text-2xl font-bold text-rose-600 mt-1">Gate-Out</p><p class="text-xs text-slate-500 mt-1">36 hrs (30% of total)</p></div>
+        <div class="card p-4"><p class="text-xs text-slate-500 uppercase tracking-wide">Avoidable Delay (est.)</p><p class="text-2xl font-bold text-amber-600 mt-1">~24 hrs</p><p class="text-xs text-slate-500 mt-1">Per container (illustrative)</p></div>
+      </div>
+      <div class="card p-5">
+        <h2 class="text-sm font-semibold mb-4 flex items-center gap-2"><i class="fa-regular fa-clock text-slate-400"></i> Average Time to Release – End-to-End Timeline</h2>
+        <div class="flex flex-wrap items-center justify-between gap-2 text-xs text-slate-500 mb-3"><span>Total average clearance time: <strong class="text-slate-800">120 hours (5 days)</strong></span></div>
+        <div class="relative pt-2">
+          <div class="flex h-3 rounded-full overflow-hidden">
+            <div class="bg-blue-600" style="width:15%"></div><div class="bg-emerald-500" style="width:25%"></div><div class="bg-violet-500" style="width:20%"></div><div class="bg-amber-500" style="width:10%"></div><div class="bg-slate-700" style="width:30%"></div>
+          </div>
+          <div class="grid grid-cols-5 gap-1 mt-3 text-center text-xs">
+            <div><div class="w-8 h-8 mx-auto rounded-full bg-blue-600 text-white flex items-center justify-center mb-1"><i class="fa-solid fa-ship"></i></div><p class="font-medium">Arrival</p><p class="text-slate-500">18 hrs</p></div>
+            <div><div class="w-8 h-8 mx-auto rounded-full bg-emerald-500 text-white flex items-center justify-center mb-1"><i class="fa-solid fa-file-lines"></i></div><p class="font-medium">Permits</p><p class="text-slate-500">30 hrs</p></div>
+            <div><div class="w-8 h-8 mx-auto rounded-full bg-violet-500 text-white flex items-center justify-center mb-1"><i class="fa-solid fa-user-check"></i></div><p class="font-medium">Customs</p><p class="text-slate-500">24 hrs</p></div>
+            <div><div class="w-8 h-8 mx-auto rounded-full bg-amber-500 text-white flex items-center justify-center mb-1"><i class="fa-solid fa-magnifying-glass"></i></div><p class="font-medium">Inspection</p><p class="text-slate-500">12 hrs</p></div>
+            <div><div class="w-8 h-8 mx-auto rounded-full bg-slate-700 text-white flex items-center justify-center mb-1"><i class="fa-solid fa-warehouse"></i></div><p class="font-medium">Gate-Out</p><p class="text-slate-500">36 hrs</p></div>
+          </div>
+        </div>
+        <div class="grid md:grid-cols-3 gap-3 mt-5">
+          <div class="bg-rose-50 border border-rose-200 rounded-lg p-3 text-sm"><p class="font-semibold text-rose-800"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Bottleneck 1: Agency Permits</p><p class="text-xs text-rose-700 mt-1">Avg delay: 30 hrs (25% of total)</p></div>
+          <div class="bg-rose-50 border border-rose-200 rounded-lg p-3 text-sm"><p class="font-semibold text-rose-800"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Bottleneck 2: Payment Processing</p><p class="text-xs text-rose-700 mt-1">Avg delay: 8 hrs (7% of total)</p></div>
+          <div class="bg-rose-50 border border-rose-200 rounded-lg p-3 text-sm"><p class="font-semibold text-rose-800"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Bottleneck 3: Port Gate-Out</p><p class="text-xs text-rose-700 mt-1">Avg delay: 36 hrs (30% of total)</p></div>
+        </div>
+      </div>
+      <div class="grid md:grid-cols-3 gap-4">
+        <div class="card p-4"><h3 class="text-sm font-semibold mb-3">Time by Stage (Median Hours)</h3><canvas id="stageBarChart" height="180"></canvas></div>
+        <div class="card p-4"><h3 class="text-sm font-semibold mb-3">Where Delays Occur</h3><canvas id="delayDonut" height="180"></canvas></div>
+        <div class="card p-4"><h3 class="text-sm font-semibold mb-2">Key Takeaways</h3><ol class="text-sm space-y-2 list-decimal list-inside text-slate-700"><li>Overall median release time improved by 18% vs previous study.</li><li>Agency permits + port gate-out remain the largest contributors (55% combined).</li><li>Incomplete timestamps in earlier stages – key data quality gap.</li><li>Targeted process improvements could reduce avoidable delay by up to 1 day per container.</li></ol></div>
+      </div>
+    </div>
+    <div id="panel-shipments" class="tab-panel hidden space-y-4">
+      <div class="flex flex-wrap items-center justify-between gap-3"><h2 class="text-lg font-semibold">Shipment-Level Records</h2>
+        <div class="flex flex-wrap gap-2">
+          <input type="text" id="shipSearch" placeholder="Search Bill of Lading / Container…" class="border border-slate-300 rounded-lg px-3 py-1.5 text-sm w-64" oninput="filterShipments()" />
+          <select id="shipStatus" class="border border-slate-300 rounded-lg px-3 py-1.5 text-sm" onchange="filterShipments()"><option value="">All Status</option><option value="Released">Released</option><option value="On Hold">On Hold</option><option value="In Progress">In Progress</option></select>
+          <select id="shipAnomaly" class="border border-slate-300 rounded-lg px-3 py-1.5 text-sm" onchange="filterShipments()"><option value="">All</option><option value="anomaly">Anomalies only</option></select>
+        </div>
+      </div>
+      <div class="card overflow-hidden"><div class="overflow-x-auto scroll-thin"><table class="w-full text-sm"><thead class="bg-slate-50 text-left text-xs uppercase text-slate-500"><tr><th class="px-4 py-3">Bill of Lading</th><th class="px-4 py-3">Container</th><th class="px-4 py-3">Cargo Type</th><th class="px-4 py-3">Arrival</th><th class="px-4 py-3">Release Time (hrs)</th><th class="px-4 py-3">Status</th><th class="px-4 py-3">Flag</th><th class="px-4 py-3"></th></tr></thead><tbody id="shipmentTableBody" class="divide-y divide-slate-100"></tbody></table></div><div class="px-4 py-3 border-t border-slate-100 text-xs text-slate-500 flex justify-between"><span id="shipCount">Showing 0 of 0</span><span>Prototype sample of 80 shipments · Click Timeline for event detail</span></div></div>
+      <div id="timelinePanel" class="card p-5 hidden"><div class="flex justify-between items-start mb-4"><div><h3 class="font-semibold text-lg" id="tlTitle">Shipment Timeline</h3><p class="text-sm text-slate-500" id="tlMeta"></p></div><button onclick="closeTimeline()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button></div><div id="tlEvents" class="space-y-0 relative"></div></div>
+    </div>
+    <div id="panel-ports" class="tab-panel hidden space-y-5"><h2 class="text-lg font-semibold">Port Comparison – Release Performance</h2><div class="grid grid-cols-1 md:grid-cols-3 gap-4"><div class="card p-4 border-l-4 border-emerald-500"><p class="text-xs text-slate-500">Tin Can Island (Primary)</p><p class="text-2xl font-bold">120 hrs</p><p class="text-xs text-slate-500">Median | n=1,240</p></div><div class="card p-4 border-l-4 border-blue-500"><p class="text-xs text-slate-500">Lekki Deep Sea Port</p><p class="text-2xl font-bold">96 hrs</p><p class="text-xs text-slate-500">Median | n=480 (illustrative)</p></div><div class="card p-4 border-l-4 border-violet-500"><p class="text-xs text-slate-500">Onne Port</p><p class="text-2xl font-bold">138 hrs</p><p class="text-xs text-slate-500">Median | n=210 (illustrative)</p></div></div><div class="card p-5"><h3 class="text-sm font-semibold mb-4">Median Hours by Stage – Port Comparison</h3><canvas id="portCompareChart" height="120"></canvas></div></div>
+    <div id="panel-agencies" class="tab-panel hidden space-y-5"><h2 class="text-lg font-semibold">Agency Scorecards – Contribution to Delay</h2><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="agencyCards"></div></div>
+    <div id="panel-anomalies" class="tab-panel hidden space-y-5"><div class="flex items-center justify-between"><h2 class="text-lg font-semibold">AI-Assisted Anomaly Detection</h2><span class="text-xs bg-violet-100 text-violet-800 px-2.5 py-1 rounded-full">Rule + statistical flags</span></div><div class="grid grid-cols-1 md:grid-cols-3 gap-4"><div class="card p-4"><p class="text-xs text-slate-500">Flagged Shipments</p><p class="text-2xl font-bold text-rose-600" id="anomalyCount">—</p></div><div class="card p-4"><p class="text-xs text-slate-500">Most Common Pattern</p><p class="text-lg font-semibold text-slate-800">Gate-out > 48 hrs</p></div><div class="card p-4"><p class="text-xs text-slate-500">Estimated Impact</p><p class="text-lg font-semibold text-amber-600">~1.8 days extra dwell</p></div></div><div class="card overflow-hidden"><table class="w-full text-sm"><thead class="bg-slate-50 text-left text-xs uppercase text-slate-500"><tr><th class="px-4 py-3">Bill of Lading</th><th class="px-4 py-3">Total Hours</th><th class="px-4 py-3">Primary Flag</th><th class="px-4 py-3">Severity</th><th class="px-4 py-3">Suggested Action</th></tr></thead><tbody id="anomalyTableBody" class="divide-y divide-slate-100"></tbody></table></div></div>
+    <div id="panel-reports" class="tab-panel hidden space-y-5"><h2 class="text-lg font-semibold">Executive Reports & Assurance</h2><div class="card p-5"><h3 class="font-semibold mb-3">Priority Interventions</h3><div class="space-y-3"><div class="flex items-start gap-3 p-3 bg-slate-50 rounded-lg border"><span class="bg-emerald-600 text-white text-xs font-bold px-2 py-0.5 rounded">P1</span><div><p class="font-medium">Joint inspection scheduling + digital gate appointment</p><p class="text-xs text-slate-500">Owner: Customs + Terminal Operators | Target: −18–24 hrs</p></div></div><div class="flex items-start gap-3 p-3 bg-slate-50 rounded-lg border"><span class="bg-slate-400 text-white text-xs font-bold px-2 py-0.5 rounded">P2</span><div><p class="font-medium">Expand non-intrusive inspection capacity</p><p class="text-xs text-slate-500">Owner: Customs | Target: physical exam < 30%</p></div></div><div class="flex items-start gap-3 p-3 bg-slate-50 rounded-lg border"><span class="bg-slate-400 text-white text-xs font-bold px-2 py-0.5 rounded">P2</span><div><p class="font-medium">Mandate complete timestamp capture in NNSW</p><p class="text-xs text-slate-500">Owner: NNSW Secretariat | Data quality</p></div></div></div></div><div class="card p-5"><h3 class="font-semibold mb-2">Assurance Statement (Prototype)</h3><p class="text-sm text-slate-600">Based on the illustrative dataset of 1,240 import consignments at Tin Can Island Port (Q3 2027), the median end-to-end release time is 120 hours. Agency permits and port gate-out operations account for 55% of total dwell time. Continuous monitoring and anomaly rules surface structural delays that a single periodic TRS would understate. Independent re-measurement after priority interventions is recommended to provide formal assurance of improvement.</p><p class="text-xs text-slate-400 mt-3">Source: Nigeria NSW TRS Dashboard (Illustrative) | WCO TRS methodology (Version 4, 2025) | Not actual government data.</p></div></div>
+  </main>
+  <footer class="border-t border-slate-200 bg-white mt-10 py-4"><div class="max-w-7xl mx-auto px-4 sm:px-6 text-xs text-slate-500 flex flex-wrap justify-between gap-2"><span>Nigeria National Single Window · Time Release Study Intelligence & Assurance Prototype</span><span>Illustrative data only · WCO TRS methodology aligned</span></div></footer>
+  <script>
+    const stages = [{id:'arrival',name:'Cargo Arrival & Initial Processing',median:18,color:'#2563eb'},{id:'permits',name:'Documentation & Agency Permits',median:30,color:'#10b981'},{id:'customs',name:'Customs Assessment & Payment',median:24,color:'#8b5cf6'},{id:'inspection',name:'Inspection & Release Coordination',median:12,color:'#f59e0b'},{id:'gateout',name:'Port Operations & Gate-Out',median:36,color:'#334155'}];
+    const cargoTypes = ['General Cargo','Containerised','Vehicles','Bulk','Reefer','Dangerous Goods'];
+    const agencies = [{name:'NAFDAC',avgHours:14,share:22,status:'Needs attention'},{name:'SON',avgHours:11,share:18,status:'Moderate'},{name:'NAQS',avgHours:9,share:12,status:'Good'},{name:'Customs (Assessment)',avgHours:16,share:20,status:'Needs attention'},{name:'Terminal Operator',avgHours:28,share:28,status:'Critical'}];
+    function rand(min,max){return Math.round(min+Math.random()*(max-min));}
+    function pick(arr){return arr[Math.floor(Math.random()*arr.length)];}
+    const shipments = [];
+    for(let i=1;i<=80;i++){
+      const bl=`NGTC${String(20270000+i).slice(-6)}`;
+      const container=`MSCU${String(1000000+i*17).slice(-7)}`;
+      const cargo=pick(cargoTypes);
+      const arrivalDate=new Date(2027,6,rand(1,28),rand(0,23));
+      const stageTimes=stages.map(s=>{let t=Math.max(2,Math.round(s.median*(0.5+Math.random())));if(Math.random()<0.08)t=Math.round(s.median*(2.2+Math.random()*1.5));return t;});
+      const total=stageTimes.reduce((a,b)=>a+b,0);
+      let status='Released';if(total>200)status='On Hold';else if(Math.random()<0.12)status='In Progress';
+      const isAnomaly=total>180||stageTimes.some((t,idx)=>t>stages[idx].median*2);
+      shipments.push({id:i,bl,container,cargo,arrival:arrivalDate,stageTimes,total,status,isAnomaly,events:stages.map((s,idx)=>({stage:s.name,hours:stageTimes[idx],start:new Date(arrivalDate.getTime()+stageTimes.slice(0,idx).reduce((a,b)=>a+b,0)*3600000),end:new Date(arrivalDate.getTime()+stageTimes.slice(0,idx+1).reduce((a,b)=>a+b,0)*3600000)}))});
+    }
+    function showTab(name){document.querySelectorAll('.tab-panel').forEach(p=>p.classList.add('hidden'));document.getElementById('panel-'+name).classList.remove('hidden');document.querySelectorAll('.tab-btn').forEach(b=>{b.classList.remove('tab-active','text-emerald-700','font-semibold');b.classList.add('text-slate-600');});const btn=document.getElementById('tab-'+name);btn.classList.add('tab-active');btn.classList.remove('text-slate-600');}
+    Chart.register(ChartDataLabels);
+    new Chart(document.getElementById('stageBarChart'),{type:'bar',data:{labels:stages.map(s=>s.name.split(' ')[0]+'…'),datasets:[{data:stages.map(s=>s.median),backgroundColor:stages.map(s=>s.color),borderRadius:4}]},options:{indexAxis:'y',plugins:{legend:{display:false},datalabels:{anchor:'end',align:'right',color:'#334155',font:{size:11,weight:'600'},formatter:v=>v+'h'}},scales:{x:{beginAtZero:true,max:45,grid:{color:'#f1f5f9'}},y:{grid:{display:false}}}}});
+    new Chart(document.getElementById('delayDonut'),{type:'doughnut',data:{labels:['Port Gate-Out','Agency Permits','Customs & Payment','Port Arrival','Inspection'],datasets:[{data:[36,30,24,18,12],backgroundColor:['#334155','#10b981','#8b5cf6','#2563eb','#f59e0b'],borderWidth:0}]},options:{cutout:'62%',plugins:{legend:{display:false},datalabels:{display:false}}}});
+    new Chart(document.getElementById('portCompareChart'),{type:'bar',data:{labels:stages.map(s=>s.name.split('&')[0].trim().slice(0,18)),datasets:[{label:'Tin Can',data:[18,30,24,12,36],backgroundColor:'#10b981'},{label:'Lekki',data:[14,22,18,10,32],backgroundColor:'#3b82f6'},{label:'Onne',data:[20,34,28,14,42],backgroundColor:'#8b5cf6'}]},options:{plugins:{legend:{position:'bottom'}},scales:{y:{beginAtZero:true}}}});
+    const agencyCards=document.getElementById('agencyCards');
+    agencies.forEach(a=>{let borderCls,badgeCls,barCls;if(a.status==='Critical'){borderCls='border-rose-500';badgeCls='bg-rose-100 text-rose-800';barCls='bg-rose-500';}else if(a.status==='Needs attention'){borderCls='border-amber-500';badgeCls='bg-amber-100 text-amber-800';barCls='bg-amber-500';}else{borderCls='border-emerald-500';badgeCls='bg-emerald-100 text-emerald-800';barCls='bg-emerald-500';}agencyCards.innerHTML+=`<div class="card p-4 border-t-4 ${borderCls}"><div class="flex justify-between items-start"><h3 class="font-semibold">${a.name}</h3><span class="text-xs px-2 py-0.5 rounded-full ${badgeCls}">${a.status}</span></div><p class="text-2xl font-bold mt-2">${a.avgHours} <span class="text-sm font-normal text-slate-500">hrs avg</span></p><p class="text-xs text-slate-500 mt-1">~${a.share}% of total delay contribution</p><div class="mt-3 h-1.5 bg-slate-100 rounded-full overflow-hidden"><div class="h-full ${barCls} rounded-full" style="width:${Math.min(100,a.avgHours*3)}%"></div></div></div>`;});
+    function renderShipments(list){const tbody=document.getElementById('shipmentTableBody');tbody.innerHTML='';list.forEach(s=>{const flag=s.isAnomaly?'<span class="text-xs bg-rose-100 text-rose-700 px-2 py-0.5 rounded-full">Anomaly</span>':'<span class="text-xs text-slate-400">—</span>';const statusBadge=s.status==='Released'?'<span class="text-xs px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">Released</span>':s.status==='On Hold'?'<span class="text-xs px-2 py-0.5 rounded-full bg-rose-100 text-rose-800">On Hold</span>':'<span class="text-xs px-2 py-0.5 rounded-full bg-amber-100 text-amber-800">In Progress</span>';tbody.innerHTML+=`<tr class="${s.isAnomaly?'anomaly-row':'hover:bg-slate-50'}"><td class="px-4 py-2.5 font-medium">${s.bl}</td><td class="px-4 py-2.5 font-mono text-xs">${s.container}</td><td class="px-4 py-2.5">${s.cargo}</td><td class="px-4 py-2.5 text-xs">${s.arrival.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'})}</td><td class="px-4 py-2.5 font-semibold ${s.total>180?'text-rose-600':''}">${s.total}</td><td class="px-4 py-2.5">${statusBadge}</td><td class="px-4 py-2.5">${flag}</td><td class="px-4 py-2.5"><button onclick="showTimeline(${s.id})" class="text-emerald-600 hover:text-emerald-800 text-xs font-medium">Timeline</button></td></tr>`;});document.getElementById('shipCount').textContent=`Showing ${list.length} of ${shipments.length}`;}
+    function filterShipments(){const q=document.getElementById('shipSearch').value.toLowerCase();const status=document.getElementById('shipStatus').value;const anom=document.getElementById('shipAnomaly').value;let filtered=shipments.filter(s=>{const matchQ=!q||s.bl.toLowerCase().includes(q)||s.container.toLowerCase().includes(q);const matchS=!status||s.status===status;const matchA=!anom||(anom==='anomaly'&&s.isAnomaly);return matchQ&&matchS&&matchA;});renderShipments(filtered);}
+    function showTimeline(id){const s=shipments.find(x=>x.id===id);if(!s)return;document.getElementById('timelinePanel').classList.remove('hidden');document.getElementById('tlTitle').textContent=`${s.bl} · ${s.container}`;document.getElementById('tlMeta').textContent=`${s.cargo} · Total ${s.total} hours · ${s.status}`;const el=document.getElementById('tlEvents');el.innerHTML='';s.events.forEach((e,idx)=>{const isLong=e.hours>stages[idx].median*1.5;el.innerHTML+=`<div class="flex gap-4"><div class="flex flex-col items-center"><div class="timeline-dot ${isLong?'bg-rose-500':'bg-emerald-500'}"></div>${idx<s.events.length-1?'<div class="w-0.5 flex-1 bg-slate-200 my-1"></div>':''}</div><div class="pb-5 flex-1"><div class="flex justify-between items-baseline"><p class="font-medium text-sm">${e.stage}</p><p class="text-sm font-semibold ${isLong?'text-rose-600':'text-slate-700'}">${e.hours} hrs</p></div><p class="text-xs text-slate-500 mt-0.5">${e.start.toLocaleString('en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})} → ${e.end.toLocaleString('en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})}</p>${isLong?'<p class="text-xs text-rose-600 mt-1"><i class="fa-solid fa-flag"></i> Above stage median – potential bottleneck</p>':''}</div></div>`;});document.getElementById('timelinePanel').scrollIntoView({behavior:'smooth'});}
+    function closeTimeline(){document.getElementById('timelinePanel').classList.add('hidden');}
+    const anomalies=shipments.filter(s=>s.isAnomaly).sort((a,b)=>b.total-a.total);document.getElementById('anomalyCount').textContent=anomalies.length;const anomBody=document.getElementById('anomalyTableBody');anomalies.slice(0,25).forEach(s=>{let primary='Elevated total dwell';let severity='Medium';if(s.total>220){primary='Extreme dwell (>9 days)';severity='High';}else if(s.stageTimes[4]>70){primary='Gate-out bottleneck';severity='High';}else if(s.stageTimes[1]>55){primary='Agency permits delay';severity='Medium';}const sevBadge=severity==='High'?'<span class="text-xs px-2 py-0.5 rounded-full bg-rose-100 text-rose-800">High</span>':'<span class="text-xs px-2 py-0.5 rounded-full bg-amber-100 text-amber-800">Medium</span>';anomBody.innerHTML+=`<tr class="hover:bg-slate-50"><td class="px-4 py-2.5 font-medium">${s.bl}</td><td class="px-4 py-2.5 font-semibold text-rose-600">${s.total}</td><td class="px-4 py-2.5">${primary}</td><td class="px-4 py-2.5">${sevBadge}</td><td class="px-4 py-2.5 text-xs text-slate-600">Escalate to process owner · re-check timestamps</td></tr>`;});
+    renderShipments(shipments);
+  </script>
+</body>
+</html>
