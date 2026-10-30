@@ -9,38 +9,65 @@
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
   <style>
-    body { font-family: Inter, system-ui, sans-serif; }
-    .card { background: white; border-radius: 0.75rem; box-shadow: 0 1px 2px rgba(0,0,0,.05); border: 1px solid #e2e8f0; }
+    body { font-family: Inter, system-ui, -apple-system, sans-serif; }
+    .card { background: #fff; border-radius: 0.75rem; box-shadow: 0 1px 2px rgba(0,0,0,.04); border: 1px solid #e2e8f0; }
     .tab-active { border-bottom: 2px solid #059669; color: #047857; font-weight: 600; }
     .anomaly-row { background: #fff1f2; border-left: 4px solid #fb7185; }
-    .portrait-wrap { max-width: 820px; margin: 0 auto; }
+    .portrait-wrap { max-width: 920px; margin: 0 auto; }
+    .stage-pill { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 9999px; color: #fff; white-space: nowrap; }
+    .bn-card { background: #fff5f5; border: 1px solid #fecaca; border-radius: 0.5rem; padding: 0.5rem 0.65rem; font-size: 10px; }
   </style>
 </head>
 <body class="bg-slate-100 text-slate-800 min-h-screen">
 <div class="portrait-wrap bg-slate-50 min-h-screen shadow-lg">
+
+<!-- Header -->
 <header class="bg-white border-b border-slate-200 sticky top-0 z-50">
-  <div class="px-4 py-3 flex flex-wrap items-center justify-between gap-2">
-    <div class="flex items-center gap-2.5">
-      <div class="w-10 h-10 rounded-full bg-emerald-700 flex items-center justify-center text-white font-bold text-sm shadow">NRS</div>
-      <div>
-        <h1 class="text-base font-bold text-slate-900 leading-tight" id="hdrTitle">Nigeria National Single Window (NSW)</h1>
-        <p class="text-xs text-slate-500" id="hdrSub">Time Release Study (TRS) - Trade Clearance Performance</p>
+  <div class="px-4 py-3 flex flex-wrap items-start justify-between gap-3">
+    <div class="flex items-center gap-2.5 min-w-0">
+      <div class="w-11 h-11 rounded-full bg-emerald-700 flex items-center justify-center text-white font-bold text-xs shadow shrink-0">NRS</div>
+      <div class="min-w-0">
+        <h1 class="text-sm sm:text-base font-bold text-slate-900 leading-tight" id="hdrTitle">Nigeria National Single Window (NSW)</h1>
+        <p class="text-[11px] text-slate-500" id="hdrSub">Time Release Study (TRS) – Trade Clearance Performance</p>
+        <p class="text-[10px] text-slate-400 mt-0.5 hidden sm:block">From cargo arrival to release — measuring time, identifying bottlenecks, enabling faster trade.</p>
       </div>
     </div>
-    <div class="flex flex-wrap items-center gap-1.5 text-[10px]">
-      <span class="inline-flex items-center gap-1 bg-slate-100 px-2 py-0.5 rounded-full" id="hdrQuarter">-</span>
-      <span class="inline-flex items-center gap-1 bg-slate-100 px-2 py-0.5 rounded-full" id="hdrPort">-</span>
-      <span class="inline-flex items-center gap-1 bg-slate-100 px-2 py-0.5 rounded-full" id="hdrSample">-</span>
-      <span class="bg-sky-100 text-sky-800 px-2 py-0.5 rounded-full font-medium">Illustrative</span>
+    <div class="flex flex-wrap gap-1.5 text-[10px]">
+      <span class="inline-flex items-center gap-1 bg-sky-50 text-sky-800 border border-sky-100 px-2 py-1 rounded-lg">
+        <i class="fa-regular fa-calendar"></i> <span id="chipQuarter">—</span>
+      </span>
+      <span class="inline-flex items-center gap-1 bg-slate-50 text-slate-700 border border-slate-200 px-2 py-1 rounded-lg">
+        <i class="fa-solid fa-ship"></i> <span id="chipPort">—</span>
+      </span>
+      <span class="inline-flex items-center gap-1 bg-slate-50 text-slate-700 border border-slate-200 px-2 py-1 rounded-lg">
+        <i class="fa-solid fa-cube"></i> <span id="chipSample">—</span>
+      </span>
+      <span class="bg-sky-100 text-sky-800 px-2 py-1 rounded-lg font-medium">Illustrative</span>
     </div>
   </div>
 </header>
-<div class="bg-white border-b border-slate-200 px-4 py-2 flex flex-wrap gap-2 items-center">
-  <label class="text-xs text-slate-500">Port</label>
-  <select id="portSelect" class="border border-slate-300 rounded-lg px-2 py-1 text-sm" onchange="onFilterChange()"></select>
-  <label class="text-xs text-slate-500 ml-2">Quarter</label>
-  <select id="quarterSelect" class="border border-slate-300 rounded-lg px-2 py-1 text-sm" onchange="onFilterChange()"></select>
+
+<!-- Filters -->
+<div class="bg-white border-b border-slate-200 px-4 py-2 flex flex-wrap gap-3 items-center text-xs">
+  <div class="flex items-center gap-1.5">
+    <label class="text-slate-500">Port</label>
+    <select id="portSelect" class="border border-slate-300 rounded-lg px-2 py-1 text-sm bg-white" onchange="onFilterChange()"></select>
+  </div>
+  <div class="flex items-center gap-1.5">
+    <label class="text-slate-500">Period</label>
+    <select id="quarterSelect" class="border border-slate-300 rounded-lg px-2 py-1 text-sm bg-white" onchange="onFilterChange()"></select>
+  </div>
+  <div class="flex items-center gap-1.5">
+    <label class="text-slate-500">Compare vs</label>
+    <select id="compareSelect" class="border border-slate-300 rounded-lg px-2 py-1 text-sm bg-white" onchange="onFilterChange()">
+      <option value="prior">Prior quarter (default)</option>
+      <option value="2025-Q1">2025-Q1 baseline</option>
+      <option value="none">No comparison</option>
+    </select>
+  </div>
 </div>
+
+<!-- Tabs -->
 <nav class="bg-white border-b border-slate-200">
   <div class="px-2 flex gap-0.5 overflow-x-auto text-xs">
     <button onclick="showTab('executive')" id="tab-executive" class="tab-btn px-3 py-2.5 whitespace-nowrap tab-active"><i class="fa-solid fa-chart-line mr-1"></i>Executive</button>
@@ -49,157 +76,526 @@
     <button onclick="showTab('anomalies')" id="tab-anomalies" class="tab-btn px-3 py-2.5 whitespace-nowrap text-slate-600"><i class="fa-solid fa-triangle-exclamation mr-1"></i>Anomalies</button>
   </div>
 </nav>
-<main class="px-4 py-4 space-y-4" id="mainContent">
-  <!-- Content rendered by JS -->
-</main>
-<footer class="px-4 py-6 text-center text-[10px] text-slate-400 border-t border-slate-200 mt-4">
-  <span id="footerDisclaimer">NNSW TRS Intelligence Prototype · Illustrative data · Not official statistics</span>
-</footer>
-</div>
-<script>
-/* Full interactive TRS prototype - loads data/*.json */
-let META, PORT_DATA={}, SHIPMENTS=[], currentPort='tincan', currentQuarter='2026-Q2';
-let stageBarChart, delayDonut;
-Chart.register(ChartDataLabels);
 
-async function boot(){
-  try{
-    const [meta,tincan,lekki,onne,ships]=await Promise.all([
-      fetch('data/meta.json').then(r=>r.json()),
-      fetch('data/tincan.json').then(r=>r.json()),
-      fetch('data/lekki.json').then(r=>r.json()),
-      fetch('data/onne.json').then(r=>r.json()),
-      fetch('data/shipments.json').then(r=>r.json())
-    ]);
-    META=meta;PORT_DATA={tincan,lekki,onne};SHIPMENTS=ships.shipments||ships;
-    const portSel=document.getElementById('portSelect');
-    const qSel=document.getElementById('quarterSelect');
-    META.ports.forEach(p=>{const o=document.createElement('option');o.value=p.id;o.textContent=p.name;portSel.appendChild(o);});
-    META.quarters.forEach(q=>{const o=document.createElement('option');o.value=q;o.textContent=q;qSel.appendChild(o);});
-    portSel.value=currentPort;qSel.value=currentQuarter;
-    document.getElementById('hdrTitle').textContent=META.title;
-    document.getElementById('hdrSub').textContent=META.subtitle;
-    document.getElementById('footerDisclaimer').textContent=META.disclaimer;
-    buildShell();
-    renderAll();
-  }catch(err){
-    document.getElementById('mainContent').innerHTML='<div class="card p-6 text-center text-rose-600"><p class="font-semibold">Failed to load data files</p><p class="text-xs mt-2">'+err.message+'</p><p class="text-xs mt-2 text-slate-500">Serve over HTTP (Netlify). file:// will not work with fetch.</p></div>';
-  }
-}
-function buildShell(){
-  document.getElementById('mainContent').innerHTML=`
+<main class="px-3 sm:px-4 py-4 space-y-4">
+
+  <!-- ================= EXECUTIVE ================= -->
   <section id="panel-executive" class="tab-panel space-y-4">
-    <div class="grid grid-cols-2 gap-2.5">
-      <div class="card p-3"><p class="text-[10px] text-slate-500 uppercase">Median Release</p><p class="text-xl font-bold mt-0.5" id="kpiTotal">-</p><p class="text-[10px] mt-0.5" id="kpiDelta">-</p></div>
-      <div class="card p-3"><p class="text-[10px] text-slate-500 uppercase">Sample Size</p><p class="text-xl font-bold mt-0.5" id="kpiSample">-</p><p class="text-[10px] text-slate-500 mt-0.5">Import consignments</p></div>
-      <div class="card p-3"><p class="text-[10px] text-slate-500 uppercase">Top Bottleneck</p><p class="text-xl font-bold text-rose-600 mt-0.5" id="kpiBottleneck">-</p><p class="text-[10px] text-slate-500 mt-0.5" id="kpiBottleneckDetail">-</p></div>
-      <div class="card p-3"><p class="text-[10px] text-slate-500 uppercase">Anomalies</p><p class="text-xl font-bold text-amber-600 mt-0.5" id="kpiAnomaly">-</p><p class="text-[10px] text-slate-500 mt-0.5">Flagged shipments</p></div>
-    </div>
-    <div class="card p-4">
-      <h2 class="text-xs font-semibold mb-2"><i class="fa-regular fa-clock text-slate-400"></i> Average Time to Release - End-to-End</h2>
-      <p class="text-[11px] text-slate-500 mb-2">Total average clearance: <strong id="timelineTotal">-</strong></p>
-      <div class="h-3 rounded-full overflow-hidden flex mb-3" id="timelineBar"></div>
-      <div class="grid grid-cols-5 gap-1 text-center text-[10px]" id="timelineStages"></div>
-    </div>
-    <div class="card p-4">
-      <h2 class="text-xs font-semibold mb-3">Stage Hours (bar)</h2>
-      <div class="h-40"><canvas id="stageBarChart"></canvas></div>
-    </div>
-    <div class="card p-4">
-      <h2 class="text-xs font-semibold mb-2">Delay Share</h2>
-      <div class="flex gap-3 items-center">
-        <div class="w-28 h-28"><canvas id="delayDonut"></canvas></div>
-        <div class="text-[10px] space-y-1 flex-1" id="donutLegend"></div>
+
+    <!-- KPI strip with comparison -->
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+      <div class="card p-3">
+        <p class="text-[10px] text-slate-500 uppercase tracking-wide">Median Release</p>
+        <p class="text-xl font-bold mt-0.5" id="kpiTotal">—</p>
+        <p class="text-[10px] mt-0.5" id="kpiDelta">—</p>
+      </div>
+      <div class="card p-3">
+        <p class="text-[10px] text-slate-500 uppercase tracking-wide">Sample Size</p>
+        <p class="text-xl font-bold mt-0.5" id="kpiSample">—</p>
+        <p class="text-[10px] text-slate-500 mt-0.5">Import consignments</p>
+      </div>
+      <div class="card p-3">
+        <p class="text-[10px] text-slate-500 uppercase tracking-wide">Top Bottleneck</p>
+        <p class="text-lg font-bold text-rose-600 mt-0.5 leading-tight" id="kpiBottleneck">—</p>
+        <p class="text-[10px] text-slate-500 mt-0.5" id="kpiBottleneckDetail">—</p>
+      </div>
+      <div class="card p-3">
+        <p class="text-[10px] text-slate-500 uppercase tracking-wide">Anomalies</p>
+        <p class="text-xl font-bold text-amber-600 mt-0.5" id="kpiAnomaly">—</p>
+        <p class="text-[10px] text-slate-500 mt-0.5">Flagged shipments</p>
       </div>
     </div>
-    <div class="card p-4 space-y-2" id="bottleneckCards"></div>
+
+    <!-- End-to-end timeline (image-style) -->
     <div class="card p-4">
-      <h2 class="text-xs font-semibold mb-2"><i class="fa-solid fa-lightbulb text-amber-500"></i> Key Takeaways</h2>
-      <ul class="text-xs space-y-1 text-slate-600 list-disc pl-4" id="takeawaysList"></ul>
-      <p class="text-xs text-slate-500 mt-2 italic" id="aiInsight"></p>
+      <div class="flex items-center gap-2 mb-1">
+        <i class="fa-regular fa-clock text-sky-600"></i>
+        <h2 class="text-sm font-semibold text-slate-800">Average Time to Release – End-to-End Timeline</h2>
+      </div>
+      <p class="text-[11px] text-slate-500 mb-4">Total average clearance time: <strong id="timelineTotal" class="text-slate-800">—</strong>
+        <span id="timelineCompare" class="ml-1"></span>
+      </p>
+
+      <!-- Stage icons + names -->
+      <div class="grid grid-cols-5 gap-1 mb-2" id="timelineIcons"></div>
+
+      <!-- Segmented bar -->
+      <div class="flex h-3 rounded-full overflow-hidden mb-2 shadow-inner" id="timelineBar"></div>
+
+      <!-- Hour pills under each stage (same horizontal line) -->
+      <div class="grid grid-cols-5 gap-1 mb-4" id="timelineHours"></div>
+
+      <!-- Bottleneck cards – delay hours + share on same line -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-2" id="bottleneckCards"></div>
     </div>
-    <div class="card p-4">
-      <h2 class="text-xs font-semibold mb-2">Regional Benchmarks</h2>
-      <div class="grid grid-cols-3 gap-2 text-center text-xs" id="benchCards"></div>
+
+    <!-- Three-column lower: bars | donut | takeaways -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-3">
+      <!-- Time by Stage bar -->
+      <div class="card p-3">
+        <h3 class="text-xs font-semibold text-slate-800 mb-1 flex items-center gap-1.5">
+          <i class="fa-solid fa-chart-bar text-slate-400"></i> Time by Stage (Median Hours)
+        </h3>
+        <p class="text-[10px] text-slate-400 mb-2">Breakdown of average time spent at each stage</p>
+        <div class="h-44"><canvas id="stageBarChart"></canvas></div>
+      </div>
+
+      <!-- Where Delays Occur donut -->
+      <div class="card p-3">
+        <h3 class="text-xs font-semibold text-slate-800 mb-1 flex items-center gap-1.5">
+          <i class="fa-regular fa-clock text-slate-400"></i> Where Delays Occur
+        </h3>
+        <p class="text-[10px] text-slate-400 mb-2">Share of total clearance time</p>
+        <div class="flex items-center gap-3">
+          <div class="relative w-28 h-28 shrink-0">
+            <canvas id="delayDonut"></canvas>
+            <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+              <span class="text-base font-bold text-slate-800" id="donutCenterHrs">—</span>
+              <span class="text-[9px] text-slate-400 leading-tight text-center">total average<br>clearance time</span>
+            </div>
+          </div>
+          <div class="text-[10px] space-y-1.5 flex-1" id="donutLegend"></div>
+        </div>
+      </div>
+
+      <!-- Key Takeaways + Next Steps -->
+      <div class="card p-3 space-y-3">
+        <div>
+          <h3 class="text-xs font-semibold text-slate-800 mb-2 flex items-center gap-1.5">
+            <i class="fa-solid fa-bullseye text-emerald-600"></i> Key Takeaways
+          </h3>
+          <ol class="text-[11px] space-y-1.5 list-decimal list-inside text-slate-700" id="takeawaysList"></ol>
+        </div>
+        <div class="bg-emerald-50 border border-emerald-100 rounded-lg p-2.5">
+          <h4 class="text-[11px] font-semibold text-emerald-800 mb-1 flex items-center gap-1"><i class="fa-solid fa-check"></i> Next Steps</h4>
+          <ul class="text-[10px] text-emerald-900 space-y-0.5 list-disc list-inside" id="nextStepsList">
+            <li>Validate findings with agency process owners.</li>
+            <li>Prioritise corrective actions and assign owners.</li>
+            <li>Repeat study to measure improvement.</li>
+          </ul>
+        </div>
+      </div>
     </div>
+
+    <!-- AI Insight -->
+    <div class="bg-violet-50 border border-violet-200 rounded-xl p-3.5">
+      <p class="text-xs font-semibold text-violet-900 flex items-center gap-1.5">
+        <i class="fa-solid fa-wand-magic-sparkles"></i> AI Insight (Example)
+      </p>
+      <p class="mt-1.5 text-[11px] text-violet-800 leading-relaxed" id="aiInsight">—</p>
+      <p class="mt-1.5 text-[10px] text-violet-500 italic">AI insight is a hypothesis for investigation, not a confirmed finding.</p>
+    </div>
+
+    <!-- Benchmarks -->
+    <div class="card p-3">
+      <h3 class="text-xs font-semibold mb-2">Regional Benchmarks (median hours)</h3>
+      <div class="grid grid-cols-3 gap-2 text-center text-xs" id="benchmarks"></div>
+    </div>
+
+    <p class="text-[10px] text-slate-400 text-center">Source: Nigeria NSW TRS Dashboard (Illustrative). | WCO TRS methodology (Version 4, 2025) · Not actual government data.</p>
   </section>
+
+  <!-- ================= SHIPMENTS ================= -->
   <section id="panel-shipments" class="tab-panel hidden space-y-3">
-    <div class="flex flex-wrap gap-2 items-center">
-      <input id="shipSearch" type="text" placeholder="Search BL / Container..." class="border border-slate-300 rounded-lg px-2 py-1 text-sm flex-1 min-w-[140px]" oninput="renderShipments()" />
-      <select id="shipFilter" class="border border-slate-300 rounded-lg px-2 py-1 text-sm" onchange="renderShipments()">
-        <option value="all">All</option>
+    <div class="flex flex-wrap gap-2">
+      <input type="text" id="shipSearch" placeholder="Search BL / Container..." class="border border-slate-300 rounded-lg px-2.5 py-1.5 text-xs flex-1 min-w-[140px]" oninput="filterShipments()" />
+      <select id="shipStatus" class="border border-slate-300 rounded-lg px-2 py-1.5 text-xs" onchange="filterShipments()">
+        <option value="">All Status</option>
         <option value="Released">Released</option>
-        <option value="anomaly">Anomaly</option>
         <option value="On Hold">On Hold</option>
+        <option value="In Progress">In Progress</option>
+      </select>
+      <select id="shipAnomaly" class="border border-slate-300 rounded-lg px-2 py-1.5 text-xs" onchange="filterShipments()">
+        <option value="">All</option>
+        <option value="1">Anomalies only</option>
       </select>
     </div>
-    <div id="shipList" class="space-y-2"></div>
+    <div class="overflow-x-auto card">
+      <table class="w-full text-xs">
+        <thead class="bg-slate-50 text-slate-500 text-left">
+          <tr>
+            <th class="px-3 py-2 font-medium">BL</th>
+            <th class="px-3 py-2 font-medium">Container</th>
+            <th class="px-3 py-2 font-medium">Cargo</th>
+            <th class="px-3 py-2 font-medium">Total hrs</th>
+            <th class="px-3 py-2 font-medium">Status</th>
+            <th class="px-3 py-2 font-medium"></th>
+          </tr>
+        </thead>
+        <tbody id="shipTableBody"></tbody>
+      </table>
+    </div>
+    <div id="timelinePanel" class="card p-4 hidden">
+      <div class="flex justify-between items-center mb-3">
+        <h3 class="text-sm font-semibold" id="tlTitle">Shipment timeline</h3>
+        <button onclick="closeTimeline()" class="text-slate-400 hover:text-slate-600 text-xs"><i class="fa-solid fa-xmark"></i> Close</button>
+      </div>
+      <div id="tlBody" class="space-y-0"></div>
+    </div>
   </section>
+
+  <!-- ================= AGENCIES ================= -->
   <section id="panel-agencies" class="tab-panel hidden space-y-3">
-    <div id="agencyCards" class="grid gap-2.5"></div>
+    <p class="text-xs text-slate-500">Agency scorecards for selected port & period (touch time and contribution to delay).</p>
+    <div id="agencyCards" class="grid gap-2.5 sm:grid-cols-2"></div>
   </section>
+
+  <!-- ================= ANOMALIES ================= -->
   <section id="panel-anomalies" class="tab-panel hidden space-y-3">
-    <div class="card p-3 text-xs text-slate-600">Rules: release time > 2× median, elevated stage hours, holds, multi-agency friction.</div>
-    <div id="anomalyTable" class="space-y-2"></div>
-  </section>`;
+    <div class="card p-3 text-xs text-slate-600">
+      Detection rules (illustrative): total dwell > 2× median · stage hours well above peer median · multi-agency hold · missing early timestamps.
+    </div>
+    <div class="overflow-x-auto card">
+      <table class="w-full text-xs">
+        <thead class="bg-slate-50 text-slate-500 text-left">
+          <tr>
+            <th class="px-3 py-2 font-medium">BL</th>
+            <th class="px-3 py-2 font-medium">Total hrs</th>
+            <th class="px-3 py-2 font-medium">Primary flag</th>
+            <th class="px-3 py-2 font-medium">Severity</th>
+          </tr>
+        </thead>
+        <tbody id="anomalyTableBody"></tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+<footer class="px-4 py-5 text-center text-[10px] text-slate-400 border-t border-slate-200 mt-2">
+  <span id="footerDisclaimer">Illustrative data only. Not actual government or NRS statistics.</span>
+</footer>
+</div>
+
+<script>
+Chart.register(ChartDataLabels);
+
+let META = null;
+let PORT_DATA = {};
+let SHIPMENTS = [];
+let currentPort = 'tincan';
+let currentQuarter = '2026-Q2';
+let stageBarChart = null;
+let delayDonut = null;
+
+const STAGE_ICONS = ['fa-ship', 'fa-file-lines', 'fa-user-check', 'fa-magnifying-glass', 'fa-warehouse'];
+const STAGE_SHORT_LABELS = {
+  arrival: 'Port Arrival & Initial Processing',
+  permits: 'Agency Permits & Documentation',
+  customs: 'Customs Assessment & Payment',
+  inspection: 'Inspection & Release Coordination',
+  gateout: 'Port Operations & Gate-Out'
+};
+
+async function loadData() {
+  const [meta, tincan, lekki, onne, ships] = await Promise.all([
+    fetch('data/meta.json').then(r => r.json()),
+    fetch('data/tincan.json').then(r => r.json()),
+    fetch('data/lekki.json').then(r => r.json()),
+    fetch('data/onne.json').then(r => r.json()),
+    fetch('data/shipments.json').then(r => r.json())
+  ]);
+  META = meta;
+  PORT_DATA = { tincan, lekki, onne };
+  SHIPMENTS = ships.shipments || ships;
+
+  const portSel = document.getElementById('portSelect');
+  const qSel = document.getElementById('quarterSelect');
+  META.ports.forEach(p => {
+    const o = document.createElement('option');
+    o.value = p.id;
+    o.textContent = p.name;
+    portSel.appendChild(o);
+  });
+  META.quarters.forEach(q => {
+    const o = document.createElement('option');
+    o.value = q;
+    o.textContent = q;
+    qSel.appendChild(o);
+  });
+  portSel.value = currentPort;
+  qSel.value = currentQuarter;
+
+  document.getElementById('hdrTitle').textContent = META.title;
+  document.getElementById('hdrSub').textContent = META.subtitle;
+  document.getElementById('footerDisclaimer').textContent = META.disclaimer;
+
+  renderAll();
 }
-function getQ(){return PORT_DATA[currentPort].quarters[currentQuarter];}
-function onFilterChange(){currentPort=document.getElementById('portSelect').value;currentQuarter=document.getElementById('quarterSelect').value;renderAll();}
-function renderAll(){
-  const q=getQ(),stages=META.stages,hours=stages.map(s=>q.stageHours[s.id]),total=q.totalHours,prior=q.priorTotalHours;
-  const delta=prior?Math.round((1-total/prior)*100):0;
-  document.getElementById('hdrQuarter').textContent=currentQuarter;
-  document.getElementById('hdrPort').textContent=PORT_DATA[currentPort].portName;
-  document.getElementById('hdrSample').textContent=q.sampleSize.toLocaleString()+' shipments';
-  document.getElementById('kpiTotal').innerHTML=total+' <span class="text-sm font-normal text-slate-500">hrs</span>';
-  document.getElementById('kpiDelta').innerHTML=delta>0?'<span class="text-emerald-600">\u2193 '+delta+'% vs prior quarter</span>':'vs prior '+prior+' hrs';
-  document.getElementById('kpiSample').textContent=q.sampleSize.toLocaleString();
-  const topBn=q.bottlenecks[0];
-  document.getElementById('kpiBottleneck').textContent=topBn?topBn.title.split(' ').pop():'-';
-  document.getElementById('kpiBottleneckDetail').textContent=topBn?topBn.delayHours+' hrs ('+topBn.pct+'%)':'-';
-  document.getElementById('kpiAnomaly').textContent=q.anomalyCount;
-  document.getElementById('timelineBar').innerHTML=stages.map((s,i)=>'<div style="width:'+(hours[i]/total*100).toFixed(1)+'%;background:'+s.color+'"></div>').join('');
-  document.getElementById('timelineTotal').textContent=total+' hours ('+(total/24).toFixed(1)+' days)';
-  const icons=['fa-ship','fa-file-lines','fa-user-check','fa-magnifying-glass','fa-warehouse'];
-  document.getElementById('timelineStages').innerHTML=stages.map((s,i)=>'<div><div class="w-7 h-7 mx-auto rounded-full text-white flex items-center justify-center mb-0.5 text-[9px]" style="background:'+s.color+'"><i class="fa-solid '+icons[i]+'"></i></div><p class="font-medium">'+s.short+'</p><p class="text-slate-500">'+hours[i]+' hrs</p></div>').join('');
-  document.getElementById('bottleneckCards').innerHTML=q.bottlenecks.map(b=>'<div class="bg-rose-50 border border-rose-200 rounded-lg p-2.5 text-xs"><p class="font-semibold text-rose-800"><i class="fa-solid fa-triangle-exclamation mr-1"></i> '+b.title+'</p><p class="text-[10px] text-rose-700 mt-0.5">'+b.desc+'</p><p class="text-[10px] text-rose-600 mt-0.5">Avg delay: '+b.delayHours+' hrs ('+b.pct+'% of total)</p></div>').join('');
-  if(stageBarChart)stageBarChart.destroy();
-  stageBarChart=new Chart(document.getElementById('stageBarChart'),{type:'bar',data:{labels:stages.map(s=>s.short),datasets:[{data:hours,backgroundColor:stages.map(s=>s.color),borderRadius:3}]},options:{indexAxis:'y',plugins:{legend:{display:false},datalabels:{anchor:'end',align:'right',font:{size:10,weight:'600'},formatter:v=>v+'h'}},scales:{x:{beginAtZero:true,max:Math.max(...hours)+10},y:{grid:{display:false}}}}});
-  if(delayDonut)delayDonut.destroy();
-  const donutOrder=[4,1,2,0,3];
-  delayDonut=new Chart(document.getElementById('delayDonut'),{type:'doughnut',data:{labels:donutOrder.map(i=>stages[i].short),datasets:[{data:donutOrder.map(i=>hours[i]),backgroundColor:donutOrder.map(i=>stages[i].color),borderWidth:0}]},options:{cutout:'60%',plugins:{legend:{display:false},datalabels:{display:false}}}});
-  document.getElementById('donutLegend').innerHTML=donutOrder.map(i=>'<div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-sm" style="background:'+stages[i].color+'"></span>'+stages[i].short+': '+hours[i]+'h ('+Math.round(hours[i]/total*100)+'%)</div>').join('');
-  document.getElementById('takeawaysList').innerHTML=q.takeaways.map(t=>'<li>'+t+'</li>').join('');
-  document.getElementById('aiInsight').textContent=q.aiInsight;
-  const bm=q.benchmarks;
-  document.getElementById('benchCards').innerHTML=`<div class="card p-2"><p class="text-slate-500">Lomé</p><p class="font-bold">${bm.lome}h</p></div><div class="card p-2"><p class="text-slate-500">Tema</p><p class="font-bold">${bm.tema}h</p></div><div class="card p-2"><p class="text-slate-500">North Star</p><p class="font-bold text-emerald-600">${bm.northStar}h</p></div>`;
-  renderShipments(); renderAgencies(); renderAnomalies();
+
+function getQ(port, quarter) {
+  return PORT_DATA[port].quarters[quarter];
 }
-function renderShipments(){
-  const q=(document.getElementById('shipSearch').value||'').toLowerCase();
-  const st=document.getElementById('shipFilter').value;
-  let list=(SHIPMENTS||[]).filter(s=>s.port===currentPort);
-  if(q) list=list.filter(s=>(s.bl||'').toLowerCase().includes(q)||(s.container||'').toLowerCase().includes(q));
-  if(st==='anomaly') list=list.filter(s=>s.anomaly);
-  else if(st!=='all') list=list.filter(s=>s.status===st);
-  document.getElementById('shipList').innerHTML=list.slice(0,40).map(s=>`<div class="card p-3 text-xs ${s.anomaly?'anomaly-row':''}"><div class="flex justify-between"><span class="font-semibold">${s.bl}</span><span class="text-slate-500">${s.container}</span></div><div class="mt-1 text-slate-600">${s.cargo} · ${s.total}h · ${s.status}</div></div>`).join('')||'<p class="text-xs text-slate-500">No shipments match.</p>';
+
+function getPriorQuarter(q) {
+  const idx = META.quarters.indexOf(q);
+  if (idx <= 0) return null;
+  return META.quarters[idx - 1];
 }
-function renderAgencies(){
-  const q=getQ();
-  document.getElementById('agencyCards').innerHTML=(q.agencies||[]).map(a=>`<div class="card p-3"><div class="flex justify-between"><h3 class="text-sm font-semibold">${a.name}</h3><span class="text-xs font-bold ${a.status==='Good'?'text-emerald-600':a.status==='Critical'?'text-rose-600':'text-amber-600'}">${a.status}</span></div><p class="text-[11px] text-slate-500 mt-1">Avg ${a.avgHours}h · share ${a.share}%</p></div>`).join('')||'<p class="text-xs text-slate-500">No agency data.</p>';
+
+function onFilterChange() {
+  currentPort = document.getElementById('portSelect').value;
+  currentQuarter = document.getElementById('quarterSelect').value;
+  renderAll();
 }
-function renderAnomalies(){
-  const list=(SHIPMENTS||[]).filter(s=>s.port===currentPort&&s.anomaly);
-  document.getElementById('anomalyTable').innerHTML=list.map(s=>`<div class="card p-3 anomaly-row text-xs"><div class="font-semibold">${s.bl} · ${s.container}</div><div class="text-slate-600 mt-0.5">${s.cargo} · ${s.total}h · ${s.status}</div></div>`).join('')||'<p class="text-xs text-slate-500">No anomalies in sample for this port.</p>';
+
+function resolveBaseline(q) {
+  const mode = document.getElementById('compareSelect').value;
+  if (mode === 'none') return null;
+  if (mode === 'prior') {
+    const pq = getPriorQuarter(currentQuarter);
+    return pq ? getQ(currentPort, pq) : null;
+  }
+  return PORT_DATA[currentPort].quarters[mode] || null;
 }
-function showTab(name){
-  document.querySelectorAll('.tab-panel').forEach(el=>el.classList.add('hidden'));
-  document.getElementById('panel-'+name).classList.remove('hidden');
-  document.querySelectorAll('.tab-btn').forEach(b=>{b.classList.remove('tab-active');b.classList.add('text-slate-600');});
-  const btn=document.getElementById('tab-'+name);
-  btn.classList.add('tab-active');btn.classList.remove('text-slate-600');
+
+function deltaHtml(current, baseline, unit) {
+  if (baseline == null || baseline === current) return '<span class="text-slate-400">—</span>';
+  const d = current - baseline;
+  const pct = baseline ? Math.round((1 - current / baseline) * 100) : 0;
+  if (d < 0) {
+    return `<span class="text-emerald-600 font-medium">↓ ${Math.abs(d)}${unit} (${pct}% vs baseline)</span>`;
+  }
+  if (d > 0) {
+    return `<span class="text-rose-600 font-medium">↑ ${d}${unit} vs baseline</span>`;
+  }
+  return '<span class="text-slate-400">unchanged</span>';
 }
-boot();
+
+function renderAll() {
+  const q = getQ(currentPort, currentQuarter);
+  const baseline = resolveBaseline(q);
+  const stages = META.stages;
+  const hours = stages.map(s => q.stageHours[s.id]);
+  const total = q.totalHours;
+  const priorTotal = baseline ? baseline.totalHours : q.priorTotalHours;
+
+  document.getElementById('chipQuarter').textContent = currentQuarter + ' (Illustrative)';
+  document.getElementById('chipPort').textContent = PORT_DATA[currentPort].portName + ' – Imports';
+  document.getElementById('chipSample').textContent = q.sampleSize.toLocaleString() + ' shipments';
+
+  document.getElementById('kpiTotal').innerHTML = total + ' <span class="text-sm font-normal text-slate-500">hrs</span>';
+  document.getElementById('kpiDelta').innerHTML = deltaHtml(total, priorTotal, ' hrs');
+  document.getElementById('kpiSample').textContent = q.sampleSize.toLocaleString();
+  const topBn = (q.bottlenecks || [])[0];
+  document.getElementById('kpiBottleneck').textContent = topBn ? topBn.title : '—';
+  document.getElementById('kpiBottleneckDetail').textContent = topBn
+    ? topBn.delayHours + ' hrs · ' + topBn.pct + '% of total'
+    : '—';
+  document.getElementById('kpiAnomaly').textContent = q.anomalyCount;
+
+  const days = (total / 24).toFixed(1);
+  document.getElementById('timelineTotal').textContent = total + ' hours (' + days + ' days)';
+  document.getElementById('timelineCompare').innerHTML = priorTotal != null
+    ? deltaHtml(total, priorTotal, ' hrs')
+    : '';
+
+  document.getElementById('timelineIcons').innerHTML = stages.map((s, i) => `
+    <div class="text-center px-0.5">
+      <div class="w-8 h-8 mx-auto rounded-full text-white flex items-center justify-center text-[11px] shadow-sm" style="background:${s.color}">
+        <i class="fa-solid ${STAGE_ICONS[i]}"></i>
+      </div>
+      <p class="mt-1.5 text-[9px] font-semibold text-slate-700 leading-tight">${i + 1}. ${s.name.split('&')[0].trim()}</p>
+      <p class="text-[8px] text-slate-400 leading-tight mt-0.5 hidden sm:block">${s.name.includes('&') ? s.name.split('&')[1].trim() : ''}</p>
+    </div>`).join('');
+
+  document.getElementById('timelineBar').innerHTML = stages.map((s, i) =>
+    `<div style="width:${(hours[i] / total * 100).toFixed(2)}%;background:${s.color}" title="${s.short}: ${hours[i]}h"></div>`
+  ).join('');
+
+  document.getElementById('timelineHours').innerHTML = stages.map((s, i) =>
+    `<div class="text-center"><span class="stage-pill" style="background:${s.color}">${hours[i]} hrs</span></div>`
+  ).join('');
+
+  document.getElementById('bottleneckCards').innerHTML = (q.bottlenecks || []).map((b, idx) => `
+    <div class="bn-card">
+      <p class="font-semibold text-rose-800 flex items-start gap-1">
+        <i class="fa-solid fa-triangle-exclamation mt-0.5 shrink-0"></i>
+        <span>Bottleneck ${idx + 1}: ${b.title}</span>
+      </p>
+      <p class="text-rose-700 mt-1 leading-snug">${b.desc}</p>
+      <p class="mt-1.5 font-semibold text-rose-600 flex items-center justify-between gap-2">
+        <span>Avg. delay: ${b.delayHours} hrs</span>
+        <span class="bg-rose-100 text-rose-800 px-1.5 py-0.5 rounded">${b.pct}% of total</span>
+      </p>
+    </div>`).join('');
+
+  if (stageBarChart) stageBarChart.destroy();
+  const barLabels = stages.map(s => STAGE_SHORT_LABELS[s.id] || s.short);
+  stageBarChart = new Chart(document.getElementById('stageBarChart'), {
+    type: 'bar',
+    data: {
+      labels: barLabels,
+      datasets: [{
+        data: hours,
+        backgroundColor: stages.map(s => s.color),
+        borderRadius: 4,
+        barThickness: 16
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        datalabels: {
+          anchor: 'end',
+          align: 'right',
+          font: { size: 10, weight: '600' },
+          formatter: v => v + ' hrs',
+          color: '#334155'
+        }
+      },
+      scales: {
+        x: { beginAtZero: true, max: Math.max(...hours) + 12, grid: { color: '#f1f5f9' }, ticks: { font: { size: 9 } } },
+        y: { grid: { display: false }, ticks: { font: { size: 9 } } }
+      }
+    }
+  });
+
+  const donutOrder = [4, 1, 2, 0, 3];
+  if (delayDonut) delayDonut.destroy();
+  delayDonut = new Chart(document.getElementById('delayDonut'), {
+    type: 'doughnut',
+    data: {
+      labels: donutOrder.map(i => stages[i].short),
+      datasets: [{
+        data: donutOrder.map(i => hours[i]),
+        backgroundColor: donutOrder.map(i => stages[i].color),
+        borderWidth: 0
+      }]
+    },
+    options: {
+      cutout: '68%',
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        datalabels: { display: false }
+      }
+    }
+  });
+  document.getElementById('donutCenterHrs').textContent = total + ' hrs';
+  document.getElementById('donutLegend').innerHTML = donutOrder.map(i => {
+    const pct = Math.round(hours[i] / total * 100);
+    return `<div class="flex items-start gap-1.5">
+      <span class="w-2.5 h-2.5 rounded-sm mt-0.5 shrink-0" style="background:${stages[i].color}"></span>
+      <span><span class="font-medium text-slate-700">${STAGE_SHORT_LABELS[stages[i].id] || stages[i].short}</span><br>
+      <span class="text-slate-500">${hours[i]} hrs (${pct}%)</span></span>
+    </div>`;
+  }).join('');
+
+  document.getElementById('takeawaysList').innerHTML = (q.takeaways || []).map(t => `<li>${t}</li>`).join('');
+  document.getElementById('aiInsight').textContent = q.aiInsight || '—';
+
+  const bm = q.benchmarks || {};
+  document.getElementById('benchmarks').innerHTML = `
+    <div class="bg-slate-50 rounded-lg p-2"><p class="text-slate-500">Lomé</p><p class="font-bold text-slate-800">${bm.lome ?? '—'}h</p></div>
+    <div class="bg-slate-50 rounded-lg p-2"><p class="text-slate-500">Tema</p><p class="font-bold text-slate-800">${bm.tema ?? '—'}h</p></div>
+    <div class="bg-emerald-50 rounded-lg p-2 border border-emerald-100"><p class="text-emerald-700">North Star</p><p class="font-bold text-emerald-700">${bm.northStar ?? META.northStarHours}h</p></div>`;
+
+  renderShipments();
+  renderAgencies();
+  renderAnomalies();
+}
+
+function filterShipments() { renderShipments(); }
+
+function renderShipments() {
+  const q = (document.getElementById('shipSearch').value || '').toLowerCase();
+  const st = document.getElementById('shipStatus').value;
+  const an = document.getElementById('shipAnomaly').value;
+  let list = SHIPMENTS.filter(s => s.port === currentPort);
+  if (q) list = list.filter(s => (s.bl || '').toLowerCase().includes(q) || (s.container || '').toLowerCase().includes(q));
+  if (st) list = list.filter(s => s.status === st);
+  if (an === '1') list = list.filter(s => s.anomaly);
+  document.getElementById('shipTableBody').innerHTML = list.slice(0, 50).map(s => `
+    <tr class="border-t border-slate-100 hover:bg-slate-50 ${s.anomaly ? 'anomaly-row' : ''}">
+      <td class="px-3 py-2 font-medium">${s.bl}</td>
+      <td class="px-3 py-2 text-slate-500">${s.container}</td>
+      <td class="px-3 py-2">${s.cargo || ''}</td>
+      <td class="px-3 py-2 font-semibold ${s.anomaly ? 'text-rose-600' : ''}">${s.total}</td>
+      <td class="px-3 py-2">${s.status}</td>
+      <td class="px-3 py-2"><button class="text-sky-600 hover:underline text-[10px]" onclick='showShipmentTimeline(${JSON.stringify(s).replace(/'/g, "&#39;")})'>Timeline</button></td>
+    </tr>`).join('') || '<tr><td colspan="6" class="px-3 py-4 text-center text-slate-400">No shipments match.</td></tr>';
+}
+
+function showShipmentTimeline(s) {
+  const stages = META.stages;
+  document.getElementById('timelinePanel').classList.remove('hidden');
+  document.getElementById('tlTitle').textContent = s.bl + ' · ' + s.container + ' · ' + s.total + ' hrs';
+  document.getElementById('tlBody').innerHTML = (s.stageHours || []).map((h, i) => {
+    const isLong = h > (getQ(currentPort, currentQuarter).stageHours[stages[i].id] * 1.25);
+    return `<div class="flex gap-3">
+      <div class="flex flex-col items-center">
+        <div style="width:12px;height:12px;border-radius:50%;background:${isLong ? '#f43f5e' : stages[i].color}"></div>
+        ${i < s.stageHours.length - 1 ? '<div style="width:2px;flex:1;background:#e2e8f0;margin:2px 0"></div>' : ''}
+      </div>
+      <div class="pb-3 flex-1">
+        <div class="flex justify-between">
+          <p class="font-medium text-xs">${stages[i].name}</p>
+          <p class="text-xs font-semibold ${isLong ? 'text-rose-600' : ''}">${h} hrs</p>
+        </div>
+        ${isLong ? '<p class="text-[10px] text-rose-600 mt-0.5"><i class="fa-solid fa-flag"></i> Above stage median</p>' : ''}
+      </div>
+    </div>`;
+  }).join('');
+  document.getElementById('timelinePanel').scrollIntoView({ behavior: 'smooth' });
+}
+
+function closeTimeline() {
+  document.getElementById('timelinePanel').classList.add('hidden');
+}
+
+function renderAgencies() {
+  const q = getQ(currentPort, currentQuarter);
+  document.getElementById('agencyCards').innerHTML = (q.agencies || []).map(a => {
+    const tone = a.status === 'Good' ? 'text-emerald-600 bg-emerald-50' :
+      a.status === 'Critical' ? 'text-rose-600 bg-rose-50' : 'text-amber-600 bg-amber-50';
+    return `<div class="card p-3">
+      <div class="flex justify-between items-start gap-2">
+        <h3 class="text-sm font-semibold">${a.name}</h3>
+        <span class="text-[10px] font-bold px-1.5 py-0.5 rounded ${tone}">${a.status}</span>
+      </div>
+      <p class="text-[11px] text-slate-500 mt-1.5">Avg touch: <strong>${a.avgHours} hrs</strong> · Share of delay: <strong>${a.share}%</strong></p>
+    </div>`;
+  }).join('') || '<p class="text-xs text-slate-500">No agency data for this selection.</p>';
+}
+
+function renderAnomalies() {
+  const list = SHIPMENTS.filter(s => s.port === currentPort && s.anomaly).sort((a, b) => b.total - a.total);
+  document.getElementById('anomalyTableBody').innerHTML = list.map(s => {
+    let primary = 'Elevated total dwell', severity = 'Medium';
+    if (s.total > 160) { primary = 'Extreme dwell'; severity = 'High'; }
+    else if (s.stageHours && s.stageHours[4] > 45) { primary = 'Gate-out bottleneck'; severity = 'High'; }
+    else if (s.stageHours && s.stageHours[1] > 40) { primary = 'Agency permits delay'; severity = 'Medium'; }
+    const sev = severity === 'High'
+      ? '<span class="text-[10px] px-1.5 py-0.5 rounded-full bg-rose-100 text-rose-800">High</span>'
+      : '<span class="text-[10px] px-1.5 py-0.5 rounded-full bg-amber-100 text-amber-800">Medium</span>';
+    return `<tr class="border-t border-slate-100 hover:bg-slate-50">
+      <td class="px-3 py-2 font-medium">${s.bl}</td>
+      <td class="px-3 py-2 font-semibold text-rose-600">${s.total}</td>
+      <td class="px-3 py-2">${primary}</td>
+      <td class="px-3 py-2">${sev}</td>
+    </tr>`;
+  }).join('') || '<tr><td colspan="4" class="px-3 py-4 text-center text-slate-400">No anomalies in sample for this port.</td></tr>';
+}
+
+function showTab(name) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.add('hidden'));
+  document.getElementById('panel-' + name).classList.remove('hidden');
+  document.querySelectorAll('.tab-btn').forEach(b => {
+    b.classList.remove('tab-active');
+    b.classList.add('text-slate-600');
+  });
+  const btn = document.getElementById('tab-' + name);
+  btn.classList.add('tab-active');
+  btn.classList.remove('text-slate-600');
+}
+
+loadData().catch(err => {
+  document.querySelector('main').innerHTML = '<div class="card p-6 text-center text-rose-600"><p class="font-semibold">Failed to load data files</p><p class="text-xs mt-2">' + err.message + '</p><p class="text-xs mt-2 text-slate-500">Serve over HTTP (Netlify). file:// will not work with fetch.</p></div>';
+});
 </script>
 </body>
 </html>
