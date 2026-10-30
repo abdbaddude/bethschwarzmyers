@@ -2,9 +2,7 @@
 
 Browser-based **Trade Performance Assurance** prototype for the Nigeria National Single Window (NSW).
 
-## Location
-
-This app lives in the `bsm-nnsw-trs/` directory of the repository.
+**Location in monorepo:** `bsm-nnsw-trs/`
 
 ## Features
 
@@ -15,9 +13,14 @@ This app lives in the `bsm-nnsw-trs/` directory of the repository.
 - AI-assisted Anomaly Detection
 - Executive Reports & assurance statement
 
+## Stack
+
+- Single-file static site (Tailwind CDN + Chart.js)
+- Netlify-ready (`netlify.toml` included)
+- Illustrative data only – aligned with WCO TRS methodology
+
 ## Deploy
 
-- Netlify / Vercel: set publish directory to `bsm-nnsw-trs`
-- Or drag the `bsm-nnsw-trs` folder to [Netlify Drop](https://app.netlify.com/drop)
+Point Netlify / Vercel **base / publish directory** to `bsm-nnsw-trs` or drag this folder to [Netlify Drop](https://app.netlify.com/drop).
 
-**Illustrative data only – WCO TRS methodology aligned. Not actual government data.**
+**Not actual government data.**
