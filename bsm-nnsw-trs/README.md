@@ -1,15 +1,13 @@
-# Nigeria NSW - Time Release Study (TRS) Prototype
+# NNSW TRS Intelligence Prototype
 
-Data-driven Trade Performance Assurance dashboard.
+Nigeria National Single Window – Time Release Study (TRS) Intelligence & Trade Performance Assurance prototype.
+
+## Live
+Deploy via Netlify with base directory `bsm-nnsw-trs`.
 
 ## Structure
+- `index.html` – interactive portrait dashboard (Tailwind, Chart.js)
+- `data/` – meta + per-port quarterly metrics + sample shipments
+- `netlify.toml` – static publish config
 
-- `index.html` - interactive portrait dashboard
-- `data/` - JSON metrics by port and quarter (6 quarters, 3 ports)
-- `netlify.toml` - static deploy config
-
-## Deploy
-
-Base directory: `bsm-nnsw-trs`
-
-**Illustrative data only. Not actual government statistics.**
+Illustrative data only. Not official statistics.
