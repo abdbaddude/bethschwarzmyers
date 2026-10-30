@@ -20,8 +20,6 @@
 </head>
 <body class="bg-slate-100 text-slate-800 min-h-screen">
 <div class="portrait-wrap bg-slate-50 min-h-screen shadow-lg">
-
-<!-- Header -->
 <header class="bg-white border-b border-slate-200 sticky top-0 z-50">
   <div class="px-4 py-3 flex flex-wrap items-start justify-between gap-3">
     <div class="flex items-center gap-2.5 min-w-0">
@@ -46,8 +44,6 @@
     </div>
   </div>
 </header>
-
-<!-- Filters -->
 <div class="bg-white border-b border-slate-200 px-4 py-2 flex flex-wrap gap-3 items-center text-xs">
   <div class="flex items-center gap-1.5">
     <label class="text-slate-500">Port</label>
@@ -66,8 +62,6 @@
     </select>
   </div>
 </div>
-
-<!-- Tabs -->
 <nav class="bg-white border-b border-slate-200">
   <div class="px-2 flex gap-0.5 overflow-x-auto text-xs">
     <button onclick="showTab('executive')" id="tab-executive" class="tab-btn px-3 py-2.5 whitespace-nowrap tab-active"><i class="fa-solid fa-chart-line mr-1"></i>Executive</button>
@@ -76,13 +70,8 @@
     <button onclick="showTab('anomalies')" id="tab-anomalies" class="tab-btn px-3 py-2.5 whitespace-nowrap text-slate-600"><i class="fa-solid fa-triangle-exclamation mr-1"></i>Anomalies</button>
   </div>
 </nav>
-
 <main class="px-3 sm:px-4 py-4 space-y-4">
-
-  <!-- ================= EXECUTIVE ================= -->
   <section id="panel-executive" class="tab-panel space-y-4">
-
-    <!-- KPI strip with comparison -->
     <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
       <div class="card p-3">
         <p class="text-[10px] text-slate-500 uppercase tracking-wide">Median Release</p>
@@ -105,8 +94,6 @@
         <p class="text-[10px] text-slate-500 mt-0.5">Flagged shipments</p>
       </div>
     </div>
-
-    <!-- End-to-end timeline (image-style) -->
     <div class="card p-4">
       <div class="flex items-center gap-2 mb-1">
         <i class="fa-regular fa-clock text-sky-600"></i>
@@ -115,23 +102,12 @@
       <p class="text-[11px] text-slate-500 mb-4">Total average clearance time: <strong id="timelineTotal" class="text-slate-800">—</strong>
         <span id="timelineCompare" class="ml-1"></span>
       </p>
-
-      <!-- Stage icons + names -->
       <div class="grid grid-cols-5 gap-1 mb-2" id="timelineIcons"></div>
-
-      <!-- Segmented bar -->
       <div class="flex h-3 rounded-full overflow-hidden mb-2 shadow-inner" id="timelineBar"></div>
-
-      <!-- Hour pills under each stage (same horizontal line) -->
       <div class="grid grid-cols-5 gap-1 mb-4" id="timelineHours"></div>
-
-      <!-- Bottleneck cards – delay hours + share on same line -->
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-2" id="bottleneckCards"></div>
+      <div class="grid grid-cols-1 sm:grid-cols-5 gap-1.5 mt-1" id="bottleneckCards"></div>
     </div>
-
-    <!-- Three-column lower: bars | donut | takeaways -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-3">
-      <!-- Time by Stage bar -->
       <div class="card p-3">
         <h3 class="text-xs font-semibold text-slate-800 mb-1 flex items-center gap-1.5">
           <i class="fa-solid fa-chart-bar text-slate-400"></i> Time by Stage (Median Hours)
@@ -139,8 +115,6 @@
         <p class="text-[10px] text-slate-400 mb-2">Breakdown of average time spent at each stage</p>
         <div class="h-44"><canvas id="stageBarChart"></canvas></div>
       </div>
-
-      <!-- Where Delays Occur donut -->
       <div class="card p-3">
         <h3 class="text-xs font-semibold text-slate-800 mb-1 flex items-center gap-1.5">
           <i class="fa-regular fa-clock text-slate-400"></i> Where Delays Occur
@@ -157,8 +131,6 @@
           <div class="text-[10px] space-y-1.5 flex-1" id="donutLegend"></div>
         </div>
       </div>
-
-      <!-- Key Takeaways + Next Steps -->
       <div class="card p-3 space-y-3">
         <div>
           <h3 class="text-xs font-semibold text-slate-800 mb-2 flex items-center gap-1.5">
@@ -176,8 +148,6 @@
         </div>
       </div>
     </div>
-
-    <!-- AI Insight -->
     <div class="bg-violet-50 border border-violet-200 rounded-xl p-3.5">
       <p class="text-xs font-semibold text-violet-900 flex items-center gap-1.5">
         <i class="fa-solid fa-wand-magic-sparkles"></i> AI Insight (Example)
@@ -185,17 +155,37 @@
       <p class="mt-1.5 text-[11px] text-violet-800 leading-relaxed" id="aiInsight">—</p>
       <p class="mt-1.5 text-[10px] text-violet-500 italic">AI insight is a hypothesis for investigation, not a confirmed finding.</p>
     </div>
-
-    <!-- Benchmarks -->
     <div class="card p-3">
       <h3 class="text-xs font-semibold mb-2">Regional Benchmarks (median hours)</h3>
       <div class="grid grid-cols-3 gap-2 text-center text-xs" id="benchmarks"></div>
     </div>
-
+    <div class="card p-3">
+      <h3 class="text-xs font-semibold mb-2 flex items-center gap-1.5"><i class="fa-solid fa-diagram-project text-slate-400"></i> Workstream coverage (prototype)</h3>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[10px]" id="workstreamCoverage">
+        <div class="rounded-lg border border-emerald-100 bg-emerald-50/60 p-2">
+          <p class="font-semibold text-emerald-800">A. NSW baseline &amp; TRS diagnostic</p>
+          <p class="text-emerald-900/80 mt-0.5">Stage start/end model · median release · multi-port sample · QoQ baseline</p>
+          <p class="mt-1 text-emerald-700 font-medium">Covered (illustrative)</p>
+        </div>
+        <div class="rounded-lg border border-emerald-100 bg-emerald-50/60 p-2">
+          <p class="font-semibold text-emerald-800">B. Bottleneck &amp; delay attribution</p>
+          <p class="text-emerald-900/80 mt-0.5">Stage share · agency scorecards · delay hrs/% · arrows to timeline stages</p>
+          <p class="mt-1 text-emerald-700 font-medium">Partially covered</p>
+        </div>
+        <div class="rounded-lg border border-sky-100 bg-sky-50/60 p-2">
+          <p class="font-semibold text-sky-800">C. Continuous performance measurement</p>
+          <p class="text-sky-900/80 mt-0.5">6-quarter series · prior-quarter compare · trend deltas · regional benchmarks</p>
+          <p class="mt-1 text-sky-700 font-medium">Directionally covered</p>
+        </div>
+        <div class="rounded-lg border border-amber-100 bg-amber-50/50 p-2">
+          <p class="font-semibold text-amber-800">D. Independent evidence &amp; benefits assurance</p>
+          <p class="text-amber-900/80 mt-0.5">Takeaways / next steps only — no recommendation tracker or independent assurance layer yet</p>
+          <p class="mt-1 text-amber-700 font-medium">Not yet covered</p>
+        </div>
+      </div>
+    </div>
     <p class="text-[10px] text-slate-400 text-center">Source: Nigeria NSW TRS Dashboard (Illustrative). | WCO TRS methodology (Version 4, 2025) · Not actual government data.</p>
   </section>
-
-  <!-- ================= SHIPMENTS ================= -->
   <section id="panel-shipments" class="tab-panel hidden space-y-3">
     <div class="flex flex-wrap gap-2">
       <input type="text" id="shipSearch" placeholder="Search BL / Container..." class="border border-slate-300 rounded-lg px-2.5 py-1.5 text-xs flex-1 min-w-[140px]" oninput="filterShipments()" />
@@ -233,17 +223,13 @@
       <div id="tlBody" class="space-y-0"></div>
     </div>
   </section>
-
-  <!-- ================= AGENCIES ================= -->
   <section id="panel-agencies" class="tab-panel hidden space-y-3">
-    <p class="text-xs text-slate-500">Agency scorecards for selected port & period (touch time and contribution to delay).</p>
+    <p class="text-xs text-slate-500">Agency scorecards for selected port &amp; period (touch time and contribution to delay).</p>
     <div id="agencyCards" class="grid gap-2.5 sm:grid-cols-2"></div>
   </section>
-
-  <!-- ================= ANOMALIES ================= -->
   <section id="panel-anomalies" class="tab-panel hidden space-y-3">
     <div class="card p-3 text-xs text-slate-600">
-      Detection rules (illustrative): total dwell > 2× median · stage hours well above peer median · multi-agency hold · missing early timestamps.
+      Detection rules (illustrative): total dwell &gt; 2× median · stage hours well above peer median · multi-agency hold · missing early timestamps.
     </div>
     <div class="overflow-x-auto card">
       <table class="w-full text-xs">
@@ -260,15 +246,12 @@
     </div>
   </section>
 </main>
-
 <footer class="px-4 py-5 text-center text-[10px] text-slate-400 border-t border-slate-200 mt-2">
   <span id="footerDisclaimer">Illustrative data only. Not actual government or NRS statistics.</span>
 </footer>
 </div>
-
 <script>
 Chart.register(ChartDataLabels);
-
 let META = null;
 let PORT_DATA = {};
 let SHIPMENTS = [];
@@ -276,7 +259,6 @@ let currentPort = 'tincan';
 let currentQuarter = '2026-Q2';
 let stageBarChart = null;
 let delayDonut = null;
-
 const STAGE_ICONS = ['fa-ship', 'fa-file-lines', 'fa-user-check', 'fa-magnifying-glass', 'fa-warehouse'];
 const STAGE_SHORT_LABELS = {
   arrival: 'Port Arrival & Initial Processing',
@@ -285,7 +267,6 @@ const STAGE_SHORT_LABELS = {
   inspection: 'Inspection & Release Coordination',
   gateout: 'Port Operations & Gate-Out'
 };
-
 async function loadData() {
   const [meta, tincan, lekki, onne, ships] = await Promise.all([
     fetch('data/meta.json').then(r => r.json()),
@@ -297,7 +278,6 @@ async function loadData() {
   META = meta;
   PORT_DATA = { tincan, lekki, onne };
   SHIPMENTS = ships.shipments || ships;
-
   const portSel = document.getElementById('portSelect');
   const qSel = document.getElementById('quarterSelect');
   META.ports.forEach(p => {
@@ -314,30 +294,24 @@ async function loadData() {
   });
   portSel.value = currentPort;
   qSel.value = currentQuarter;
-
   document.getElementById('hdrTitle').textContent = META.title;
   document.getElementById('hdrSub').textContent = META.subtitle;
   document.getElementById('footerDisclaimer').textContent = META.disclaimer;
-
   renderAll();
 }
-
 function getQ(port, quarter) {
   return PORT_DATA[port].quarters[quarter];
 }
-
 function getPriorQuarter(q) {
   const idx = META.quarters.indexOf(q);
   if (idx <= 0) return null;
   return META.quarters[idx - 1];
 }
-
 function onFilterChange() {
   currentPort = document.getElementById('portSelect').value;
   currentQuarter = document.getElementById('quarterSelect').value;
   renderAll();
 }
-
 function resolveBaseline(q) {
   const mode = document.getElementById('compareSelect').value;
   if (mode === 'none') return null;
@@ -347,7 +321,6 @@ function resolveBaseline(q) {
   }
   return PORT_DATA[currentPort].quarters[mode] || null;
 }
-
 function deltaHtml(current, baseline, unit) {
   if (baseline == null || baseline === current) return '<span class="text-slate-400">—</span>';
   const d = current - baseline;
@@ -360,7 +333,6 @@ function deltaHtml(current, baseline, unit) {
   }
   return '<span class="text-slate-400">unchanged</span>';
 }
-
 function renderAll() {
   const q = getQ(currentPort, currentQuarter);
   const baseline = resolveBaseline(q);
@@ -368,11 +340,9 @@ function renderAll() {
   const hours = stages.map(s => q.stageHours[s.id]);
   const total = q.totalHours;
   const priorTotal = baseline ? baseline.totalHours : q.priorTotalHours;
-
   document.getElementById('chipQuarter').textContent = currentQuarter + ' (Illustrative)';
   document.getElementById('chipPort').textContent = PORT_DATA[currentPort].portName + ' – Imports';
   document.getElementById('chipSample').textContent = q.sampleSize.toLocaleString() + ' shipments';
-
   document.getElementById('kpiTotal').innerHTML = total + ' <span class="text-sm font-normal text-slate-500">hrs</span>';
   document.getElementById('kpiDelta').innerHTML = deltaHtml(total, priorTotal, ' hrs');
   document.getElementById('kpiSample').textContent = q.sampleSize.toLocaleString();
@@ -382,13 +352,11 @@ function renderAll() {
     ? topBn.delayHours + ' hrs · ' + topBn.pct + '% of total'
     : '—';
   document.getElementById('kpiAnomaly').textContent = q.anomalyCount;
-
   const days = (total / 24).toFixed(1);
   document.getElementById('timelineTotal').textContent = total + ' hours (' + days + ' days)';
   document.getElementById('timelineCompare').innerHTML = priorTotal != null
     ? deltaHtml(total, priorTotal, ' hrs')
     : '';
-
   document.getElementById('timelineIcons').innerHTML = stages.map((s, i) => `
     <div class="text-center px-0.5">
       <div class="w-8 h-8 mx-auto rounded-full text-white flex items-center justify-center text-[11px] shadow-sm" style="background:${s.color}">
@@ -397,28 +365,37 @@ function renderAll() {
       <p class="mt-1.5 text-[9px] font-semibold text-slate-700 leading-tight">${i + 1}. ${s.name.split('&')[0].trim()}</p>
       <p class="text-[8px] text-slate-400 leading-tight mt-0.5 hidden sm:block">${s.name.includes('&') ? s.name.split('&')[1].trim() : ''}</p>
     </div>`).join('');
-
   document.getElementById('timelineBar').innerHTML = stages.map((s, i) =>
     `<div style="width:${(hours[i] / total * 100).toFixed(2)}%;background:${s.color}" title="${s.short}: ${hours[i]}h"></div>`
   ).join('');
-
   document.getElementById('timelineHours').innerHTML = stages.map((s, i) =>
     `<div class="text-center"><span class="stage-pill" style="background:${s.color}">${hours[i]} hrs</span></div>`
   ).join('');
-
-  document.getElementById('bottleneckCards').innerHTML = (q.bottlenecks || []).map((b, idx) => `
-    <div class="bn-card">
+  const stageIdx = { arrival:0, permits:1, customs:2, inspection:3, gateout:4 };
+  const bnByCol = {0:null,1:null,2:null,3:null,4:null};
+  (q.bottlenecks || []).forEach((b, idx) => {
+    const col = stageIdx[b.stage] != null ? stageIdx[b.stage] : Math.min(idx + 1, 4);
+    bnByCol[col] = { ...b, idx: idx + 1 };
+  });
+  document.getElementById('bottleneckCards').innerHTML = [0,1,2,3,4].map(col => {
+    const b = bnByCol[col];
+    if (!b) return '<div class="hidden sm:block"></div>';
+    return `<div class="bn-card relative pt-3">
+      <div class="absolute left-1/2 -top-1 -translate-x-1/2 flex flex-col items-center pointer-events-none">
+        <div class="w-0 h-0 border-l-[6px] border-r-[6px] border-b-[8px] border-l-transparent border-r-transparent border-b-rose-400"></div>
+        <div class="w-0.5 h-2 bg-rose-300"></div>
+      </div>
       <p class="font-semibold text-rose-800 flex items-start gap-1">
         <i class="fa-solid fa-triangle-exclamation mt-0.5 shrink-0"></i>
-        <span>Bottleneck ${idx + 1}: ${b.title}</span>
+        <span>Bottleneck ${b.idx}: ${b.title}</span>
       </p>
       <p class="text-rose-700 mt-1 leading-snug">${b.desc}</p>
-      <p class="mt-1.5 font-semibold text-rose-600 flex items-center justify-between gap-2">
+      <p class="mt-1.5 font-semibold text-rose-600 flex flex-wrap items-center justify-between gap-1">
         <span>Avg. delay: ${b.delayHours} hrs</span>
-        <span class="bg-rose-100 text-rose-800 px-1.5 py-0.5 rounded">${b.pct}% of total</span>
+        <span class="bg-rose-100 text-rose-800 px-1.5 py-0.5 rounded whitespace-nowrap">${b.pct}% of total</span>
       </p>
-    </div>`).join('');
-
+    </div>`;
+  }).join('');
   if (stageBarChart) stageBarChart.destroy();
   const barLabels = stages.map(s => STAGE_SHORT_LABELS[s.id] || s.short);
   stageBarChart = new Chart(document.getElementById('stageBarChart'), {
@@ -452,7 +429,6 @@ function renderAll() {
       }
     }
   });
-
   const donutOrder = [4, 1, 2, 0, 3];
   if (delayDonut) delayDonut.destroy();
   delayDonut = new Chart(document.getElementById('delayDonut'), {
@@ -484,23 +460,18 @@ function renderAll() {
       <span class="text-slate-500">${hours[i]} hrs (${pct}%)</span></span>
     </div>`;
   }).join('');
-
   document.getElementById('takeawaysList').innerHTML = (q.takeaways || []).map(t => `<li>${t}</li>`).join('');
   document.getElementById('aiInsight').textContent = q.aiInsight || '—';
-
   const bm = q.benchmarks || {};
   document.getElementById('benchmarks').innerHTML = `
     <div class="bg-slate-50 rounded-lg p-2"><p class="text-slate-500">Lomé</p><p class="font-bold text-slate-800">${bm.lome ?? '—'}h</p></div>
     <div class="bg-slate-50 rounded-lg p-2"><p class="text-slate-500">Tema</p><p class="font-bold text-slate-800">${bm.tema ?? '—'}h</p></div>
     <div class="bg-emerald-50 rounded-lg p-2 border border-emerald-100"><p class="text-emerald-700">North Star</p><p class="font-bold text-emerald-700">${bm.northStar ?? META.northStarHours}h</p></div>`;
-
   renderShipments();
   renderAgencies();
   renderAnomalies();
 }
-
 function filterShipments() { renderShipments(); }
-
 function renderShipments() {
   const q = (document.getElementById('shipSearch').value || '').toLowerCase();
   const st = document.getElementById('shipStatus').value;
@@ -519,7 +490,6 @@ function renderShipments() {
       <td class="px-3 py-2"><button class="text-sky-600 hover:underline text-[10px]" onclick='showShipmentTimeline(${JSON.stringify(s).replace(/'/g, "&#39;")})'>Timeline</button></td>
     </tr>`).join('') || '<tr><td colspan="6" class="px-3 py-4 text-center text-slate-400">No shipments match.</td></tr>';
 }
-
 function showShipmentTimeline(s) {
   const stages = META.stages;
   document.getElementById('timelinePanel').classList.remove('hidden');
@@ -542,11 +512,9 @@ function showShipmentTimeline(s) {
   }).join('');
   document.getElementById('timelinePanel').scrollIntoView({ behavior: 'smooth' });
 }
-
 function closeTimeline() {
   document.getElementById('timelinePanel').classList.add('hidden');
 }
-
 function renderAgencies() {
   const q = getQ(currentPort, currentQuarter);
   document.getElementById('agencyCards').innerHTML = (q.agencies || []).map(a => {
@@ -561,7 +529,6 @@ function renderAgencies() {
     </div>`;
   }).join('') || '<p class="text-xs text-slate-500">No agency data for this selection.</p>';
 }
-
 function renderAnomalies() {
   const list = SHIPMENTS.filter(s => s.port === currentPort && s.anomaly).sort((a, b) => b.total - a.total);
   document.getElementById('anomalyTableBody').innerHTML = list.map(s => {
@@ -580,7 +547,6 @@ function renderAnomalies() {
     </tr>`;
   }).join('') || '<tr><td colspan="4" class="px-3 py-4 text-center text-slate-400">No anomalies in sample for this port.</td></tr>';
 }
-
 function showTab(name) {
   document.querySelectorAll('.tab-panel').forEach(p => p.classList.add('hidden'));
   document.getElementById('panel-' + name).classList.remove('hidden');
@@ -592,7 +558,6 @@ function showTab(name) {
   btn.classList.add('tab-active');
   btn.classList.remove('text-slate-600');
 }
-
 loadData().catch(err => {
   document.querySelector('main').innerHTML = '<div class="card p-6 text-center text-rose-600"><p class="font-semibold">Failed to load data files</p><p class="text-xs mt-2">' + err.message + '</p><p class="text-xs mt-2 text-slate-500">Serve over HTTP (Netlify). file:// will not work with fetch.</p></div>';
 });
