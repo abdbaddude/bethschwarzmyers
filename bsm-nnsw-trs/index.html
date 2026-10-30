@@ -3,98 +3,165 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Nigeria NSW | Time Release Study – Trade Performance Assurance</title>
+  <title>Nigeria NSW | Time Release Study</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
   <style>
-    :root { --nrs-green: #006b3f; --nrs-gold: #c9a227; }
-    body { font-family: 'Inter', system-ui, -apple-system, sans-serif; }
-    .card { @apply bg-white rounded-xl shadow-sm border border-slate-200; }
-    .tab-active { @apply border-b-2 border-emerald-600 text-emerald-700 font-semibold; }
-    .anomaly-row { @apply bg-rose-50 border-l-4 border-rose-400; }
-    .timeline-dot { width: 14px; height: 14px; border-radius: 50%; }
-    .scroll-thin::-webkit-scrollbar { height: 6px; width: 6px; }
-    .scroll-thin::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+    body { font-family: Inter, system-ui, sans-serif; }
+    .card { background: white; border-radius: 0.75rem; box-shadow: 0 1px 2px rgba(0,0,0,.05); border: 1px solid #e2e8f0; }
+    .tab-active { border-bottom: 2px solid #059669; color: #047857; font-weight: 600; }
+    .anomaly-row { background: #fff1f2; border-left: 4px solid #fb7185; }
+    .portrait-wrap { max-width: 820px; margin: 0 auto; }
   </style>
 </head>
-<body class="bg-slate-50 text-slate-800 min-h-screen">
-  <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3">
-      <div class="flex items-center gap-3">
-        <div class="w-12 h-12 rounded-full bg-emerald-700 flex items-center justify-center text-white font-bold text-lg shadow">NRS</div>
-        <div>
-          <h1 class="text-lg sm:text-xl font-bold text-slate-900 leading-tight">Nigeria National Single Window (NSW)</h1>
-          <p class="text-xs sm:text-sm text-slate-500">Time Release Study (TRS) – Trade Clearance Performance</p>
-        </div>
-      </div>
-      <div class="flex flex-wrap items-center gap-2 text-xs">
-        <span class="inline-flex items-center gap-1.5 bg-slate-100 px-2.5 py-1 rounded-full"><i class="fa-regular fa-calendar text-slate-500"></i> Q3 2027 (Illustrative)</span>
-        <span class="inline-flex items-center gap-1.5 bg-slate-100 px-2.5 py-1 rounded-full"><i class="fa-solid fa-ship text-slate-500"></i> Tin Can Island – Imports</span>
-        <span class="inline-flex items-center gap-1.5 bg-slate-100 px-2.5 py-1 rounded-full"><i class="fa-solid fa-box text-slate-500"></i> 1,240 shipments</span>
-        <span class="bg-sky-100 text-sky-800 px-2.5 py-1 rounded-full font-medium">Illustrative Data</span>
+<body class="bg-slate-100 text-slate-800 min-h-screen">
+<div class="portrait-wrap bg-slate-50 min-h-screen shadow-lg">
+<header class="bg-white border-b border-slate-200 sticky top-0 z-50">
+  <div class="px-4 py-3 flex flex-wrap items-center justify-between gap-2">
+    <div class="flex items-center gap-2.5">
+      <div class="w-10 h-10 rounded-full bg-emerald-700 flex items-center justify-center text-white font-bold text-sm shadow">NRS</div>
+      <div>
+        <h1 class="text-base font-bold text-slate-900 leading-tight" id="hdrTitle">Nigeria National Single Window (NSW)</h1>
+        <p class="text-xs text-slate-500" id="hdrSub">Time Release Study (TRS) - Trade Clearance Performance</p>
       </div>
     </div>
-  </header>
-  <nav class="bg-white border-b border-slate-200">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 flex gap-1 overflow-x-auto scroll-thin">
-      <button onclick="showTab('executive')" id="tab-executive" class="tab-btn px-4 py-3 text-sm whitespace-nowrap tab-active"><i class="fa-solid fa-chart-line mr-1.5"></i> Executive Dashboard</button>
-      <button onclick="showTab('shipments')" id="tab-shipments" class="tab-btn px-4 py-3 text-sm whitespace-nowrap text-slate-600 hover:text-emerald-700"><i class="fa-solid fa-list mr-1.5"></i> Shipment Explorer</button>
-      <button onclick="showTab('ports')" id="tab-ports" class="tab-btn px-4 py-3 text-sm whitespace-nowrap text-slate-600 hover:text-emerald-700"><i class="fa-solid fa-anchor mr-1.5"></i> Port Comparison</button>
-      <button onclick="showTab('agencies')" id="tab-agencies" class="tab-btn px-4 py-3 text-sm whitespace-nowrap text-slate-600 hover:text-emerald-700"><i class="fa-solid fa-building-columns mr-1.5"></i> Agency Scorecards</button>
-      <button onclick="showTab('anomalies')" id="tab-anomalies" class="tab-btn px-4 py-3 text-sm whitespace-nowrap text-slate-600 hover:text-emerald-700"><i class="fa-solid fa-triangle-exclamation mr-1.5"></i> Anomaly Detection</button>
-      <button onclick="showTab('reports')" id="tab-reports" class="tab-btn px-4 py-3 text-sm whitespace-nowrap text-slate-600 hover:text-emerald-700"><i class="fa-solid fa-file-lines mr-1.5"></i> Executive Reports</button>
+    <div class="flex flex-wrap items-center gap-1.5 text-[10px]">
+      <span class="inline-flex items-center gap-1 bg-slate-100 px-2 py-0.5 rounded-full" id="hdrQuarter">-</span>
+      <span class="inline-flex items-center gap-1 bg-slate-100 px-2 py-0.5 rounded-full" id="hdrPort">-</span>
+      <span class="inline-flex items-center gap-1 bg-slate-100 px-2 py-0.5 rounded-full" id="hdrSample">-</span>
+      <span class="bg-sky-100 text-sky-800 px-2 py-0.5 rounded-full font-medium">Illustrative</span>
     </div>
-  </nav>
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 py-6">
-    <div id="panel-executive" class="tab-panel space-y-6">
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div class="card p-4"><p class="text-xs text-slate-500 uppercase tracking-wide">Median Release Time</p><p class="text-2xl font-bold text-slate-900 mt-1">120 <span class="text-base font-normal text-slate-500">hrs</span></p><p class="text-xs text-emerald-600 mt-1">↓ 18% vs previous study</p></div>
-        <div class="card p-4"><p class="text-xs text-slate-500 uppercase tracking-wide">Sample Size</p><p class="text-2xl font-bold text-slate-900 mt-1">1,240</p><p class="text-xs text-slate-500 mt-1">Import consignments</p></div>
-        <div class="card p-4"><p class="text-xs text-slate-500 uppercase tracking-wide">Top Bottleneck</p><p class="text-2xl font-bold text-rose-600 mt-1">Gate-Out</p><p class="text-xs text-slate-500 mt-1">36 hrs (30% of total)</p></div>
-        <div class="card p-4"><p class="text-xs text-slate-500 uppercase tracking-wide">Avoidable Delay (est.)</p><p class="text-2xl font-bold text-amber-600 mt-1">~24 hrs</p><p class="text-xs text-slate-500 mt-1">Per container (illustrative)</p></div>
-      </div>
-      <div class="card p-5">
-        <h2 class="text-sm font-semibold mb-4 flex items-center gap-2"><i class="fa-regular fa-clock text-slate-400"></i> Average Time to Release – End-to-End Timeline</h2>
-        <div class="flex flex-wrap items-center justify-between gap-2 text-xs text-slate-500 mb-3"><span>Total average clearance time: <strong class="text-slate-800">120 hours (5 days)</strong></span></div>
-        <div class="relative pt-2">
-          <div class="flex h-3 rounded-full overflow-hidden">
-            <div class="bg-blue-600" style="width:15%"></div><div class="bg-emerald-500" style="width:25%"></div><div class="bg-violet-500" style="width:20%"></div><div class="bg-amber-500" style="width:10%"></div><div class="bg-slate-700" style="width:30%"></div>
-          </div>
-          <div class="grid grid-cols-5 gap-1 mt-3 text-center text-xs">
-            <div><div class="w-8 h-8 mx-auto rounded-full bg-blue-600 text-white flex items-center justify-center mb-1"><i class="fa-solid fa-ship"></i></div><p class="font-medium">Arrival</p><p class="text-slate-500">18 hrs</p></div>
-            <div><div class="w-8 h-8 mx-auto rounded-full bg-emerald-500 text-white flex items-center justify-center mb-1"><i class="fa-solid fa-file-lines"></i></div><p class="font-medium">Permits</p><p class="text-slate-500">30 hrs</p></div>
-            <div><div class="w-8 h-8 mx-auto rounded-full bg-violet-500 text-white flex items-center justify-center mb-1"><i class="fa-solid fa-user-check"></i></div><p class="font-medium">Customs</p><p class="text-slate-500">24 hrs</p></div>
-            <div><div class="w-8 h-8 mx-auto rounded-full bg-amber-500 text-white flex items-center justify-center mb-1"><i class="fa-solid fa-magnifying-glass"></i></div><p class="font-medium">Inspection</p><p class="text-slate-500">12 hrs</p></div>
-            <div><div class="w-8 h-8 mx-auto rounded-full bg-slate-700 text-white flex items-center justify-center mb-1"><i class="fa-solid fa-warehouse"></i></div><p class="font-medium">Gate-Out</p><p class="text-slate-500">36 hrs</p></div>
-          </div>
-        </div>
-        <div class="grid md:grid-cols-3 gap-3 mt-5">
-          <div class="bg-rose-50 border border-rose-200 rounded-lg p-3 text-sm"><p class="font-semibold text-rose-800"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Bottleneck 1: Agency Permits</p><p class="text-xs text-rose-700 mt-1">Avg delay: 30 hrs (25% of total)</p></div>
-          <div class="bg-rose-50 border border-rose-200 rounded-lg p-3 text-sm"><p class="font-semibold text-rose-800"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Bottleneck 2: Payment Processing</p><p class="text-xs text-rose-700 mt-1">Avg delay: 8 hrs (7% of total)</p></div>
-          <div class="bg-rose-50 border border-rose-200 rounded-lg p-3 text-sm"><p class="font-semibold text-rose-800"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Bottleneck 3: Port Gate-Out</p><p class="text-xs text-rose-700 mt-1">Avg delay: 36 hrs (30% of total)</p></div>
-        </div>
-      </div>
-      <div class="grid md:grid-cols-3 gap-4">
-        <div class="card p-4"><h3 class="text-sm font-semibold mb-3">Time by Stage (Median Hours)</h3><canvas id="stageBarChart" height="180"></canvas></div>
-        <div class="card p-4"><h3 class="text-sm font-semibold mb-3">Where Delays Occur</h3><canvas id="delayDonut" height="180"></canvas></div>
-        <div class="card p-4"><h3 class="text-sm font-semibold mb-2">Key Takeaways</h3><ol class="text-sm space-y-2 list-decimal list-inside text-slate-700"><li>Overall median release time improved by 18% vs previous study.</li><li>Agency permits + port gate-out remain the largest contributors (55% combined).</li><li>Incomplete timestamps in earlier stages – key data quality gap.</li><li>Targeted process improvements could reduce avoidable delay by up to 1 day per container.</li></ol></div>
-      </div>
+  </div>
+</header>
+<div class="bg-white border-b border-slate-200 px-4 py-2 flex flex-wrap gap-2 items-center">
+  <label class="text-xs text-slate-500">Port</label>
+  <select id="portSelect" class="border border-slate-300 rounded-lg px-2 py-1 text-sm" onchange="onFilterChange()"></select>
+  <label class="text-xs text-slate-500 ml-2">Quarter</label>
+  <select id="quarterSelect" class="border border-slate-300 rounded-lg px-2 py-1 text-sm" onchange="onFilterChange()"></select>
+</div>
+<nav class="bg-white border-b border-slate-200">
+  <div class="px-2 flex gap-0.5 overflow-x-auto text-xs">
+    <button onclick="showTab('executive')" id="tab-executive" class="tab-btn px-3 py-2.5 whitespace-nowrap tab-active"><i class="fa-solid fa-chart-line mr-1"></i>Executive</button>
+    <button onclick="showTab('shipments')" id="tab-shipments" class="tab-btn px-3 py-2.5 whitespace-nowrap text-slate-600"><i class="fa-solid fa-list mr-1"></i>Shipments</button>
+    <button onclick="showTab('agencies')" id="tab-agencies" class="tab-btn px-3 py-2.5 whitespace-nowrap text-slate-600"><i class="fa-solid fa-building-columns mr-1"></i>Agencies</button>
+    <button onclick="showTab('anomalies')" id="tab-anomalies" class="tab-btn px-3 py-2.5 whitespace-nowrap text-slate-600"><i class="fa-solid fa-triangle-exclamation mr-1"></i>Anomalies</button>
+  </div>
+</nav>
+<main class="px-4 py-4 space-y-4">
+  <section id="panel-executive" class="tab-panel space-y-4">
+    <div class="grid grid-cols-2 gap-2.5">
+      <div class="card p-3"><p class="text-[10px] text-slate-500 uppercase">Median Release</p><p class="text-xl font-bold mt-0.5" id="kpiTotal">-</p><p class="text-[10px] mt-0.5" id="kpiDelta">-</p></div>
+      <div class="card p-3"><p class="text-[10px] text-slate-500 uppercase">Sample Size</p><p class="text-xl font-bold mt-0.5" id="kpiSample">-</p><p class="text-[10px] text-slate-500 mt-0.5">Import consignments</p></div>
+      <div class="card p-3"><p class="text-[10px] text-slate-500 uppercase">Top Bottleneck</p><p class="text-xl font-bold text-rose-600 mt-0.5" id="kpiBottleneck">-</p><p class="text-[10px] text-slate-500 mt-0.5" id="kpiBottleneckDetail">-</p></div>
+      <div class="card p-3"><p class="text-[10px] text-slate-500 uppercase">Anomalies</p><p class="text-xl font-bold text-amber-600 mt-0.5" id="kpiAnomaly">-</p><p class="text-[10px] text-slate-500 mt-0.5">Flagged shipments</p></div>
     </div>
-    <!-- Remaining panels and full JS logic are included in the complete artifact version. This version provides the core executive view and structure for deployment under bsm-nnsw-trs/. -->
-    <div id="panel-shipments" class="tab-panel hidden p-8 text-center text-slate-500">Shipment Explorer – full interactive version available in project artifacts.</div>
-    <div id="panel-ports" class="tab-panel hidden p-8 text-center text-slate-500">Port Comparison – full interactive version available in project artifacts.</div>
-    <div id="panel-agencies" class="tab-panel hidden p-8 text-center text-slate-500">Agency Scorecards – full interactive version available in project artifacts.</div>
-    <div id="panel-anomalies" class="tab-panel hidden p-8 text-center text-slate-500">Anomaly Detection – full interactive version available in project artifacts.</div>
-    <div id="panel-reports" class="tab-panel hidden p-8 text-center text-slate-500">Executive Reports – full interactive version available in project artifacts.</div>
-  </main>
-  <footer class="border-t border-slate-200 bg-white mt-10 py-4"><div class="max-w-7xl mx-auto px-4 sm:px-6 text-xs text-slate-500 flex flex-wrap justify-between gap-2"><span>Nigeria National Single Window · Time Release Study Intelligence & Assurance Prototype</span><span>Illustrative data only · WCO TRS methodology aligned · Deploy dir: bsm-nnsw-trs</span></div></footer>
-  <script>
-    function showTab(name){document.querySelectorAll('.tab-panel').forEach(p=>p.classList.add('hidden'));document.getElementById('panel-'+name).classList.remove('hidden');document.querySelectorAll('.tab-btn').forEach(b=>{b.classList.remove('tab-active','text-emerald-700','font-semibold');b.classList.add('text-slate-600');});const btn=document.getElementById('tab-'+name);btn.classList.add('tab-active');btn.classList.remove('text-slate-600');}
-    Chart.register(ChartDataLabels);
-    new Chart(document.getElementById('stageBarChart'),{type:'bar',data:{labels:['Arrival','Permits','Customs','Inspection','Gate-Out'],datasets:[{data:[18,30,24,12,36],backgroundColor:['#2563eb','#10b981','#8b5cf6','#f59e0b','#334155'],borderRadius:4}]},options:{indexAxis:'y',plugins:{legend:{display:false},datalabels:{anchor:'end',align:'right',formatter:v=>v+'h'}},scales:{x:{beginAtZero:true,max:45}}}});
-    new Chart(document.getElementById('delayDonut'),{type:'doughnut',data:{labels:['Gate-Out','Agency Permits','Customs','Arrival','Inspection'],datasets:[{data:[36,30,24,18,12],backgroundColor:['#334155','#10b981','#8b5cf6','#2563eb','#f59e0b'],borderWidth:0}]},options:{cutout:'62%',plugins:{legend:{display:false},datalabels:{display:false}}}});
-  </script>
+    <div class="card p-4">
+      <h2 class="text-xs font-semibold mb-3"><i class="fa-regular fa-clock text-slate-400"></i> Average Time to Release - End-to-End</h2>
+      <p class="text-[11px] text-slate-500 mb-2">Total average clearance: <strong id="timelineTotal">-</strong></p>
+      <div class="flex h-2.5 rounded-full overflow-hidden mb-3" id="timelineBar"></div>
+      <div class="grid grid-cols-5 gap-1 text-center text-[10px]" id="timelineStages"></div>
+      <div class="grid grid-cols-1 gap-2 mt-4" id="bottleneckCards"></div>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      <div class="card p-3"><h3 class="text-xs font-semibold mb-2">Time by Stage (Median Hours)</h3><canvas id="stageBarChart" height="160"></canvas></div>
+      <div class="card p-3"><h3 class="text-xs font-semibold mb-2">Where Delays Occur</h3><canvas id="delayDonut" height="160"></canvas><div class="mt-2 space-y-1 text-[10px]" id="donutLegend"></div></div>
+    </div>
+    <div class="card p-3"><h3 class="text-xs font-semibold mb-2">Key Takeaways</h3><ol class="text-xs space-y-1.5 list-decimal list-inside text-slate-700" id="takeawaysList"></ol></div>
+    <div class="bg-violet-50 border border-violet-200 rounded-lg p-3 text-xs"><p class="font-semibold text-violet-900"><i class="fa-solid fa-robot mr-1"></i> AI Insight</p><p class="mt-1 text-violet-800" id="aiInsight">-</p><p class="mt-1 text-[10px] text-violet-600">AI insight is a hypothesis for investigation, not a confirmed finding.</p></div>
+    <div class="card p-3"><h3 class="text-xs font-semibold mb-2">Regional Benchmarks (hrs)</h3><div class="grid grid-cols-3 gap-2 text-center text-xs" id="benchmarks"></div></div>
+  </section>
+  <section id="panel-shipments" class="tab-panel hidden space-y-3">
+    <div class="flex flex-wrap gap-2">
+      <input type="text" id="shipSearch" placeholder="Search BL / Container..." class="border border-slate-300 rounded-lg px-2.5 py-1.5 text-xs flex-1 min-w-[140px]" oninput="filterShipments()" />
+      <select id="shipStatus" class="border border-slate-300 rounded-lg px-2 py-1.5 text-xs" onchange="filterShipments()"><option value="">All Status</option><option value="Released">Released</option><option value="On Hold">On Hold</option><option value="In Progress">In Progress</option></select>
+      <select id="shipAnomaly" class="border border-slate-300 rounded-lg px-2 py-1.5 text-xs" onchange="filterShipments()"><option value="">All</option><option value="anomaly">Anomalies only</option></select>
+    </div>
+    <div class="card overflow-hidden"><div class="overflow-x-auto"><table class="w-full text-xs"><thead class="bg-slate-50 text-left text-[10px] uppercase text-slate-500"><tr><th class="px-3 py-2">BL</th><th class="px-3 py-2">Container</th><th class="px-3 py-2">Cargo</th><th class="px-3 py-2">Hrs</th><th class="px-3 py-2">Status</th><th class="px-3 py-2"></th></tr></thead><tbody id="shipmentTableBody" class="divide-y divide-slate-100"></tbody></table></div><div class="px-3 py-2 border-t border-slate-100 text-[10px] text-slate-500" id="shipCount">Showing 0</div></div>
+    <div id="timelinePanel" class="card p-4 hidden"><div class="flex justify-between items-start mb-3"><div><h3 class="font-semibold text-sm" id="tlTitle">Shipment Timeline</h3><p class="text-xs text-slate-500" id="tlMeta"></p></div><button onclick="closeTimeline()" class="text-slate-400"><i class="fa-solid fa-xmark"></i></button></div><div id="tlEvents"></div></div>
+  </section>
+  <section id="panel-agencies" class="tab-panel hidden space-y-3"><h2 class="text-sm font-semibold">Agency Scorecards</h2><div class="grid grid-cols-1 gap-2.5" id="agencyCards"></div></section>
+  <section id="panel-anomalies" class="tab-panel hidden space-y-3"><div class="flex items-center justify-between"><h2 class="text-sm font-semibold">Anomaly Detection</h2><span class="text-[10px] bg-violet-100 text-violet-800 px-2 py-0.5 rounded-full">Rule + statistical flags</span></div><div class="card overflow-hidden"><table class="w-full text-xs"><thead class="bg-slate-50 text-left text-[10px] uppercase text-slate-500"><tr><th class="px-3 py-2">BL</th><th class="px-3 py-2">Hrs</th><th class="px-3 py-2">Flag</th><th class="px-3 py-2">Severity</th></tr></thead><tbody id="anomalyTableBody" class="divide-y divide-slate-100"></tbody></table></div></section>
+</main>
+<footer class="border-t border-slate-200 bg-white py-3 px-4 text-[10px] text-slate-500 flex flex-wrap justify-between gap-1"><span>Nigeria NSW - TRS Intelligence Prototype</span><span id="footerDisclaimer">Illustrative data - WCO TRS methodology</span></footer>
+</div>
+<script>
+/* Full interactive logic loads data/*.json - see artifacts for complete source */
+let META=null,PORT_DATA={},SHIPMENTS=[],stageBarChart=null,delayDonut=null,currentPort='tincan',currentQuarter='2026-Q1';
+async function loadData(){
+  const[meta,tincan,lekki,onne,ships]=await Promise.all([
+    fetch('data/meta.json').then(r=>r.json()),
+    fetch('data/tincan.json').then(r=>r.json()),
+    fetch('data/lekki.json').then(r=>r.json()),
+    fetch('data/onne.json').then(r=>r.json()),
+    fetch('data/shipments.json').then(r=>r.json())
+  ]);
+  META=meta;PORT_DATA={tincan,lekki,onne};SHIPMENTS=ships.shipments;
+  META.ports.forEach(p=>{const o=document.createElement('option');o.value=p.id;o.textContent=p.name;document.getElementById('portSelect').appendChild(o);});
+  META.quarters.forEach(q=>{const o=document.createElement('option');o.value=q;o.textContent=q;document.getElementById('quarterSelect').appendChild(o);});
+  document.getElementById('portSelect').value=currentPort;document.getElementById('quarterSelect').value=currentQuarter;
+  document.getElementById('hdrTitle').textContent=META.title;document.getElementById('hdrSub').textContent=META.subtitle;
+  document.getElementById('footerDisclaimer').textContent=META.disclaimer;renderAll();
+}
+function getQ(){return PORT_DATA[currentPort].quarters[currentQuarter];}
+function onFilterChange(){currentPort=document.getElementById('portSelect').value;currentQuarter=document.getElementById('quarterSelect').value;renderAll();}
+function renderAll(){
+  const q=getQ(),stages=META.stages,hours=stages.map(s=>q.stageHours[s.id]),total=q.totalHours,prior=q.priorTotalHours;
+  const delta=prior?Math.round((1-total/prior)*100):0;
+  document.getElementById('hdrQuarter').textContent=currentQuarter;
+  document.getElementById('hdrPort').textContent=PORT_DATA[currentPort].portName;
+  document.getElementById('hdrSample').textContent=q.sampleSize.toLocaleString()+' shipments';
+  document.getElementById('kpiTotal').innerHTML=total+' <span class="text-sm font-normal text-slate-500">hrs</span>';
+  document.getElementById('kpiDelta').innerHTML=delta>0?'<span class="text-emerald-600">\u2193 '+delta+'% vs prior quarter</span>':'vs prior '+prior+' hrs';
+  document.getElementById('kpiSample').textContent=q.sampleSize.toLocaleString();
+  const topBn=q.bottlenecks[0];
+  document.getElementById('kpiBottleneck').textContent=topBn?topBn.title.split(' ').pop():'-';
+  document.getElementById('kpiBottleneckDetail').textContent=topBn?topBn.delayHours+' hrs ('+topBn.pct+'%)':'-';
+  document.getElementById('kpiAnomaly').textContent=q.anomalyCount;
+  document.getElementById('timelineBar').innerHTML=stages.map((s,i)=>'<div style="width:'+(hours[i]/total*100).toFixed(1)+'%;background:'+s.color+'"></div>').join('');
+  document.getElementById('timelineTotal').textContent=total+' hours ('+(total/24).toFixed(1)+' days)';
+  const icons=['fa-ship','fa-file-lines','fa-user-check','fa-magnifying-glass','fa-warehouse'];
+  document.getElementById('timelineStages').innerHTML=stages.map((s,i)=>'<div><div class="w-7 h-7 mx-auto rounded-full text-white flex items-center justify-center mb-0.5 text-[9px]" style="background:'+s.color+'"><i class="fa-solid '+icons[i]+'"></i></div><p class="font-medium">'+s.short+'</p><p class="text-slate-500">'+hours[i]+' hrs</p></div>').join('');
+  document.getElementById('bottleneckCards').innerHTML=q.bottlenecks.map(b=>'<div class="bg-rose-50 border border-rose-200 rounded-lg p-2.5 text-xs"><p class="font-semibold text-rose-800"><i class="fa-solid fa-triangle-exclamation mr-1"></i> '+b.title+'</p><p class="text-[10px] text-rose-700 mt-0.5">'+b.desc+'</p><p class="text-[10px] text-rose-600 mt-0.5">Avg delay: '+b.delayHours+' hrs ('+b.pct+'% of total)</p></div>').join('');
+  if(stageBarChart)stageBarChart.destroy();
+  stageBarChart=new Chart(document.getElementById('stageBarChart'),{type:'bar',data:{labels:stages.map(s=>s.short),datasets:[{data:hours,backgroundColor:stages.map(s=>s.color),borderRadius:3}]},options:{indexAxis:'y',plugins:{legend:{display:false},datalabels:{anchor:'end',align:'right',font:{size:10,weight:'600'},formatter:v=>v+'h'}},scales:{x:{beginAtZero:true,max:Math.max(...hours)+10},y:{grid:{display:false}}}}});
+  if(delayDonut)delayDonut.destroy();
+  const donutOrder=[4,1,2,0,3];
+  delayDonut=new Chart(document.getElementById('delayDonut'),{type:'doughnut',data:{labels:donutOrder.map(i=>stages[i].short),datasets:[{data:donutOrder.map(i=>hours[i]),backgroundColor:donutOrder.map(i=>stages[i].color),borderWidth:0}]},options:{cutout:'60%',plugins:{legend:{display:false},datalabels:{display:false}}}});
+  document.getElementById('donutLegend').innerHTML=donutOrder.map(i=>'<div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-sm" style="background:'+stages[i].color+'"></span>'+stages[i].short+': '+hours[i]+'h ('+Math.round(hours[i]/total*100)+'%)</div>').join('');
+  document.getElementById('takeawaysList').innerHTML=q.takeaways.map(t=>'<li>'+t+'</li>').join('');
+  document.getElementById('aiInsight').textContent=q.aiInsight;
+  const bm=q.benchmarks;
+  document.getElementById('benchmarks').innerHTML='<div class="bg-slate-50 rounded-lg p-2"><p class="text-[10px] text-slate-500">Lome</p><p class="font-bold text-emerald-700">~'+bm.lome+' hrs</p></div><div class="bg-slate-50 rounded-lg p-2"><p class="text-[10px] text-slate-500">Tema</p><p class="font-bold text-emerald-700">~'+bm.tema+' hrs</p></div><div class="bg-slate-50 rounded-lg p-2"><p class="text-[10px] text-slate-500">This port</p><p class="font-bold text-amber-600">'+total+' hrs</p></div>';
+  document.getElementById('agencyCards').innerHTML=q.agencies.map(a=>{let border='border-emerald-500',badge='bg-emerald-100 text-emerald-800',bar='bg-emerald-500';if(a.status==='Critical'){border='border-rose-500';badge='bg-rose-100 text-rose-800';bar='bg-rose-500';}else if(a.status==='Needs attention'){border='border-amber-500';badge='bg-amber-100 text-amber-800';bar='bg-amber-500';}return '<div class="card p-3 border-t-4 '+border+'"><div class="flex justify-between items-start"><h3 class="font-semibold text-sm">'+a.name+'</h3><span class="text-[10px] px-1.5 py-0.5 rounded-full '+badge+'">'+a.status+'</span></div><p class="text-lg font-bold mt-1">'+a.avgHours+' <span class="text-xs font-normal text-slate-500">hrs avg</span></p><p class="text-[10px] text-slate-500">~'+a.share+'% of delay contribution</p><div class="mt-2 h-1.5 bg-slate-100 rounded-full overflow-hidden"><div class="h-full '+bar+' rounded-full" style="width:'+Math.min(100,a.avgHours*2.5)+'%"></div></div></div>';}).join('');
+  filterShipments();renderAnomalies();
+}
+function filterShipments(){
+  const q=document.getElementById('shipSearch').value.toLowerCase();
+  const status=document.getElementById('shipStatus').value;
+  const anom=document.getElementById('shipAnomaly').value;
+  let list=SHIPMENTS.filter(s=>{if(s.port!==currentPort)return false;if(q&&!s.bl.toLowerCase().includes(q)&&!s.container.toLowerCase().includes(q))return false;if(status&&s.status!==status)return false;if(anom==='anomaly'&&!s.anomaly)return false;return true;});
+  document.getElementById('shipmentTableBody').innerHTML=list.map(s=>{const sb=s.status==='Released'?'<span class="text-[10px] px-1.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800">Released</span>':s.status==='On Hold'?'<span class="text-[10px] px-1.5 py-0.5 rounded-full bg-rose-100 text-rose-800">On Hold</span>':'<span class="text-[10px] px-1.5 py-0.5 rounded-full bg-amber-100 text-amber-800">In Progress</span>';return '<tr class="'+(s.anomaly?'anomaly-row':'hover:bg-slate-50')+'"><td class="px-3 py-2 font-medium">'+s.bl+'</td><td class="px-3 py-2 font-mono text-[10px]">'+s.container+'</td><td class="px-3 py-2">'+s.cargo+'</td><td class="px-3 py-2 font-semibold '+(s.total>140?'text-rose-600':'')+'">'+s.total+'</td><td class="px-3 py-2">'+sb+'</td><td class="px-3 py-2"><button onclick="showTimeline('+s.id+')" class="text-emerald-600 text-[10px] font-medium">Timeline</button></td></tr>';}).join('');
+  document.getElementById('shipCount').textContent='Showing '+list.length+' of '+SHIPMENTS.filter(s=>s.port===currentPort).length;
+}
+function showTimeline(id){
+  const s=SHIPMENTS.find(x=>x.id===id);if(!s)return;
+  const stages=META.stages;
+  document.getElementById('timelinePanel').classList.remove('hidden');
+  document.getElementById('tlTitle').textContent=s.bl+' \u00b7 '+s.container;
+  document.getElementById('tlMeta').textContent=s.cargo+' \u00b7 Total '+s.total+' hrs \u00b7 '+s.status;
+  document.getElementById('tlEvents').innerHTML=s.stageHours.map((h,i)=>{const med=getQ().stageHours[stages[i].id];const isLong=h>med*1.5;return '<div class="flex gap-3"><div class="flex flex-col items-center"><div style="width:12px;height:12px;border-radius:50%;background:'+(isLong?'#f43f5e':'#10b981')+'"></div>'+(i<s.stageHours.length-1?'<div style="width:2px;flex:1;background:#e2e8f0;margin:2px 0"></div>':'')+'</div><div class="pb-3 flex-1"><div class="flex justify-between"><p class="font-medium text-xs">'+stages[i].name+'</p><p class="text-xs font-semibold '+(isLong?'text-rose-600':'')+'">'+h+' hrs</p></div>'+(isLong?'<p class="text-[10px] text-rose-600 mt-0.5"><i class="fa-solid fa-flag"></i> Above stage median</p>':'')+'</div></div>';}).join('');
+  document.getElementById('timelinePanel').scrollIntoView({behavior:'smooth'});
+}
+function closeTimeline(){document.getElementById('timelinePanel').classList.add('hidden');}
+function renderAnomalies(){
+  const list=SHIPMENTS.filter(s=>s.port===currentPort&&s.anomaly).sort((a,b)=>b.total-a.total);
+  document.getElementById('anomalyTableBody').innerHTML=list.map(s=>{let primary='Elevated total dwell',severity='Medium';if(s.total>160){primary='Extreme dwell';severity='High';}else if(s.stageHours[4]>45){primary='Gate-out bottleneck';severity='High';}else if(s.stageHours[1]>40){primary='Agency permits delay';severity='Medium';}const sev=severity==='High'?'<span class="text-[10px] px-1.5 py-0.5 rounded-full bg-rose-100 text-rose-800">High</span>':'<span class="text-[10px] px-1.5 py-0.5 rounded-full bg-amber-100 text-amber-800">Medium</span>';return '<tr class="hover:bg-slate-50"><td class="px-3 py-2 font-medium">'+s.bl+'</td><td class="px-3 py-2 font-semibold text-rose-600">'+s.total+'</td><td class="px-3 py-2">'+primary+'</td><td class="px-3 py-2">'+sev+'</td></tr>';}).join('');
+}
+function showTab(name){document.querySelectorAll('.tab-panel').forEach(p=>p.classList.add('hidden'));document.getElementById('panel-'+name).classList.remove('hidden');document.querySelectorAll('.tab-btn').forEach(b=>{b.classList.remove('tab-active');b.classList.add('text-slate-600');});const btn=document.getElementById('tab-'+name);btn.classList.add('tab-active');btn.classList.remove('text-slate-600');}
+Chart.register(ChartDataLabels);
+loadData().catch(err=>{document.querySelector('main').innerHTML='<div class="card p-6 text-center text-rose-600"><p class="font-semibold">Failed to load data files</p><p class="text-xs mt-2">'+err.message+'</p><p class="text-xs mt-2 text-slate-500">Serve over HTTP (Netlify). file:// will not work with fetch.</p></div>';});
+</script>
 </body>
 </html>
