@@ -1,81 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Nigeria NSW | Time Release Study</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-  <script src="https://unpkg.com/vis-network@9.1.9/standalone/umd/vis-network.min.js"></script>
-  <style>
-    body { font-family: Inter, system-ui, -apple-system, sans-serif; }
-    .card { background: #fff; border-radius: 0.75rem; box-shadow: 0 1px 2px rgba(0,0,0,.04); border: 1px solid #e2e8f0; }
-    .tab-active { border-bottom: 2px solid #059669; color: #047857; font-weight: 600; }
-    .anomaly-row { background: #fff1f2; border-left: 4px solid #fb7185; }
-    .portrait-wrap { max-width: 920px; margin: 0 auto; }
-    .stage-pill { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 9999px; color: #fff; white-space: nowrap; }
-    .bn-card { background: #fff5f5; border: 1px solid #fecaca; border-radius: 0.5rem; padding: 0.5rem 0.65rem; font-size: 10px; }
-  </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Nigeria NSW | Time Release Study</title>
 </head>
-<body class="bg-slate-100 text-slate-800 min-h-screen">
-<div class="portrait-wrap bg-slate-50 min-h-screen shadow-lg">
-<header class="bg-white border-b border-slate-200 sticky top-0 z-50">
-  <div class="px-4 py-3 flex flex-wrap items-start justify-between gap-3">
-    <div class="flex items-center gap-2.5 min-w-0">
-      <div class="w-11 h-11 rounded-full bg-emerald-700 flex items-center justify-center text-white font-bold text-xs shadow shrink-0">NRS</div>
-      <div class="min-w-0">
-        <h1 class="text-sm sm:text-base font-bold text-slate-900 leading-tight" id="hdrTitle">Nigeria National Single Window (NSW)</h1>
-        <p class="text-[11px] text-slate-500" id="hdrSub">Time Release Study (TRS) – Trade Clearance Performance</p>
-        <p class="text-[10px] text-slate-400 mt-0.5 hidden sm:block">From cargo arrival to release — measuring time, identifying bottlenecks, enabling faster trade.</p>
-      </div>
-    </div>
-    <div class="flex flex-wrap gap-1.5 text-[10px]">
-      <span class="inline-flex items-center gap-1 bg-sky-50 text-sky-800 border border-sky-100 px-2 py-1 rounded-lg">
-        <i class="fa-regular fa-calendar"></i> <span id="chipQuarter">—</span>
-      </span>
-      <span class="inline-flex items-center gap-1 bg-slate-50 text-slate-700 border border-slate-200 px-2 py-1 rounded-lg">
-        <i class="fa-solid fa-ship"></i> <span id="chipPort">—</span>
-      </span>
-      <span class="inline-flex items-center gap-1 bg-slate-50 text-slate-700 border border-slate-200 px-2 py-1 rounded-lg">
-        <i class="fa-solid fa-cube"></i> <span id="chipSample">—</span>
-      </span>
-      <span class="bg-sky-100 text-sky-800 px-2 py-1 rounded-lg font-medium">Illustrative</span>
-    </div>
-  </div>
-</header>
-<div class="bg-white border-b border-slate-200 px-4 py-2 flex flex-wrap gap-3 items-center text-xs">
-  <div class="flex items-center gap-1.5">
-    <label class="text-slate-500">Port</label>
-    <select id="portSelect" class="border border-slate-300 rounded-lg px-2 py-1 text-sm bg-white" onchange="onFilterChange()"></select>
-  </div>
-  <div class="flex items-center gap-1.5">
-    <label class="text-slate-500">Period</label>
-    <select id="quarterSelect" class="border border-slate-300 rounded-lg px-2 py-1 text-sm bg-white" onchange="onFilterChange()"></select>
-  </div>
-  <div class="flex items-center gap-1.5">
-    <label class="text-slate-500">Compare vs</label>
-    <select id="compareSelect" class="border border-slate-300 rounded-lg px-2 py-1 text-sm bg-white" onchange="onFilterChange()">
-      <option value="prior">Prior quarter (default)</option>
-      <option value="2025-Q1">2025-Q1 baseline</option>
-      <option value="none">No comparison</option>
-    </select>
-  </div>
-</div>
-<nav class="bg-white border-b border-slate-200">
-  <div class="px-2 flex gap-0.5 overflow-x-auto text-xs">
-    <button onclick="showTab('executive')" id="tab-executive" class="tab-btn px-3 py-2.5 whitespace-nowrap tab-active"><i class="fa-solid fa-chart-line mr-1"></i>Executive</button>
-    <button onclick="showTab('observatory')" id="tab-observatory" class="tab-btn px-3 py-2.5 whitespace-nowrap text-slate-600"><i class="fa-solid fa-binoculars mr-1"></i>Observatory</button>
-    <button onclick="showTab('network')" id="tab-network" class="tab-btn px-3 py-2.5 whitespace-nowrap text-slate-600"><i class="fa-solid fa-diagram-project mr-1"></i>Network</button>
-    <button onclick="showTab('shipments')" id="tab-shipments" class="tab-btn px-3 py-2.5 whitespace-nowrap text-slate-600"><i class="fa-solid fa-list mr-1"></i>Shipments</button>
-    <button onclick="showTab('agencies')" id="tab-agencies" class="tab-btn px-3 py-2.5 whitespace-nowrap text-slate-600"><i class="fa-solid fa-building-columns mr-1"></i>Agencies</button>
-    <button onclick="showTab('anomalies')" id="tab-anomalies" class="tab-btn px-3 py-2.5 whitespace-nowrap text-slate-600"><i class="fa-solid fa-triangle-exclamation mr-1"></i>Anomalies</button>
-  </div>
-</nav>
-<main class="px-3 sm:px-4 py-4 space-y-4">
-SEE_FULL_FILE_IN_REPO_UPDATE
-</main>
-</div>
+<body>
+<p style="font-family:system-ui;padding:2rem">Loading TRS dashboard…</p>
+<script>
+fetch('app.html').then(r=>r.text()).then(html=>{
+  document.open();
+  document.write(html);
+  document.close();
+}).catch(e=>{
+  document.body.innerHTML='<p>Failed to load app.html: '+e+'</p>';
+});
+</script>
 </body>
 </html>
