@@ -1,15 +1,15 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Nigeria NSW | TRS</title></head>
+<html lang="en"><head><meta charset="UTF-8"/><title>Nigeria NSW | TRS</title></head>
 <body><p style="font-family:system-ui;padding:2rem">Loading TRS Observatory…</p>
 <script>
 (async function(){
-  const n = 5;
-  let b64 = '';
-  for (let i = 0; i < n; i++) {
-    const t = await fetch('payload-'+i+'.txt').then(r => r.text());
-    b64 += t.trim();
-  }
-  const html = decodeURIComponent(escape(atob(b64)));
+  const n=2;
+  let b64='';
+  for(let i=0;i<n;i++){ b64 += (await fetch('z'+i+'.txt').then(r=>r.text())).trim(); }
+  const bin = Uint8Array.from(atob(b64), c=>c.charCodeAt(0));
+  const ds = new DecompressionStream('deflate');
+  const stream = new Blob([bin]).stream().pipeThrough(ds);
+  const html = await new Response(stream).text();
   document.open(); document.write(html); document.close();
-})().catch(e => { document.body.innerHTML = '<pre>'+e+'</pre>'; });
+})().catch(e=>{ document.body.innerHTML='<pre>'+e+'\n'+e.stack+'</pre>'; });
 </script></body></html>
