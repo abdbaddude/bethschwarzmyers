@@ -1,7 +1,8 @@
 # A1 — Real Data Integration Architecture
 
 **Maps to:** `docs/TODO.md` · P0 · A1  
-**Purpose:** Replace synthetic port/shipment JSON with authenticated operational feeds while preserving the existing TRS SPA contract (`meta.json` + per-port quarters + shipments).
+**Purpose:** Replace synthetic port/shipment JSON with authenticated operational feeds while preserving the existing TRS SPA contract (`meta.json` + per-port quarters + shipments).  
+**Governance template:** [`docs/MOU_DATA_SHARING_TEMPLATE.md`](./MOU_DATA_SHARING_TEMPLATE.md) — purpose-led MoU for each agency/operator, with Schedules A–F for current and future counterparties.
 
 ---
 
@@ -86,17 +87,17 @@ Stage medians are derived from complete stage spans; overall release time is arr
 | Shipments | Synthetic `shipments.json` | Live BL/container timelines from multi-source join |
 | Meta | Hand-maintained `meta.json` | Generated + versioned from stage catalogue & targets |
 | Access | Public static files | Authenticated feeds; SPA may use server-side proxy or signed URLs |
-| Governance | N/A | MoUs with NNSW, NCS, terminals, lines, payment providers, OGAs |
+| Governance | N/A | MoUs with NNSW, NCS, terminals, lines, payment providers, OGAs — see `MOU_DATA_SHARING_TEMPLATE.md` |
 
 ---
 
 ## Integration sequence (recommended)
 
 1. **Catalogue** — field inventory per source (timestamp, entity keys: BL, container, IMO, declaration ID).
-2. **MoUs** — purpose limitation, retention, audit, incident contact; start with NNSW + NCS + one terminal.
+2. **MoUs** — complete `MOU_DATA_SHARING_TEMPLATE.md` per counterparty (Schedules A–F); start with NNSW + NCS + one terminal.
 3. **Ingest MVP** — read-only APIs or SFTP batch; map to five stages; DQ scorecard.
 4. **Publish contract** — nightly (or hourly) rebuild of SPA JSON shape so the prototype UI keeps working.
-5. **Expand** — remaining terminals, shipping lines, payment, OGAs; then live/near-real-time mode (TODO C1).
+5. **Expand** — remaining terminals, shipping lines, payment, OGAs via Schedule E accession; then live/near-real-time mode (TODO C1).
 
 ---
 
