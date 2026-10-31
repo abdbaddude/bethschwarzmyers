@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Nigeria Trade Release Observatory</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+</head>
+<body class="bg-slate-100 text-slate-800 min-h-screen">
+<div class="max-w-[920px] mx-auto bg-slate-50 min-h-screen shadow-lg px-4 py-6 space-y-4">
+  <div class="bg-white rounded-xl border border-slate-200 p-4 flex items-center gap-3">
+    <div class="w-10 h-10 rounded-xl bg-sky-600 text-white flex items-center justify-center text-lg">🔭</div>
+    <div>
+      <h1 class="text-base font-bold text-slate-900">Nigeria Trade Release Observatory</h1>
+      <p class="text-[11px] text-slate-500">TRS Study Workspace · Executive Overview · WCO TRS v4 (2025)</p>
+    </div>
+    <span class="ml-auto bg-sky-100 text-sky-800 text-[10px] font-medium px-2 py-1 rounded-full">Illustrative</span>
+  </div>
+  <div class="grid grid-cols-2 gap-3 text-sm">
+    <div class="bg-white rounded-xl border border-slate-200 p-3"><p class="text-[10px] uppercase text-slate-500">Study</p><p class="font-semibold mt-0.5">Tin Can Island — Imports</p></div>
+    <div class="bg-white rounded-xl border border-slate-200 p-3"><p class="text-[10px] uppercase text-slate-500">Period</p><p class="font-semibold mt-0.5">2026-Q2</p></div>
+  </div>
+  <div class="grid grid-cols-2 gap-2.5">
+    <div class="bg-white rounded-xl border border-slate-200 p-3.5">
+      <p class="text-[10px] text-slate-500 uppercase">Median release time</p>
+      <p class="text-2xl font-bold mt-1">112 hrs</p>
+      <p class="text-[11px] text-emerald-600 mt-1">↓ 8 hrs vs prior quarter</p>
+    </div>
+    <div class="bg-white rounded-xl border border-slate-200 p-3.5">
+      <p class="text-[10px] text-slate-500 uppercase">95th percentile</p>
+      <p class="text-2xl font-bold mt-1">218 hrs</p>
+      <p class="text-[11px] text-slate-500 mt-1">Long-delay shipments</p>
+    </div>
+    <div class="bg-white rounded-xl border border-slate-200 p-3.5">
+      <p class="text-[10px] text-slate-500 uppercase">Shipments analysed</p>
+      <p class="text-2xl font-bold mt-1">1,231</p>
+      <p class="text-[11px] text-slate-500 mt-1">After data validation</p>
+    </div>
+    <div class="bg-white rounded-xl border border-slate-200 p-3.5">
+      <p class="text-[10px] text-slate-500 uppercase">Timestamp completeness</p>
+      <p class="text-2xl font-bold mt-1">94%</p>
+      <p class="text-[11px] text-slate-500 mt-1">Across required events</p>
+    </div>
+  </div>
+  <div class="bg-white rounded-xl border border-slate-200 p-4">
+    <h2 class="text-sm font-semibold">Where is time being spent?</h2>
+    <p class="text-[11px] text-slate-500 mt-0.5 mb-1">Illustrative median elapsed time by stage</p>
+    <p class="text-[10px] text-slate-400 mb-3">Stage medians do not necessarily sum to the overall median (WCO TRS v4).</p>
+    <div class="h-52"><canvas id="chart"></canvas></div>
+  </div>
+  <p class="text-[10px] text-slate-500 leading-relaxed bg-white rounded-xl border border-slate-200 p-3">
+    Methodology aligned to WCO Time Release Study Guide, Version 4 (2025): arrival → physical release; median and percentile reporting; timestamp completeness; stratified sample after validation. Illustrative metrics — not official NRS statistics.
+  </p>
+  <p class="text-center text-[10px] text-slate-400">branch v0.4.0-network · light theme · WCO TRS v4</p>
+</div>
+<script>
+Chart.register(ChartDataLabels);
+const stages = [{"short": "Arrival", "color": "#2563eb", "id": "arrival"}, {"short": "Permits", "color": "#10b981", "id": "permits"}, {"short": "Customs", "color": "#8b5cf6", "id": "customs"}, {"short": "Inspection", "color": "#f59e0b", "id": "inspection"}, {"short": "Gate-Out", "color": "#334155", "id": "gateout"}];
+const medians = {"arrival": 16, "permits": 26, "customs": 20, "inspection": 10, "gateout": 31};
+new Chart(document.getElementById('chart'), {
+  type: 'bar',
+  data: {
+    labels: stages.map(s => s.short),
+    datasets: [{ data: stages.map(s => medians[s.id]), backgroundColor: stages.map(s => s.color), borderRadius: 6, barPercentage: 0.7 }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false }, datalabels: { anchor: 'end', align: 'top', font: { size: 10, weight: '600' }, formatter: v => v + ' hrs', color: '#334155' } },
+    scales: { y: { beginAtZero: true, grid: { color: '#f1f5f9' } }, x: { grid: { display: false } } }
+  }
+});
+</script>
+</body>
+</html>

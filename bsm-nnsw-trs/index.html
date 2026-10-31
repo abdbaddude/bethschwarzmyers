@@ -1,14 +1,23 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"/><title>Nigeria NSW | TRS</title></head>
-<body><p style="font-family:system-ui;padding:2rem">Loading TRS Observatory…</p>
-<script>
-(async function(){
-  let b64='';
-  for(let i=0;i<6;i++){ b64 += (await fetch('zp'+i+'.txt').then(r=>r.text())).trim(); }
-  const bin = Uint8Array.from(atob(b64), c=>c.charCodeAt(0));
-  const ds = new DecompressionStream('deflate');
-  const stream = new Blob([bin]).stream().pipeThrough(ds);
-  const html = await new Response(stream).text();
-  document.open(); document.write(html); document.close();
-})().catch(e=>{ document.body.innerHTML='<pre>'+e+'\n'+e.stack+'</pre>'; });
-</script></body></html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Nigeria NSW | TRS v0.4.0</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100 min-h-screen flex items-center justify-center p-6">
+<div class="max-w-md w-full bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-4">
+  <div class="flex items-center gap-3">
+    <div class="w-11 h-11 rounded-full bg-emerald-700 text-white flex items-center justify-center font-bold text-xs">NRS</div>
+    <div>
+      <h1 class="font-bold text-slate-900">NNSW TRS Intelligence</h1>
+      <p class="text-xs text-slate-500">branch <code class="bg-slate-100 px-1 rounded">v0.4.0-network</code></p>
+    </div>
+  </div>
+  <p class="text-sm text-slate-600">Open the light-theme <strong>Observatory</strong> (WCO TRS v4 metrics). Full multi-tab SPA with Network graph is in local artifacts and will land on a follow-up push.</p>
+  <a href="observatory.html" class="block text-center bg-sky-600 hover:bg-sky-700 text-white font-medium rounded-xl py-3 text-sm">Open Observatory →</a>
+  <p class="text-[10px] text-slate-400 text-center">Not merged to main · Netlify Deploy Preview / branch deploy</p>
+</div>
+</body>
+</html>
