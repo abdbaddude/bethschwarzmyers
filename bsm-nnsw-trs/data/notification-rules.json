@@ -1,0 +1,34 @@
+{
+  "updated": "2026-10-31",
+  "version": "1.0",
+  "channels": {
+    "email": { "enabled": true, "priority": 1, "note": "Primary audit trail; ship first" },
+    "push": { "enabled": true, "priority": 2, "note": "In-app / PWA when available" },
+    "sms": { "enabled": true, "priority": 3, "note": "High severity only" }
+  },
+  "digest": { "watcherDefault": "daily", "ownerImmediate": true },
+  "events": [
+    { "id": "assigned", "label": "Intervention assigned or owner changed", "severity": "medium", "channels": ["email", "push"], "recipients": ["intervention_owner"], "includeAeo": false },
+    { "id": "deadline_t7", "label": "Deadline approaching (T-7 days)", "severity": "medium", "channels": ["email", "push"], "recipients": ["intervention_owner", "agency_focal"], "includeAeo": false },
+    { "id": "deadline_t1", "label": "Deadline approaching (T-1 day)", "severity": "high", "channels": ["email", "push", "sms"], "recipients": ["intervention_owner", "agency_focal"], "includeAeo": false },
+    { "id": "status_change", "label": "Assurance status changed", "severity": "medium", "channels": ["email", "push"], "recipients": ["intervention_owner", "agency_focal", "nnsw_assurance"], "includeAeo": "if_aeo_relevant" },
+    { "id": "benefit_shortfall", "label": "Measured benefit below expected (or regression after Implemented)", "severity": "high", "channels": ["email", "push", "sms"], "recipients": ["intervention_owner", "agency_focal", "nnsw_assurance"], "includeAeo": "if_aeo_relevant" },
+    { "id": "overdue", "label": "Overdue with no status change", "severity": "high", "channels": ["email", "push", "sms"], "recipients": ["intervention_owner", "agency_focal", "nnsw_assurance", "programme_escalation"], "includeAeo": false },
+    { "id": "verified", "label": "Benefit verified", "severity": "low", "channels": ["email"], "recipients": ["intervention_owner", "nnsw_assurance"], "includeAeo": "if_aeo_relevant" }
+  ],
+  "aeoRelevance": {
+    "rule": "Notify AEO contacts only when intervention stage/port intersects their enrolled scope AND event is status_change, benefit_shortfall, or verified",
+    "respectPreferences": true
+  },
+  "demoMode": {
+    "sendReal": false,
+    "logPreview": true,
+    "note": "Prototype logs intended recipients only; no SMTP/SMS/push provider wired yet",
+    "forceVendorCc": true,
+    "benefitsLink": "https://bsm-nnsw-trs.netlify.app/#recommendations"
+  },
+  "demoRecipients": {
+    "vendorBaEmail": "abd_adebiyi@icloud.com",
+    "note": "Demo: vendor BA always CC on assurance digests when demoMode.forceVendorCc is true"
+  }
+}
