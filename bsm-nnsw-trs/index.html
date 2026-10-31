@@ -4,9 +4,9 @@
 <script>
 (async function(){
   let b64 = '';
-  for (let i = 0; i < 4; i++) {
-    const t = await fetch('q' + i + '.txt').then(r => {
-      if (!r.ok) throw new Error('Failed to load q' + i + '.txt: ' + r.status);
+  for (let i = 0; i < 8; i++) {
+    const t = await fetch('r' + i + '.txt').then(r => {
+      if (!r.ok) throw new Error('Failed to load r' + i + '.txt: ' + r.status);
       return r.text();
     });
     b64 += t.replace(/\s+/g, '');
