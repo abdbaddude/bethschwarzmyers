@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Nigeria NSW | TRS v0.6.1</title></head>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Nigeria NSW | TRS v0.7.0</title></head>
 <body><p style="font-family:system-ui;padding:2rem;color:#334155">Loading TRS dashboard…</p>
 <script>
 (async function(){
   let b64 = '';
-  for (let i = 0; i < 9; i++) {
+  for (let i = 0; i < 10; i++) {
     const t = await fetch('p' + i + '.txt').then(r => {
       if (!r.ok) throw new Error('Failed to load p' + i + '.txt: ' + r.status);
       return r.text();
