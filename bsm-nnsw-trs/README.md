@@ -1,13 +1,17 @@
-# NNSW TRS Intelligence Prototype
+# NNSW TRS Intelligence v0.5.0
 
-Nigeria National Single Window – Time Release Study (TRS) Intelligence & Trade Performance Assurance prototype.
+**Full UI restored** — Observatory and Network are **tabs** on the existing dashboard (not separate sites).
 
-## Live
-Deploy via Netlify with base directory `bsm-nnsw-trs`.
+## Tabs
+1. **Executive** — end-to-end timeline, bottlenecks, charts, workstreams
+2. **Observatory** — WCO TRS v4 metrics (median, p95, sample, timestamp completeness)
+3. **Network** — interactive agency / stage / trader graph with delay edges
+4. **Shipments** / **Agencies** / **Anomalies**
 
-## Structure
-- `index.html` – interactive portrait dashboard (Tailwind, Chart.js)
-- `data/` – meta + per-port quarterly metrics + sample shipments
-- `netlify.toml` – static publish config
+## Branch only
+`v0.5.0-full-ui` is **not** merged to `main`.
 
-Illustrative data only. Not official statistics.
+Open a draft PR for a Netlify Deploy Preview, or enable branch deploys.
+
+## Local
+`artifacts/trs-prototype/index.html` — same full SPA.
