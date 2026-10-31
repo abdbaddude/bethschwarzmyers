@@ -1,20 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Nigeria NSW | Time Release Study</title>
-</head>
-<body>
-<p style="font-family:system-ui;padding:2rem">Loading TRS dashboard…</p>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Nigeria NSW | TRS</title></head>
+<body><p style="font-family:system-ui;padding:2rem">Loading TRS Observatory…</p>
 <script>
-fetch('app.html').then(r=>r.text()).then(html=>{
-  document.open();
-  document.write(html);
-  document.close();
-}).catch(e=>{
-  document.body.innerHTML='<p>Failed to load app.html: '+e+'</p>';
-});
-</script>
-</body>
-</html>
+(async function(){
+  const n = 5;
+  let b64 = '';
+  for (let i = 0; i < n; i++) {
+    const t = await fetch('payload-'+i+'.txt').then(r => r.text());
+    b64 += t.trim();
+  }
+  const html = decodeURIComponent(escape(atob(b64)));
+  document.open(); document.write(html); document.close();
+})().catch(e => { document.body.innerHTML = '<pre>'+e+'</pre>'; });
+</script></body></html>
