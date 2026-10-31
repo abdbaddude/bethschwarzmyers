@@ -1,7 +1,7 @@
 # TODO — Nigeria NSW TRS Intelligence & Trade Assurance Platform
 
 **Derived from:** `docs/STRATEGIC_CONTEXT.md`  
-**Version:** 1.1 · October 2026  
+**Version:** 1.2 · October 2026  
 **Rule:** Items map to strategic context sections. Status: ⬜ not started · 🟡 in progress · ✅ done
 
 ---
@@ -10,7 +10,7 @@
 
 - [x] **D1. Recommendation & benefits tracker** *(Workstream D gap)*
   Build a tab/module where each recommended intervention (joint inspection scheduling, scanning expansion, AEO scale-up, etc.) has: owner, deadline, expected dwell-time reduction, measured before/after delta, and assurance status. This closes the "measurement without consequence" risk called out in §7.
-  **Done in prototype (v0.8.0):** Benefits tab driven by `data/recommendations.json` + module licence gate in `data/app-config.json`. Illustrative before/after hours; wire to live TRS medians when A1 lands.
+  **Done in prototype (v0.8.0+):** Benefits tab driven by `data/recommendations.json` + module licence gate in `data/app-config.json`. Illustrative before/after hours; wire to live TRS medians when A1 lands.
 
 - [ ] **B1. Full delay attribution split** *(Workstream B gap)*
   Extend bottleneck attribution beyond stage/agency to the four-way split: NSW platform time vs agency decision time vs terminal/port operations vs trader documentation time. Requires event-level timestamp enrichment from NICIS/NNSW feeds.
@@ -19,6 +19,12 @@
   Replace synthetic JSON (`tincan.json`, `lekki.json`, `onne.json`, `shipments.json`) with authenticated feeds from NNSW, NICIS/Customs, terminal operators, shipping lines, and payment gateways. Define data-sharing MoUs with OGAs.
 
 ## P1 — High value
+
+- [x] **N0. Contacts + notification rules + policy (demo)**
+  Contact directory with email and phone for agency focals and AEO representatives; event rules; recipient resolution with AEO scope; Alerts tab preview. Policy: `docs/NOTIFICATION_POLICY.md`. Data: `contacts.json`, `notification-rules.json`.
+
+- [ ] **N1. Live notification providers**
+  Connect email (SMTP/API), push (web/PWA), and SMS for high-severity events per `notification-rules.json`. Persist delivery audit log for D2. Keep demo mode until credentials exist.
 
 - [ ] **C1. Live / near-real-time monitoring mode**
   Add a "live" toggle that polls for fresh timestamps (daily/weekly cadence) between formal TRS cycles, with early-warning alerts when a stage's median breaches 1.5× its six-quarter trend.
@@ -56,6 +62,7 @@
 
 - [x] **DOC1. Strategic context document** — `docs/STRATEGIC_CONTEXT.md` (this branch)
 - [x] **DOC2. About tab** in SPA highlighting strategic rationale
+- [x] **DOC5. Notification policy** — `docs/NOTIFICATION_POLICY.md`
 - [ ] **DOC3. One-pager for NNSW/NRS/Customs stakeholders** summarising the 90-day pilot proposal
 - [ ] **DOC4. Data dictionary** for the nine-stage event model and JSON schemas
 
