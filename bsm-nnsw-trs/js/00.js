@@ -101,11 +101,3 @@ function initTheme() {
 function resolveTheme(mode) {
   if (mode === 'dark') return 'dark';
   if (mode === 'light') return 'light';
-  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-}
-
-function setTheme(mode) {
-  currentTheme = mode;
-  localStorage.setItem('trs-theme', mode);
-  const resolved = resolveTheme(mode);
-  document.documentElement.classList.toggle('dark', resolved === 'dark');
