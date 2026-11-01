@@ -4,14 +4,15 @@
 <body><p style="font-family:system-ui;padding:2rem;color:#334155">Loading TRS…</p>
 <script>
 (async function(){
-  const b64 = (await fetch('spa.txt').then(r => {
-    if (!r.ok) throw new Error('spa.txt ' + r.status);
+  const parts = await Promise.all([0,1].map(i => fetch('spa'+i+'.txt').then(r => {
+    if (!r.ok) throw new Error('spa'+i+'.txt '+r.status);
     return r.text();
-  })).replace(/\s+/g,'');
+  })));
+  const b64 = parts.join('').replace(/\s+/g,'');
   const bin = Uint8Array.from(atob(b64), c => c.charCodeAt(0));
   const html = await new Response(new Blob([bin]).stream().pipeThrough(new DecompressionStream('gzip'))).text();
   document.open(); document.write(html); document.close();
 })().catch(e => {
-  document.body.innerHTML = '<pre style="padding:1rem;color:#b91c1c;white-space:pre-wrap">' + e + '\n' + (e.stack||'') + '</pre>';
+  document.body.innerHTML = '<pre style="padding:1rem;color:#b91c1c;white-space:pre-wrap">'+e+'\n'+(e.stack||'')+'</pre>';
 });
 </script></body></html>
