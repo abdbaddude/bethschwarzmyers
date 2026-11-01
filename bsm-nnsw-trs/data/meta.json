@@ -1,0 +1,32 @@
+{
+  "title": "Nigeria National Single Window (NSW)",
+  "subtitle": "Time Release Study (TRS) – Trade Clearance Performance",
+  "methodology": "WCO Time Release Study Guide, Version 4 (2025)",
+  "disclaimer": "Illustrative data only. Not actual government or NRS statistics.",
+  "northStarHours": 24,
+  "stages": [
+    {"id": "arrival", "name": "Cargo Arrival & Initial Processing", "short": "Arrival", "color": "#2563eb"},
+    {"id": "permits", "name": "Documentation & Agency Permits", "short": "Permits", "color": "#10b981"},
+    {"id": "customs", "name": "Customs Assessment & Payment", "short": "Customs", "color": "#8b5cf6"},
+    {"id": "inspection", "name": "Inspection & Release Coordination", "short": "Inspection", "color": "#f59e0b"},
+    {"id": "gateout", "name": "Port Operations & Gate-Out", "short": "Gate-Out", "color": "#334155"}
+  ],
+  "ports": [
+    {"id": "tincan", "name": "Tin Can Island", "label": "Tin Can Island – Imports"},
+    {"id": "lekki", "name": "Lekki Deep Sea Port", "label": "Lekki Deep Sea Port – Imports"},
+    {"id": "onne", "name": "Onne Port", "label": "Onne Port – Imports"}
+  ],
+  "quarters": ["2025-Q1", "2025-Q2", "2025-Q3", "2025-Q4", "2026-Q1", "2026-Q2"],
+  "observatory": {
+    "title": "Nigeria Trade Release Observatory",
+    "subtitle": "TRS Study Workspace · Executive Overview",
+    "disclaimer": "Illustrative metrics structured per WCO TRS v4 (2025). Not official NRS or government statistics."
+  },
+  "stageTargets": {
+    "arrival": 4,
+    "permits": 6,
+    "customs": 5,
+    "inspection": 4,
+    "gateout": 5
+  }
+}
