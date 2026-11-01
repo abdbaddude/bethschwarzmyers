@@ -1,16 +1,1 @@
-{
-  "version": "0.9.0",
-  "themeDefault": "system",
-  "modules": [
-    {"id": "executive", "label": "Observatory", "icon": "fa-binoculars", "order": 1},
-    {"id": "observatory", "label": "Executive", "icon": "fa-chart-line", "order": 2},
-    {"id": "network", "label": "Network", "icon": "fa-diagram-project", "order": 3},
-    {"id": "trends", "label": "Trends", "icon": "fa-arrow-trend-down", "order": 4},
-    {"id": "shipments", "label": "Shipments", "icon": "fa-list", "order": 5},
-    {"id": "agencies", "label": "Agencies", "icon": "fa-building-columns", "order": 6},
-    {"id": "anomalies", "label": "Anomalies", "icon": "fa-triangle-exclamation", "order": 7},
-    {"id": "recommendations", "label": "Benefits", "icon": "fa-list-check", "order": 8},
-    {"id": "notifications", "label": "Alerts", "icon": "fa-bell", "order": 9},
-    {"id": "about", "label": "About", "icon": "fa-circle-info", "order": 10}
-  ]
-}
+PLACEHOLDER
