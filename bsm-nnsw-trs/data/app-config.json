@@ -1,37 +1,16 @@
 {
-  "version": "0.8.1",
+  "version": "0.10.0",
   "themeDefault": "system",
-  "license": {
-    "key": "NNSW-TRS-DEMO-2026",
-    "format": "binary-placeholder",
-    "issued": "2026-10-31",
-    "expiresDays": 30,
-    "expires": "2026-11-30",
-    "note": "Placeholder licence. Cryptographic key validation is backlog (LIC1).",
-    "modules": [
-      "core",
-      "observatory",
-      "executive",
-      "network",
-      "trends",
-      "shipments",
-      "agencies",
-      "anomalies",
-      "about",
-      "recommendations",
-      "notifications"
-    ]
-  },
   "modules": [
-    {"id": "executive", "label": "Observatory", "icon": "fa-binoculars", "licenseKey": "core", "alwaysOn": true, "order": 1},
-    {"id": "observatory", "label": "Executive", "icon": "fa-chart-line", "licenseKey": "executive", "alwaysOn": true, "order": 2},
-    {"id": "network", "label": "Network", "icon": "fa-diagram-project", "licenseKey": "network", "alwaysOn": true, "order": 3},
-    {"id": "trends", "label": "Trends", "icon": "fa-arrow-trend-down", "licenseKey": "trends", "alwaysOn": true, "order": 4},
-    {"id": "shipments", "label": "Shipments", "icon": "fa-list", "licenseKey": "shipments", "alwaysOn": true, "order": 5},
-    {"id": "agencies", "label": "Agencies", "icon": "fa-building-columns", "licenseKey": "agencies", "alwaysOn": true, "order": 6},
-    {"id": "anomalies", "label": "Anomalies", "icon": "fa-triangle-exclamation", "licenseKey": "anomalies", "alwaysOn": true, "order": 7},
-    {"id": "recommendations", "label": "Benefits", "icon": "fa-list-check", "licenseKey": "recommendations", "alwaysOn": false, "order": 8, "workstream": "D1", "description": "Recommendation and benefits tracker"},
-    {"id": "notifications", "label": "Alerts", "icon": "fa-bell", "licenseKey": "notifications", "alwaysOn": false, "order": 9, "description": "Benefit-assurance notification preview"},
-    {"id": "about", "label": "About", "icon": "fa-circle-info", "licenseKey": "about", "alwaysOn": true, "order": 10}
+    {"id": "executive", "label": "Observatory", "icon": "fa-binoculars", "order": 1},
+    {"id": "observatory", "label": "Executive", "icon": "fa-chart-line", "order": 2},
+    {"id": "network", "label": "Network", "icon": "fa-diagram-project", "order": 3},
+    {"id": "trends", "label": "Trends", "icon": "fa-arrow-trend-down", "order": 4},
+    {"id": "shipments", "label": "Shipments", "icon": "fa-list", "order": 5},
+    {"id": "agencies", "label": "Agencies", "icon": "fa-building-columns", "order": 6},
+    {"id": "anomalies", "label": "Anomalies", "icon": "fa-triangle-exclamation", "order": 7},
+    {"id": "recommendations", "label": "Benefits", "icon": "fa-list-check", "order": 8},
+    {"id": "notifications", "label": "Alerts", "icon": "fa-bell", "order": 9},
+    {"id": "about", "label": "About", "icon": "fa-circle-info", "order": 10}
   ]
 }

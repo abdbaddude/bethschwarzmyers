@@ -1,16 +1,16 @@
-# NNSW TRS Intelligence Prototype
+# NNSW TRS Intelligence v0.10.0
 
-Nigeria National Single Window – Time Release Study (TRS) Intelligence & Trade Performance Assurance prototype.
+Single-file SPA. No licence gating. No split payload files (no r*/p*/spa*).
 
-## Live
-Deploy via Netlify with base directory `bsm-nnsw-trs`.
+## Features
+- Observatory / Executive / Network / Trends / Shipments / Agencies / Anomalies
+- Benefits (Recommendation & Benefits tracker)
+- Alerts (benefit-assurance notification preview)
+- Themes: system / light / dark
+- Data: Tin Can, Lekki, Onne + shipments + contacts + notification rules
 
-## Structure
-- `index.html` – interactive portrait dashboard (Tailwind, Chart.js; loader + deflate payloads on this branch)
-- `data/` – meta + per-port quarterly metrics + sample shipments
-- `docs/` – programme context
-  - `STRATEGIC_CONTEXT.md` – why the monitor exists (About-tab source)
-  - `TODO.md` – delivery backlog derived from strategic context
-- `netlify.toml` – static publish config
+## Run
+Static host (Netlify base dir `bsm-nnsw-trs`). Open `index.html`.
 
-Illustrative data only. Not official statistics.
+## Docs
+See `docs/` — A1 architecture, MoU template, notification policy, OPA routing, email templates.
