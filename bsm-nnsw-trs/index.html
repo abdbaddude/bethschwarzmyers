@@ -1,22 +1,33 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Nigeria NSW | TRS v0.8.1</title></head>
-<body><p style="font-family:system-ui;padding:2rem;color:#334155">Loading TRS dashboard…</p>
-<script>
-(async function(){
-  let b64 = '';
-  for (let i = 0; i < 8; i++) {
-    const t = await fetch('r' + i + '.txt').then(r => {
-      if (!r.ok) throw new Error('Failed to load r' + i + '.txt: ' + r.status);
-      return r.text();
-    });
-    b64 += t.replace(/\s+/g, '');
-  }
-  if (!/^[A-Za-z0-9+/=]+$/.test(b64)) throw new Error('Invalid base64 payload (length ' + b64.length + ')');
-  const bin = Uint8Array.from(atob(b64), c => c.charCodeAt(0));
-  const stream = new Blob([bin]).stream().pipeThrough(new DecompressionStream('deflate'));
-  const html = await new Response(stream).text();
-  document.open(); document.write(html); document.close();
-})().catch(e => {
-  document.body.innerHTML = '<pre style="padding:1rem;color:#b91c1c;white-space:pre-wrap">' + String(e) + '\n' + (e.stack || '') + '</pre>';
-});
-</script></body></html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nigeria NSW | TRS v0.10.0</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 40rem; margin: 3rem auto; padding: 0 1.25rem; color: #0f172a; line-height: 1.5; }
+    code { background: #f1f5f9; padding: 0.1em 0.35em; border-radius: 0.25rem; font-size: 0.9em; }
+    pre { background: #0f172a; color: #e2e8f0; padding: 1rem; border-radius: 0.5rem; overflow: auto; font-size: 0.8rem; }
+    a { color: #0369a1; }
+  </style>
+</head>
+<body>
+  <h1>TRS v0.10.0</h1>
+  <p>Branch is ready. The full single-file SPA (~98&nbsp;KB) could not be pushed through the API channel (size limit).</p>
+  <p><strong>Complete the branch with one local push:</strong></p>
+  <pre>git clone https://github.com/abdbaddude/bethschwarzmyers.git
+cd bethschwarzmyers
+git checkout v0.10.0
+# copy from artifacts/trs-v0.10.0/
+cp /path/to/trs-v0.10.0/index.html bsm-nnsw-trs/
+cp -R /path/to/trs-v0.10.0/data/* bsm-nnsw-trs/data/
+cp -R /path/to/trs-v0.10.0/docs/* bsm-nnsw-trs/docs/
+# remove payload shards left from v0.7
+rm -f bsm-nnsw-trs/r*.txt bsm-nnsw-trs/p*.txt bsm-nnsw-trs/q*.txt bsm-nnsw-trs/spa*.txt
+git add bsm-nnsw-trs
+git commit -m "v0.10.0: full SPA + data + docs, no licence, no payloads"
+git push origin v0.10.0</pre>
+  <p>Local package: <code>artifacts/trs-v0.10.0/</code> and <code>artifacts/trs-v0.10.0.zip</code>.</p>
+  <p>No licence gating. No r/p/spa split files. All features since v0.7 (Benefits, Alerts, themes, contacts, notification policy, MoU, A1 architecture).</p>
+</body>
+</html>
