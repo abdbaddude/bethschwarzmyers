@@ -57,3 +57,24 @@ function showNetworkStageTrend(stageId, stepNum) {
     ).join('');
   }
 }
+
+function filterShipments() { renderShipments(); }
+
+function renderShipments() {
+  const q = (document.getElementById('shipSearch').value || '').toLowerCase();
+  const st = document.getElementById('shipStatus').value;
+  const an = document.getElementById('shipAnomaly').value;
+  let list = SHIPMENTS.filter(s => s.port === currentPort);
+  if (q) list = list.filter(s => (s.bl || '').toLowerCase().includes(q) || (s.container || '').toLowerCase().includes(q));
+  if (st) list = list.filter(s => s.status === st);
+  if (an === '1') list = list.filter(s => s.anomaly);
+  document.getElementById('shipTableBody').innerHTML = list.slice(0, 50).map(s => `
+    <tr class="border-t border-slate-100 hover:bg-slate-50 ${s.anomaly ? 'anomaly-row' : ''}">
+      <td class="px-3 py-2 font-medium">${s.bl}</td>
+      <td class="px-3 py-2 text-slate-500">${s.container}</td>
+      <td class="px-3 py-2">${s.cargo || ''}</td>
+      <td class="px-3 py-2 font-semibold ${s.anomaly ? 'text-rose-600' : ''}">${s.total}</td>
+      <td class="px-3 py-2">${s.status}</td>
+      <td class="px-3 py-2"><button class="text-sky-600 hover:underline text-[10px]" onclick='showShipmentTimeline(${JSON.stringify(s).replace(/'/g, "&#39;")})'>Timeline</button></td>
+    </tr>`).join('') || '<tr><td colspan="6" class="px-3 py-4 text-center text-slate-400">No shipments match.</td></tr>';
+}
