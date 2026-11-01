@@ -1,0 +1,24 @@
+{
+  "shipments": [
+    {"id":1,"bl":"NGTC270001","container":"MSCU1000017","port":"tincan","quarter":"2026-Q1","cargo":"Containerised","arrival":"2026-01-08T06:20:00","stageHours":[16,28,22,11,34],"total":111,"status":"Released","anomaly":false},
+    {"id":2,"bl":"NGTC270002","container":"MSCU1000034","port":"tincan","quarter":"2026-Q1","cargo":"General Cargo","arrival":"2026-01-12T14:10:00","stageHours":[19,42,26,13,48],"total":148,"status":"Released","anomaly":true},
+    {"id":3,"bl":"NGTC270003","container":"MSCU1000051","port":"tincan","quarter":"2026-Q1","cargo":"Vehicles","arrival":"2026-01-15T09:45:00","stageHours":[17,29,23,10,35],"total":114,"status":"Released","anomaly":false},
+    {"id":4,"bl":"NGTC270004","container":"MSCU1000068","port":"tincan","quarter":"2026-Q1","cargo":"Reefer","arrival":"2026-01-18T22:30:00","stageHours":[15,55,28,14,52],"total":164,"status":"On Hold","anomaly":true},
+    {"id":5,"bl":"NGTC270005","container":"MSCU1000085","port":"tincan","quarter":"2026-Q1","cargo":"Bulk","arrival":"2026-01-22T11:05:00","stageHours":[18,31,24,12,36],"total":121,"status":"Released","anomaly":false},
+    {"id":6,"bl":"NGTC270006","container":"MSCU1000102","port":"lekki","quarter":"2026-Q1","cargo":"Containerised","arrival":"2026-01-09T08:15:00","stageHours":[12,24,17,8,20],"total":81,"status":"Released","anomaly":false},
+    {"id":7,"bl":"NGTC270007","container":"MSCU1000119","port":"lekki","quarter":"2026-Q1","cargo":"General Cargo","arrival":"2026-01-14T16:40:00","stageHours":[13,38,19,9,28],"total":107,"status":"Released","anomaly":true},
+    {"id":8,"bl":"NGTC270008","container":"MSCU1000136","port":"lekki","quarter":"2026-Q1","cargo":"Vehicles","arrival":"2026-01-19T07:25:00","stageHours":[11,23,16,8,19],"total":77,"status":"Released","anomaly":false},
+    {"id":9,"bl":"NGTC270009","container":"MSCU1000153","port":"onne","quarter":"2026-Q1","cargo":"Containerised","arrival":"2026-01-11T13:50:00","stageHours":[21,36,27,14,41],"total":139,"status":"Released","anomaly":false},
+    {"id":10,"bl":"NGTC270010","container":"MSCU1000170","port":"onne","quarter":"2026-Q1","cargo":"Bulk","arrival":"2026-01-20T10:00:00","stageHours":[22,48,29,15,55],"total":169,"status":"On Hold","anomaly":true},
+    {"id":11,"bl":"NGTC270011","container":"MSCU1000187","port":"tincan","quarter":"2026-Q2","cargo":"Containerised","arrival":"2026-04-05T05:30:00","stageHours":[15,26,20,10,32],"total":103,"status":"Released","anomaly":false},
+    {"id":12,"bl":"NGTC270012","container":"MSCU1000204","port":"tincan","quarter":"2026-Q2","cargo":"Dangerous Goods","arrival":"2026-04-10T19:15:00","stageHours":[18,45,25,16,50],"total":154,"status":"In Progress","anomaly":true},
+    {"id":13,"bl":"NGTC270013","container":"MSCU1000221","port":"lekki","quarter":"2026-Q2","cargo":"Reefer","arrival":"2026-04-08T12:00:00","stageHours":[11,22,16,7,18],"total":74,"status":"Released","anomaly":false},
+    {"id":14,"bl":"NGTC270014","container":"MSCU1000238","port":"lekki","quarter":"2026-Q2","cargo":"General Cargo","arrival":"2026-04-15T08:45:00","stageHours":[12,25,17,8,22],"total":84,"status":"Released","anomaly":false},
+    {"id":15,"bl":"NGTC270015","container":"MSCU1000255","port":"onne","quarter":"2026-Q2","cargo":"Vehicles","arrival":"2026-04-12T14:20:00","stageHours":[20,33,24,12,36],"total":125,"status":"Released","anomaly":false},
+    {"id":16,"bl":"NGTC270016","container":"MSCU1000272","port":"tincan","quarter":"2026-Q2","cargo":"Containerised","arrival":"2026-04-18T06:10:00","stageHours":[16,27,21,11,33],"total":108,"status":"Released","anomaly":false},
+    {"id":17,"bl":"NGTC270017","container":"MSCU1000289","port":"tincan","quarter":"2026-Q2","cargo":"Bulk","arrival":"2026-04-22T21:00:00","stageHours":[17,30,23,12,35],"total":117,"status":"Released","anomaly":false},
+    {"id":18,"bl":"NGTC270018","container":"MSCU1000306","port":"lekki","quarter":"2026-Q2","cargo":"Containerised","arrival":"2026-04-20T09:30:00","stageHours":[10,21,15,7,17],"total":70,"status":"Released","anomaly":false},
+    {"id":19,"bl":"NGTC270019","container":"MSCU1000323","port":"onne","quarter":"2026-Q2","cargo":"General Cargo","arrival":"2026-04-25T11:40:00","stageHours":[19,34,25,13,38],"total":129,"status":"Released","anomaly":false},
+    {"id":20,"bl":"NGTC270020","container":"MSCU1000340","port":"onne","quarter":"2026-Q2","cargo":"Reefer","arrival":"2026-04-28T16:55:00","stageHours":[21,50,28,15,58],"total":172,"status":"On Hold","anomaly":true}
+  ]
+}

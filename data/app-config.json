@@ -1,0 +1,113 @@
+{
+  "version": "0.8.1",
+  "themeDefault": "system",
+  "license": {
+    "key": "NNSW-TRS-DEMO-2026",
+    "type": "subscription",
+    "status": "active",
+    "issued": "2026-10-31",
+    "validFrom": "2026-10-31",
+    "validTo": "2026-11-30",
+    "expiresDays": 30,
+    "note": "Demo subscription. All modules active for the validity window. Cryptographic key validation is backlog (LIC1).",
+    "modules": [
+      "core",
+      "observatory",
+      "executive",
+      "network",
+      "trends",
+      "shipments",
+      "agencies",
+      "anomalies",
+      "about",
+      "recommendations",
+      "notifications"
+    ],
+    "expires": "2026-11-30"
+  },
+  "modules": [
+    {
+      "id": "executive",
+      "label": "Observatory",
+      "icon": "fa-binoculars",
+      "licenseKey": "core",
+      "alwaysOn": true,
+      "order": 1
+    },
+    {
+      "id": "observatory",
+      "label": "Executive",
+      "icon": "fa-chart-line",
+      "licenseKey": "executive",
+      "alwaysOn": true,
+      "order": 2
+    },
+    {
+      "id": "network",
+      "label": "Network",
+      "icon": "fa-diagram-project",
+      "licenseKey": "network",
+      "alwaysOn": true,
+      "order": 3
+    },
+    {
+      "id": "trends",
+      "label": "Trends",
+      "icon": "fa-arrow-trend-down",
+      "licenseKey": "trends",
+      "alwaysOn": true,
+      "order": 4
+    },
+    {
+      "id": "shipments",
+      "label": "Shipments",
+      "icon": "fa-list",
+      "licenseKey": "shipments",
+      "alwaysOn": true,
+      "order": 5
+    },
+    {
+      "id": "agencies",
+      "label": "Agencies",
+      "icon": "fa-building-columns",
+      "licenseKey": "agencies",
+      "alwaysOn": true,
+      "order": 6
+    },
+    {
+      "id": "anomalies",
+      "label": "Anomalies",
+      "icon": "fa-triangle-exclamation",
+      "licenseKey": "anomalies",
+      "alwaysOn": true,
+      "order": 7
+    },
+    {
+      "id": "recommendations",
+      "label": "Benefits",
+      "icon": "fa-list-check",
+      "licenseKey": "recommendations",
+      "alwaysOn": true,
+      "order": 8,
+      "workstream": "D1",
+      "description": "Recommendation & benefits tracker \u2014 owner, deadline, expected vs measured dwell reduction, assurance status"
+    },
+    {
+      "id": "notifications",
+      "label": "Alerts",
+      "icon": "fa-bell",
+      "licenseKey": "notifications",
+      "alwaysOn": true,
+      "order": 9,
+      "description": "Benefit-assurance notification preview and contact routing (email first; push/SMS by severity)"
+    },
+    {
+      "id": "about",
+      "label": "About",
+      "icon": "fa-circle-info",
+      "licenseKey": "about",
+      "alwaysOn": true,
+      "order": 10
+    }
+  ]
+}

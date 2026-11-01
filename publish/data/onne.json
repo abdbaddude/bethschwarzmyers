@@ -1,0 +1,552 @@
+{
+  "portId": "onne",
+  "portName": "Onne Port",
+  "quarters": {
+    "2025-Q1": {
+      "sampleSize": 195,
+      "stageHours": {
+        "arrival": 24,
+        "permits": 40,
+        "customs": 30,
+        "inspection": 16,
+        "gateout": 45
+      },
+      "totalHours": 155,
+      "priorTotalHours": 172,
+      "bottlenecks": [
+        {
+          "stage": "permits",
+          "title": "Agency Permits",
+          "desc": "Limited PGA presence and sequential processing.",
+          "delayHours": 40,
+          "pct": 26
+        },
+        {
+          "stage": "customs",
+          "title": "Payment Processing",
+          "desc": "Connectivity and system lag.",
+          "delayHours": 11,
+          "pct": 7
+        },
+        {
+          "stage": "gateout",
+          "title": "Port Gate-Out",
+          "desc": "Equipment and access constraints.",
+          "delayHours": 45,
+          "pct": 29
+        }
+      ],
+      "agencies": [
+        {
+          "name": "NAFDAC",
+          "avgHours": 17,
+          "share": 25,
+          "status": "Needs attention"
+        },
+        {
+          "name": "SON",
+          "avgHours": 14,
+          "share": 20,
+          "status": "Needs attention"
+        },
+        {
+          "name": "NAQS",
+          "avgHours": 12,
+          "share": 15,
+          "status": "Moderate"
+        },
+        {
+          "name": "Customs (Assessment)",
+          "avgHours": 19,
+          "share": 23,
+          "status": "Needs attention"
+        },
+        {
+          "name": "Terminal Operator",
+          "avgHours": 34,
+          "share": 32,
+          "status": "Critical"
+        }
+      ],
+      "benchmarks": {
+        "lome": 58,
+        "tema": 82,
+        "northStar": 24
+      },
+      "anomalyCount": 22,
+      "aiInsight": "Onne shows the longest dwell among the three ports; gate-out and permits dominate.",
+      "takeaways": [
+        "Median 155 hrs \u2014 highest of the three ports.",
+        "Equipment and access constraints visible on gate-out.",
+        "PGA coverage thinner than Lagos terminals.",
+        "Infrastructure and staffing interventions required."
+      ],
+      "p95Hours": 302,
+      "timestampCompleteness": 90.0,
+      "validatedSample": 183,
+      "stageMedians": {
+        "arrival": 22,
+        "permits": 37,
+        "customs": 28,
+        "inspection": 15,
+        "gateout": 41
+      },
+      "methodologyNote": "WCO TRS Guide Version 4 (2025): median preferred; stage medians need not sum to overall median; arrival\u2192physical release (gate-out)."
+    },
+    "2025-Q2": {
+      "sampleSize": 200,
+      "stageHours": {
+        "arrival": 23,
+        "permits": 38,
+        "customs": 28,
+        "inspection": 15,
+        "gateout": 43
+      },
+      "totalHours": 147,
+      "priorTotalHours": 155,
+      "bottlenecks": [
+        {
+          "stage": "permits",
+          "title": "Agency Permits",
+          "desc": "PGA sequential processing.",
+          "delayHours": 38,
+          "pct": 26
+        },
+        {
+          "stage": "customs",
+          "title": "Payment Processing",
+          "desc": "System lag.",
+          "delayHours": 10,
+          "pct": 7
+        },
+        {
+          "stage": "gateout",
+          "title": "Port Gate-Out",
+          "desc": "Yard and gate capacity.",
+          "delayHours": 43,
+          "pct": 29
+        }
+      ],
+      "agencies": [
+        {
+          "name": "NAFDAC",
+          "avgHours": 16,
+          "share": 24,
+          "status": "Needs attention"
+        },
+        {
+          "name": "SON",
+          "avgHours": 13,
+          "share": 19,
+          "status": "Needs attention"
+        },
+        {
+          "name": "NAQS",
+          "avgHours": 11,
+          "share": 14,
+          "status": "Moderate"
+        },
+        {
+          "name": "Customs (Assessment)",
+          "avgHours": 18,
+          "share": 22,
+          "status": "Needs attention"
+        },
+        {
+          "name": "Terminal Operator",
+          "avgHours": 32,
+          "share": 31,
+          "status": "Critical"
+        }
+      ],
+      "benchmarks": {
+        "lome": 55,
+        "tema": 78,
+        "northStar": 24
+      },
+      "anomalyCount": 20,
+      "aiInsight": "Modest improvement; structural profile unchanged.",
+      "takeaways": [
+        "Median 147 hrs (\u22125% QoQ).",
+        "Gate-out remains the largest stage.",
+        "Coordination with Lagos-based PGAs adds lag.",
+        "Local capacity building needed."
+      ],
+      "p95Hours": 287,
+      "timestampCompleteness": 91.2,
+      "validatedSample": 188,
+      "stageMedians": {
+        "arrival": 21,
+        "permits": 35,
+        "customs": 26,
+        "inspection": 14,
+        "gateout": 40
+      },
+      "methodologyNote": "WCO TRS Guide Version 4 (2025): median preferred; stage medians need not sum to overall median; arrival\u2192physical release (gate-out)."
+    },
+    "2025-Q3": {
+      "sampleSize": 205,
+      "stageHours": {
+        "arrival": 22,
+        "permits": 36,
+        "customs": 27,
+        "inspection": 14,
+        "gateout": 41
+      },
+      "totalHours": 140,
+      "priorTotalHours": 147,
+      "bottlenecks": [
+        {
+          "stage": "permits",
+          "title": "Agency Permits",
+          "desc": "Sequential PGA processing.",
+          "delayHours": 36,
+          "pct": 26
+        },
+        {
+          "stage": "customs",
+          "title": "Payment Processing",
+          "desc": "Confirmation lag.",
+          "delayHours": 9,
+          "pct": 6
+        },
+        {
+          "stage": "gateout",
+          "title": "Port Gate-Out",
+          "desc": "Equipment availability.",
+          "delayHours": 41,
+          "pct": 29
+        }
+      ],
+      "agencies": [
+        {
+          "name": "NAFDAC",
+          "avgHours": 15,
+          "share": 23,
+          "status": "Needs attention"
+        },
+        {
+          "name": "SON",
+          "avgHours": 12,
+          "share": 18,
+          "status": "Moderate"
+        },
+        {
+          "name": "NAQS",
+          "avgHours": 10,
+          "share": 13,
+          "status": "Moderate"
+        },
+        {
+          "name": "Customs (Assessment)",
+          "avgHours": 17,
+          "share": 21,
+          "status": "Needs attention"
+        },
+        {
+          "name": "Terminal Operator",
+          "avgHours": 30,
+          "share": 30,
+          "status": "Critical"
+        }
+      ],
+      "benchmarks": {
+        "lome": 52,
+        "tema": 75,
+        "northStar": 24
+      },
+      "anomalyCount": 18,
+      "aiInsight": "Gradual improvement; still the slowest of the three ports.",
+      "takeaways": [
+        "Median 140 hrs (\u22125% QoQ).",
+        "Permits + gate-out ~55%.",
+        "Infrastructure constraints more binding than at Lekki.",
+        "Prioritise equipment and local PGA presence."
+      ],
+      "p95Hours": 273,
+      "timestampCompleteness": 92.4,
+      "validatedSample": 192,
+      "stageMedians": {
+        "arrival": 20,
+        "permits": 33,
+        "customs": 25,
+        "inspection": 13,
+        "gateout": 38
+      },
+      "methodologyNote": "WCO TRS Guide Version 4 (2025): median preferred; stage medians need not sum to overall median; arrival\u2192physical release (gate-out)."
+    },
+    "2025-Q4": {
+      "sampleSize": 210,
+      "stageHours": {
+        "arrival": 21,
+        "permits": 35,
+        "customs": 26,
+        "inspection": 13,
+        "gateout": 40
+      },
+      "totalHours": 135,
+      "priorTotalHours": 140,
+      "bottlenecks": [
+        {
+          "stage": "permits",
+          "title": "Agency Permits",
+          "desc": "PGA turnaround.",
+          "delayHours": 35,
+          "pct": 26
+        },
+        {
+          "stage": "customs",
+          "title": "Payment Processing",
+          "desc": "System lag.",
+          "delayHours": 8,
+          "pct": 6
+        },
+        {
+          "stage": "gateout",
+          "title": "Port Gate-Out",
+          "desc": "Yard and gate constraints.",
+          "delayHours": 40,
+          "pct": 30
+        }
+      ],
+      "agencies": [
+        {
+          "name": "NAFDAC",
+          "avgHours": 15,
+          "share": 23,
+          "status": "Needs attention"
+        },
+        {
+          "name": "SON",
+          "avgHours": 12,
+          "share": 18,
+          "status": "Moderate"
+        },
+        {
+          "name": "NAQS",
+          "avgHours": 10,
+          "share": 13,
+          "status": "Moderate"
+        },
+        {
+          "name": "Customs (Assessment)",
+          "avgHours": 16,
+          "share": 20,
+          "status": "Needs attention"
+        },
+        {
+          "name": "Terminal Operator",
+          "avgHours": 29,
+          "share": 29,
+          "status": "Critical"
+        }
+      ],
+      "benchmarks": {
+        "lome": 50,
+        "tema": 72,
+        "northStar": 24
+      },
+      "anomalyCount": 17,
+      "aiInsight": "Slow but steady improvement; structural issues persist.",
+      "takeaways": [
+        "Median 135 hrs (\u22124% QoQ).",
+        "Still well above Tin Can and Lekki.",
+        "Gate-out capacity is the binding constraint.",
+        "Invest in equipment and digital call-up."
+      ],
+      "p95Hours": 263,
+      "timestampCompleteness": 93.6,
+      "validatedSample": 197,
+      "stageMedians": {
+        "arrival": 19,
+        "permits": 32,
+        "customs": 24,
+        "inspection": 12,
+        "gateout": 37
+      },
+      "methodologyNote": "WCO TRS Guide Version 4 (2025): median preferred; stage medians need not sum to overall median; arrival\u2192physical release (gate-out)."
+    },
+    "2026-Q1": {
+      "sampleSize": 215,
+      "stageHours": {
+        "arrival": 20,
+        "permits": 34,
+        "customs": 25,
+        "inspection": 13,
+        "gateout": 39
+      },
+      "totalHours": 131,
+      "priorTotalHours": 135,
+      "bottlenecks": [
+        {
+          "stage": "permits",
+          "title": "Agency Permits",
+          "desc": "PGA complementary permits.",
+          "delayHours": 34,
+          "pct": 26
+        },
+        {
+          "stage": "customs",
+          "title": "Payment Processing",
+          "desc": "Payment confirmation lag.",
+          "delayHours": 8,
+          "pct": 6
+        },
+        {
+          "stage": "gateout",
+          "title": "Port Gate-Out",
+          "desc": "Terminal congestion and equipment.",
+          "delayHours": 39,
+          "pct": 30
+        }
+      ],
+      "agencies": [
+        {
+          "name": "NAFDAC",
+          "avgHours": 14,
+          "share": 22,
+          "status": "Needs attention"
+        },
+        {
+          "name": "SON",
+          "avgHours": 12,
+          "share": 18,
+          "status": "Moderate"
+        },
+        {
+          "name": "NAQS",
+          "avgHours": 10,
+          "share": 13,
+          "status": "Moderate"
+        },
+        {
+          "name": "Customs (Assessment)",
+          "avgHours": 16,
+          "share": 20,
+          "status": "Needs attention"
+        },
+        {
+          "name": "Terminal Operator",
+          "avgHours": 28,
+          "share": 28,
+          "status": "Critical"
+        }
+      ],
+      "benchmarks": {
+        "lome": 48,
+        "tema": 72,
+        "northStar": 24
+      },
+      "anomalyCount": 16,
+      "aiInsight": "Onne remains the slowest; same structural drivers as other ports but higher absolute times.",
+      "takeaways": [
+        "Median 131 hrs (\u22123% QoQ).",
+        "Gate-out still ~30% of total.",
+        "Largest gap to regional peers.",
+        "Infrastructure and PGA presence are priority interventions."
+      ],
+      "p95Hours": 255,
+      "timestampCompleteness": 94.8,
+      "validatedSample": 202,
+      "stageMedians": {
+        "arrival": 18,
+        "permits": 31,
+        "customs": 23,
+        "inspection": 12,
+        "gateout": 36
+      },
+      "methodologyNote": "WCO TRS Guide Version 4 (2025): median preferred; stage medians need not sum to overall median; arrival\u2192physical release (gate-out)."
+    },
+    "2026-Q2": {
+      "sampleSize": 220,
+      "stageHours": {
+        "arrival": 19,
+        "permits": 32,
+        "customs": 24,
+        "inspection": 12,
+        "gateout": 37
+      },
+      "totalHours": 124,
+      "priorTotalHours": 131,
+      "bottlenecks": [
+        {
+          "stage": "permits",
+          "title": "Agency Permits",
+          "desc": "PGA processing improved modestly.",
+          "delayHours": 32,
+          "pct": 26
+        },
+        {
+          "stage": "customs",
+          "title": "Payment Processing",
+          "desc": "Faster confirmation after NNSW updates.",
+          "delayHours": 7,
+          "pct": 6
+        },
+        {
+          "stage": "gateout",
+          "title": "Port Gate-Out",
+          "desc": "Equipment and access still constrained.",
+          "delayHours": 37,
+          "pct": 30
+        }
+      ],
+      "agencies": [
+        {
+          "name": "NAFDAC",
+          "avgHours": 13,
+          "share": 21,
+          "status": "Needs attention"
+        },
+        {
+          "name": "SON",
+          "avgHours": 11,
+          "share": 17,
+          "status": "Moderate"
+        },
+        {
+          "name": "NAQS",
+          "avgHours": 9,
+          "share": 12,
+          "status": "Moderate"
+        },
+        {
+          "name": "Customs (Assessment)",
+          "avgHours": 15,
+          "share": 19,
+          "status": "Needs attention"
+        },
+        {
+          "name": "Terminal Operator",
+          "avgHours": 27,
+          "share": 27,
+          "status": "Critical"
+        }
+      ],
+      "benchmarks": {
+        "lome": 46,
+        "tema": 68,
+        "northStar": 24
+      },
+      "anomalyCount": 14,
+      "aiInsight": "Improvement continues but Onne lags Tin Can and Lekki by a wide margin.",
+      "takeaways": [
+        "Median 124 hrs (\u22125% QoQ).",
+        "Still the longest dwell of the three ports.",
+        "Gate-out and permits remain dominant.",
+        "Focus capital and staffing on Onne terminal operations."
+      ],
+      "p95Hours": 242,
+      "timestampCompleteness": 96.0,
+      "validatedSample": 206,
+      "stageMedians": {
+        "arrival": 17,
+        "permits": 29,
+        "customs": 22,
+        "inspection": 11,
+        "gateout": 34
+      },
+      "methodologyNote": "WCO TRS Guide Version 4 (2025): median preferred; stage medians need not sum to overall median; arrival\u2192physical release (gate-out)."
+    }
+  }
+}

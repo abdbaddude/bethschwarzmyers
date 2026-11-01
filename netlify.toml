@@ -1,6 +1,5 @@
 [build]
-  base = "bsm-nnsw-trs"
-  publish = "bsm-nnsw-trs"
+  publish = "."
   command = "echo 'Static site - no build required'"
 
 [[headers]]

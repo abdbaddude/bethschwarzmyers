@@ -3,13 +3,11 @@
   "themeDefault": "system",
   "license": {
     "key": "NNSW-TRS-DEMO-2026",
-    "type": "subscription",
-    "status": "active",
+    "format": "binary-placeholder",
     "issued": "2026-10-31",
-    "validFrom": "2026-10-31",
-    "validTo": "2026-11-30",
     "expiresDays": 30,
-    "note": "Demo subscription. All modules active for the validity window. Cryptographic key validation is backlog (LIC1).",
+    "expires": "2026-11-30",
+    "note": "Placeholder licence. Cryptographic key validation is backlog (LIC1).",
     "modules": [
       "core",
       "observatory",
@@ -22,8 +20,7 @@
       "about",
       "recommendations",
       "notifications"
-    ],
-    "expires": "2026-11-30"
+    ]
   },
   "modules": [
     {
@@ -87,17 +84,17 @@
       "label": "Benefits",
       "icon": "fa-list-check",
       "licenseKey": "recommendations",
-      "alwaysOn": true,
+      "alwaysOn": false,
       "order": 8,
       "workstream": "D1",
-      "description": "Recommendation & benefits tracker — owner, deadline, expected vs measured dwell reduction, assurance status"
+      "description": "Recommendation & benefits tracker \u2014 owner, deadline, expected vs measured dwell reduction, assurance status"
     },
     {
       "id": "notifications",
       "label": "Alerts",
       "icon": "fa-bell",
       "licenseKey": "notifications",
-      "alwaysOn": true,
+      "alwaysOn": false,
       "order": 9,
       "description": "Benefit-assurance notification preview and contact routing (email first; push/SMS by severity)"
     },

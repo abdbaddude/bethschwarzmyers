@@ -50,11 +50,11 @@ Recipients are resolved from **`data/contacts.json`**, not free-text on cards.
 
 Each contact record must hold **email** and **phone**, plus channel preferences (`notifyEmail`, `notifySms`, `notifyPush`).
 
-## 5. AEO players' rights
+## 5. AEO players’ rights
 
 AEO representatives are notified only when:
 
-1. The intervention's **port** and **stage** intersect their enrolled scope; and  
+1. The intervention’s **port** and **stage** intersect their enrolled scope; and  
 2. The event is one of: status change, benefit shortfall, or verified; and  
 3. Their channel preferences allow it.
 

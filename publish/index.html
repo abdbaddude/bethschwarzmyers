@@ -1,0 +1,1799 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nigeria NSW | Time Release Study</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { darkMode: 'class' };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <script src="https://unpkg.com/vis-network@9.1.9/standalone/umd/vis-network.min.js"></script>
+  <style>
+    body { font-family: Inter, system-ui, -apple-system, sans-serif; }
+    .card { background: #fff; border-radius: 0.75rem; box-shadow: 0 1px 2px rgba(0,0,0,.04); border: 1px solid #e2e8f0; }
+    .dark .card { background: #1e293b; border-color: #334155; box-shadow: none; }
+    .tab-active { border-bottom: 2px solid #059669; color: #047857; font-weight: 600; }
+    .dark .tab-active { border-bottom-color: #34d399; color: #6ee7b7; }
+    .anomaly-row { background: #fff1f2; border-left: 4px solid #fb7185; }
+    .dark .anomaly-row { background: #4c0519; border-left-color: #fb7185; }
+    .portrait-wrap { max-width: 920px; margin: 0 auto; }
+    .stage-pill { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 9999px; color: #fff; white-space: nowrap; }
+    .bn-card { background: #fff5f5; border: 1px solid #fecaca; border-radius: 0.5rem; padding: 0.5rem 0.65rem; font-size: 10px; }
+    .dark .bn-card { background: #450a0a; border-color: #7f1d1d; }
+    .dark body, .dark .bg-slate-100 { background-color: #0f172a; }
+    .dark .bg-slate-50 { background-color: #0f172a; }
+    .dark .bg-white { background-color: #1e293b; }
+    .dark .text-slate-900 { color: #f1f5f9; }
+    .dark .text-slate-800 { color: #e2e8f0; }
+    .dark .text-slate-700 { color: #cbd5e1; }
+    .dark .text-slate-600 { color: #94a3b8; }
+    .dark .text-slate-500 { color: #94a3b8; }
+    .dark .text-slate-400 { color: #64748b; }
+    .dark .border-slate-200, .dark .border-slate-100 { border-color: #334155; }
+    .dark .border-slate-300 { border-color: #475569; }
+    .dark select, .dark input { background-color: #0f172a; color: #e2e8f0; border-color: #475569; }
+    .dark .bg-slate-50 { background-color: #1e293b; }
+    .dark thead.bg-slate-50 { background-color: #0f172a; }
+    .rec-card { border-radius: 0.75rem; border: 1px solid #e2e8f0; background: #fff; overflow: hidden; }
+    .dark .rec-card { background: #1e293b; border-color: #334155; }
+    .rec-bar { width: 4px; flex-shrink: 0; }
+    .status-proposed { background: #f59e0b; }
+    .status-in_progress { background: #3b82f6; }
+    .status-implemented { background: #10b981; }
+    .status-verified { background: #14b8a6; }
+    .badge-proposed { background: #fffbeb; color: #b45309; border: 1px solid #fcd34d; }
+    .badge-in_progress { background: #eff6ff; color: #1d4ed8; border: 1px solid #93c5fd; }
+    .badge-implemented { background: #ecfdf5; color: #047857; border: 1px solid #6ee7b7; }
+    .badge-verified { background: #f0fdfa; color: #0f766e; border: 1px solid #5eead4; }
+    .dark .badge-proposed { background: #451a03; color: #fbbf24; border-color: #92400e; }
+    .dark .badge-in_progress { background: #1e3a8a; color: #93c5fd; border-color: #1e40af; }
+    .dark .badge-implemented { background: #064e3b; color: #6ee7b7; border-color: #065f46; }
+    .dark .badge-verified { background: #134e4a; color: #5eead4; border-color: #115e59; }
+    .license-locked { opacity: 0.45; pointer-events: none; }
+  </style>
+</head>
+<body class="bg-slate-100 text-slate-800 min-h-screen">
+<div class="portrait-wrap bg-slate-50 min-h-screen shadow-lg">
+
+<!-- Header -->
+<header class="bg-white border-b border-slate-200 sticky top-0 z-50">
+  <div class="px-4 py-3 flex flex-wrap items-start justify-between gap-3">
+    <div class="flex items-center gap-2.5 min-w-0">
+      <div class="w-11 h-11 rounded-full bg-emerald-700 flex items-center justify-center text-white font-bold text-xs shadow shrink-0">NRS</div>
+      <div class="min-w-0">
+        <h1 class="text-sm sm:text-base font-bold text-slate-900 leading-tight" id="hdrTitle">Nigeria National Single Window (NSW)</h1>
+        <p class="text-[11px] text-slate-500" id="hdrSub">Time Release Study (TRS) – Trade Clearance Performance</p>
+        <p class="text-[10px] text-slate-400 mt-0.5 hidden sm:block">From cargo arrival to release — measuring time, identifying bottlenecks, enabling faster trade.</p>
+      </div>
+    </div>
+    <div class="flex flex-wrap gap-1.5 text-[10px] items-center">
+      <span class="inline-flex items-center gap-1 bg-sky-50 text-sky-800 border border-sky-100 px-2 py-1 rounded-lg dark:bg-sky-950 dark:text-sky-200 dark:border-sky-800">
+        <i class="fa-regular fa-calendar"></i> <span id="chipQuarter">—</span>
+      </span>
+      <span class="inline-flex items-center gap-1 bg-slate-50 text-slate-700 border border-slate-200 px-2 py-1 rounded-lg dark:bg-slate-800 dark:text-slate-200">
+        <i class="fa-solid fa-ship"></i> <span id="chipPort">—</span>
+      </span>
+      <span class="inline-flex items-center gap-1 bg-slate-50 text-slate-700 border border-slate-200 px-2 py-1 rounded-lg dark:bg-slate-800 dark:text-slate-200">
+        <i class="fa-solid fa-cube"></i> <span id="chipSample">—</span>
+      </span>
+      <span id="chipLicense" class="inline-flex items-center gap-1 bg-emerald-50 text-emerald-800 border border-emerald-100 px-2 py-1 rounded-lg dark:bg-emerald-950 dark:text-emerald-200 dark:border-emerald-800" title="Module licence">
+        <i class="fa-solid fa-key"></i> <span id="chipLicenseText">Licence</span>
+      </span>
+      <span class="bg-sky-100 text-sky-800 px-2 py-1 rounded-lg font-medium dark:bg-sky-900 dark:text-sky-200">Illustrative</span>
+      <div class="inline-flex items-center border border-slate-200 rounded-lg overflow-hidden dark:border-slate-600" title="Theme">
+        <button type="button" onclick="setTheme('system')" id="theme-system" class="theme-btn px-1.5 py-1 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-700" title="System"><i class="fa-solid fa-desktop"></i></button>
+        <button type="button" onclick="setTheme('light')" id="theme-light" class="theme-btn px-1.5 py-1 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-700" title="Light"><i class="fa-solid fa-sun"></i></button>
+        <button type="button" onclick="setTheme('dark')" id="theme-dark" class="theme-btn px-1.5 py-1 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-700" title="Dark"><i class="fa-solid fa-moon"></i></button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Filters -->
+<div class="bg-white border-b border-slate-200 px-4 py-2 flex flex-wrap gap-3 items-center text-xs">
+  <div class="flex items-center gap-1.5">
+    <label class="text-slate-500">Port</label>
+    <select id="portSelect" class="border border-slate-300 rounded-lg px-2 py-1 text-sm bg-white" onchange="onFilterChange()"></select>
+  </div>
+  <div class="flex items-center gap-1.5">
+    <label class="text-slate-500">Period</label>
+    <select id="quarterSelect" class="border border-slate-300 rounded-lg px-2 py-1 text-sm bg-white" onchange="onFilterChange()"></select>
+  </div>
+  <div class="flex items-center gap-1.5">
+    <label class="text-slate-500">Compare vs</label>
+    <select id="compareSelect" class="border border-slate-300 rounded-lg px-2 py-1 text-sm bg-white" onchange="onFilterChange()">
+      <option value="prior">Prior quarter (default)</option>
+      <option value="2025-Q1">2025-Q1 baseline</option>
+      <option value="none">No comparison</option>
+    </select>
+  </div>
+</div>
+
+<!-- Tabs (built from app-config modules + licence) -->
+<nav class="bg-white border-b border-slate-200 dark:bg-slate-900 dark:border-slate-700">
+  <div id="tabNav" class="px-2 flex gap-0.5 overflow-x-auto text-xs"></div>
+</nav>
+<div id="licenseBanner" class="hidden px-4 py-2 text-[11px] bg-amber-50 text-amber-900 border-b border-amber-200 dark:bg-amber-950 dark:text-amber-100 dark:border-amber-800"></div>
+
+<main class="px-3 sm:px-4 py-4 space-y-4">
+
+  <!-- ================= EXECUTIVE ================= -->
+  <section id="panel-executive" class="tab-panel space-y-4">
+
+    <!-- KPI strip with comparison -->
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+      <div class="card p-3">
+        <p class="text-[10px] text-slate-500 uppercase tracking-wide">Median Release</p>
+        <p class="text-xl font-bold mt-0.5" id="kpiTotal">—</p>
+        <p class="text-[10px] mt-0.5" id="kpiDelta">—</p>
+      </div>
+      <div class="card p-3">
+        <p class="text-[10px] text-slate-500 uppercase tracking-wide">Sample Size</p>
+        <p class="text-xl font-bold mt-0.5" id="kpiSample">—</p>
+        <p class="text-[10px] text-slate-500 mt-0.5">Import consignments</p>
+      </div>
+      <div class="card p-3">
+        <p class="text-[10px] text-slate-500 uppercase tracking-wide">Top Bottleneck</p>
+        <p class="text-lg font-bold text-rose-600 mt-0.5 leading-tight" id="kpiBottleneck">—</p>
+        <p class="text-[10px] text-slate-500 mt-0.5" id="kpiBottleneckDetail">—</p>
+      </div>
+      <div class="card p-3">
+        <p class="text-[10px] text-slate-500 uppercase tracking-wide">Anomalies</p>
+        <p class="text-xl font-bold text-amber-600 mt-0.5" id="kpiAnomaly">—</p>
+        <p class="text-[10px] text-slate-500 mt-0.5">Flagged shipments</p>
+      </div>
+    </div>
+
+    <!-- End-to-end timeline (image-style) -->
+    <div class="card p-4">
+      <div class="flex items-center gap-2 mb-1">
+        <i class="fa-regular fa-clock text-sky-600"></i>
+        <h2 class="text-sm font-semibold text-slate-800">Average Time to Release – End-to-End Timeline</h2>
+      </div>
+      <p class="text-[11px] text-slate-500 mb-4">Total average clearance time: <strong id="timelineTotal" class="text-slate-800">—</strong>
+        <span id="timelineCompare" class="ml-1"></span>
+      </p>
+
+      <!-- Stage icons + names -->
+      <div class="grid grid-cols-5 gap-1 mb-2" id="timelineIcons"></div>
+
+      <!-- Segmented bar -->
+      <div class="flex h-3 rounded-full overflow-hidden mb-2 shadow-inner" id="timelineBar"></div>
+
+      <!-- Hour pills under each stage (same horizontal line) -->
+      <div class="grid grid-cols-5 gap-1 mb-4" id="timelineHours"></div>
+
+      <!-- Bottleneck cards – delay hours + share on same line -->
+      <div class="grid grid-cols-1 sm:grid-cols-5 gap-1.5 mt-1" id="bottleneckCards"></div>
+    </div>
+
+    <!-- Three-column lower: bars | donut | takeaways -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-3">
+      <!-- Time by Stage bar -->
+      <div class="card p-3">
+        <h3 class="text-xs font-semibold text-slate-800 mb-1 flex items-center gap-1.5">
+          <i class="fa-solid fa-chart-bar text-slate-400"></i> Time by Stage (Median Hours)
+        </h3>
+        <p class="text-[10px] text-slate-400 mb-2">Median hours by stage · diamond = target · label shows % to meet or surplus vs target</p>
+        <div class="h-52"><canvas id="stageBarChart"></canvas></div>
+      </div>
+
+      <!-- Where Delays Occur donut -->
+      <div class="card p-3">
+        <h3 class="text-xs font-semibold text-slate-800 mb-1 flex items-center gap-1.5">
+          <i class="fa-regular fa-clock text-slate-400"></i> Where Delays Occur
+        </h3>
+        <p class="text-[10px] text-slate-400 mb-2">Share of total clearance time</p>
+        <div class="flex items-center gap-3">
+          <div class="relative w-28 h-28 shrink-0">
+            <canvas id="delayDonut"></canvas>
+            <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+              <span class="text-base font-bold text-slate-800" id="donutCenterHrs">—</span>
+              <span class="text-[9px] text-slate-400 leading-tight text-center">total average<br>clearance time</span>
+            </div>
+          </div>
+          <div class="text-[10px] space-y-1.5 flex-1" id="donutLegend"></div>
+        </div>
+      </div>
+
+      <!-- Key Takeaways + Next Steps -->
+      <div class="card p-3 space-y-3">
+        <div>
+          <h3 class="text-xs font-semibold text-slate-800 mb-2 flex items-center gap-1.5">
+            <i class="fa-solid fa-bullseye text-emerald-600"></i> Key Takeaways
+          </h3>
+          <ol class="text-[11px] space-y-1.5 list-decimal list-inside text-slate-700" id="takeawaysList"></ol>
+        </div>
+        <div class="bg-emerald-50 border border-emerald-100 rounded-lg p-2.5">
+          <h4 class="text-[11px] font-semibold text-emerald-800 mb-1 flex items-center gap-1"><i class="fa-solid fa-check"></i> Next Steps</h4>
+          <ul class="text-[10px] text-emerald-900 space-y-0.5 list-disc list-inside" id="nextStepsList">
+            <li>Validate findings with agency process owners.</li>
+            <li>Prioritise corrective actions and assign owners.</li>
+            <li>Repeat study to measure improvement.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI Insight -->
+    <div class="bg-violet-50 border border-violet-200 rounded-xl p-3.5">
+      <p class="text-xs font-semibold text-violet-900 flex items-center gap-1.5">
+        <i class="fa-solid fa-wand-magic-sparkles"></i> AI Insight (Example)
+      </p>
+      <p class="mt-1.5 text-[11px] text-violet-800 leading-relaxed" id="aiInsight">—</p>
+      <p class="mt-1.5 text-[10px] text-violet-500 italic">AI insight is a hypothesis for investigation, not a confirmed finding.</p>
+    </div>
+
+    <!-- Benchmarks -->
+    <div class="card p-3">
+      <h3 class="text-xs font-semibold mb-2">Regional Benchmarks (median hours)</h3>
+      <div class="grid grid-cols-3 gap-2 text-center text-xs" id="benchmarks"></div>
+    </div>
+
+
+    <!-- Workstream coverage (A–D) -->
+    <div class="card p-3">
+      <h3 class="text-xs font-semibold mb-2 flex items-center gap-1.5"><i class="fa-solid fa-diagram-project text-slate-400"></i> Workstream coverage (prototype)</h3>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[10px]" id="workstreamCoverage">
+        <div class="rounded-lg border border-emerald-100 bg-emerald-50/60 p-2">
+          <p class="font-semibold text-emerald-800">A. NSW baseline &amp; TRS diagnostic</p>
+          <p class="text-emerald-900/80 mt-0.5">Stage start/end model · median release · multi-port sample · QoQ baseline</p>
+          <p class="mt-1 text-emerald-700 font-medium">Covered (illustrative)</p>
+        </div>
+        <div class="rounded-lg border border-emerald-100 bg-emerald-50/60 p-2">
+          <p class="font-semibold text-emerald-800">B. Bottleneck &amp; delay attribution</p>
+          <p class="text-emerald-900/80 mt-0.5">Stage share · agency scorecards · delay hrs/% · arrows to timeline stages</p>
+          <p class="mt-1 text-emerald-700 font-medium">Partially covered</p>
+        </div>
+        <div class="rounded-lg border border-sky-100 bg-sky-50/60 p-2">
+          <p class="font-semibold text-sky-800">C. Continuous performance measurement</p>
+          <p class="text-sky-900/80 mt-0.5">6-quarter series · prior-quarter compare · trend deltas · regional benchmarks</p>
+          <p class="mt-1 text-sky-700 font-medium">Directionally covered</p>
+        </div>
+        <div class="rounded-lg border border-amber-100 bg-amber-50/50 p-2">
+          <p class="font-semibold text-amber-800">D. Independent evidence &amp; benefits assurance</p>
+          <p class="text-amber-900/80 mt-0.5">Takeaways / next steps only — no recommendation tracker or independent assurance layer yet</p>
+          <p class="mt-1 text-amber-700 font-medium">Not yet covered</p>
+        </div>
+      </div>
+    </div>
+
+    <p class="text-[10px] text-slate-400 text-center">Source: Nigeria NSW TRS Dashboard (Illustrative). | WCO TRS methodology (Version 4, 2025) · Not actual government data.</p>
+  </section>
+
+
+  <!-- ================= OBSERVATORY ================= -->
+  <section id="panel-observatory" class="tab-panel hidden space-y-4">
+    <div class="card p-4">
+      <div class="flex flex-wrap items-start justify-between gap-2 mb-1">
+        <div class="flex items-center gap-2.5">
+          <div class="w-10 h-10 rounded-xl bg-sky-600 text-white flex items-center justify-center shadow"><i class="fa-solid fa-binoculars"></i></div>
+          <div>
+            <h2 class="text-base font-bold text-slate-900" id="obsTitle">Nigeria Trade Release Executive</h2>
+            <p class="text-[11px] text-slate-500" id="obsSubtitle">TRS Study Workspace · Executive Overview</p>
+          </div>
+        </div>
+        <span class="bg-sky-100 text-sky-800 text-[10px] font-medium px-2 py-1 rounded-full">Illustrative · WCO TRS v4</span>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-3 text-sm">
+      <div class="card p-3">
+        <p class="text-[10px] uppercase tracking-wide text-slate-500">Study</p>
+        <p class="font-semibold text-slate-900 mt-0.5" id="obsStudy">—</p>
+      </div>
+      <div class="card p-3">
+        <p class="text-[10px] uppercase tracking-wide text-slate-500">Period</p>
+        <p class="font-semibold text-slate-900 mt-0.5" id="obsPeriod">—</p>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-2.5">
+      <div class="card p-3.5">
+        <p class="text-[10px] text-slate-500 uppercase tracking-wide">Median release time</p>
+        <p class="text-2xl font-bold text-slate-900 mt-1" id="obsMedian">—</p>
+        <p class="text-[11px] mt-1" id="obsMedianDelta">—</p>
+      </div>
+      <div class="card p-3.5">
+        <p class="text-[10px] text-slate-500 uppercase tracking-wide">95th percentile</p>
+        <p class="text-2xl font-bold text-slate-900 mt-1" id="obsP95">—</p>
+        <p class="text-[11px] text-slate-500 mt-1">Long-delay shipments</p>
+      </div>
+      <div class="card p-3.5">
+        <p class="text-[10px] text-slate-500 uppercase tracking-wide">Shipments analysed</p>
+        <p class="text-2xl font-bold text-slate-900 mt-1" id="obsSample">—</p>
+        <p class="text-[11px] text-slate-500 mt-1">After data validation</p>
+      </div>
+      <div class="card p-3.5">
+        <p class="text-[10px] text-slate-500 uppercase tracking-wide">Timestamp completeness</p>
+        <p class="text-2xl font-bold text-slate-900 mt-1" id="obsCompleteness">—</p>
+        <p class="text-[11px] text-slate-500 mt-1">Across required events</p>
+      </div>
+    </div>
+
+    <div class="card p-4">
+      <h3 class="text-sm font-semibold text-slate-800">Where is time being spent?</h3>
+      <p class="text-[11px] text-slate-500 mt-0.5 mb-1">Illustrative median elapsed time by stage</p>
+      <p class="text-[10px] text-slate-400 mb-3">Example only. Stage medians do not necessarily sum to the overall median (WCO TRS v4 analysis practice).</p>
+      <div class="h-52"><canvas id="obsStageChart"></canvas></div>
+    </div>
+
+    <div class="card p-3 text-[10px] text-slate-500 leading-relaxed" id="obsMethodNote">
+      Methodology aligned to WCO Time Release Study Guide, Version 4 (2025): arrival → physical release; median and percentile reporting; data quality (timestamp completeness); stratified sample after validation.
+    </div>
+  </section>
+
+
+  <!-- ================= NETWORK ================= -->
+  <section id="panel-network" class="tab-panel hidden space-y-3">
+    <div class="card p-3">
+      <div class="flex flex-wrap items-start justify-between gap-2">
+        <div>
+          <h2 class="text-sm font-semibold text-slate-800 flex items-center gap-1.5">
+            <i class="fa-solid fa-diagram-project text-sky-600"></i> Clearance network
+          </h2>
+          <p class="text-[11px] text-slate-500 mt-0.5">Traders, port, agencies and stages — edge weight = median delay (hours). Icons: ship, port, trader, agencies. Anomaly stages marked ⚠.</p>
+        </div>
+        <div class="flex flex-wrap gap-1.5 text-[10px]">
+          <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-sky-50 text-sky-800 border border-sky-100"><span class="w-2 h-2 rounded-full bg-sky-500"></span> Stage</span>
+          <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-violet-50 text-violet-800 border border-violet-100"><span class="w-2 h-2 rounded-full bg-violet-500"></span> Agency</span>
+          <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-100"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> Trader / port</span>
+        </div>
+      </div>
+    </div>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-3">
+      <div class="lg:col-span-2 card p-2 relative">
+        <div class="flex items-center justify-between px-2 pt-1 pb-0.5">
+          <span class="text-[10px] px-2 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-100">Times = <strong>median</strong> hours (WCO TRS)</span>
+          <span class="text-[10px] text-slate-400">Drag nodes · hover edges</span>
+        </div>
+        <div id="networkGraph" class="w-full rounded-lg bg-slate-50 border border-slate-100" style="height:420px"></div>
+        <p class="text-[10px] text-slate-400 px-2 py-1.5">Edge thickness ∝ median delay. Red border / ⚠ = anomalous stage dwell.</p>
+      </div>
+      <div class="card p-3 flex flex-col gap-3">
+        <div>
+          <h3 class="text-xs font-semibold text-slate-800 mb-1 flex items-center gap-1"><i class="fa-solid fa-clock text-sky-600"></i> Median times (sum)</h3>
+          <p class="text-[10px] text-slate-500 mb-2">Stage medians — may not sum exactly to total median release (WCO).</p>
+          <ul class="text-[11px] space-y-1.5" id="networkStageSummary"></ul>
+          <div class="mt-2 pt-2 border-t border-slate-100 flex justify-between text-xs font-semibold">
+            <span>Sum of stage medians</span>
+            <span id="networkStageSum">—</span>
+          </div>
+          <div class="flex justify-between text-[11px] text-slate-600 mt-0.5">
+            <span>Reported total median</span>
+            <span id="networkTotalMedian">—</span>
+          </div>
+        </div>
+        <div>
+          <h3 class="text-xs font-semibold text-slate-800 mb-2">Connection insights</h3>
+          <ul class="text-[11px] space-y-1.5 text-slate-700 max-h-28 overflow-y-auto" id="networkInsights"></ul>
+        </div>
+        <div class="border-t border-slate-100 pt-3">
+          <h3 class="text-xs font-semibold text-slate-800 mb-1 flex items-center gap-1">
+            <i class="fa-solid fa-chart-line text-sky-600"></i>
+            <span id="networkStageTrendTitle">Stage trend</span>
+          </h3>
+          <p class="text-[10px] text-slate-500 mb-1.5">Click a numbered stage node to plot median hours across quarters.</p>
+          <div class="relative bg-slate-50 rounded-lg border border-slate-100" style="height:140px">
+            <canvas id="networkStageTrendChart"></canvas>
+          </div>
+          <div class="mt-2">
+            <p class="text-[10px] uppercase tracking-wide text-slate-500 mb-1">Remarkable events</p>
+            <ul class="text-[11px] space-y-1.5 text-slate-700" id="networkStageEvents"></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card p-3 overflow-x-auto">
+      <h3 class="text-xs font-semibold text-slate-800 mb-2">Edge table (delay properties)</h3>
+      <table class="w-full text-[11px]">
+        <thead class="bg-slate-50 text-slate-500 text-left">
+          <tr>
+            <th class="px-2 py-1.5 font-medium">From</th>
+            <th class="px-2 py-1.5 font-medium">To</th>
+            <th class="px-2 py-1.5 font-medium">Type</th>
+            <th class="px-2 py-1.5 font-medium">Delay (hrs)</th>
+            <th class="px-2 py-1.5 font-medium">Share</th>
+          </tr>
+        </thead>
+        <tbody id="networkEdgeTable"></tbody>
+      </table>
+    </div>
+  </section>
+
+
+  <!-- ================= TRENDS ================= -->
+  <section id="panel-trends" class="tab-panel hidden space-y-4">
+    <div class="card p-4">
+      <div class="flex flex-wrap items-start justify-between gap-3 mb-3">
+        <div>
+          <h2 class="text-sm font-semibold text-slate-800 flex items-center gap-1.5">
+            <i class="fa-solid fa-arrow-trend-down text-emerald-600"></i> Stage release trends
+          </h2>
+          <p class="text-[11px] text-slate-500 mt-0.5">Median hours by activity over quarters — see improvements in time to release. Compare stages and ports.</p>
+        </div>
+        <span class="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200">Metric: <strong>median</strong> hours</span>
+      </div>
+
+      <div class="mb-3">
+        <p class="text-[10px] uppercase tracking-wide text-slate-500 mb-1.5">Port scope</p>
+        <div class="flex flex-wrap gap-3 text-xs" id="trendsPortRadios">
+          <label class="inline-flex items-center gap-1.5 cursor-pointer"><input type="radio" name="trendsPort" value="all" checked class="accent-sky-600" onchange="renderTrends()"> <span>All ports (avg)</span></label>
+          <label class="inline-flex items-center gap-1.5 cursor-pointer"><input type="radio" name="trendsPort" value="tincan" class="accent-sky-600" onchange="renderTrends()"> <span>Tin Can</span></label>
+          <label class="inline-flex items-center gap-1.5 cursor-pointer"><input type="radio" name="trendsPort" value="lekki" class="accent-sky-600" onchange="renderTrends()"> <span>Lekki</span></label>
+          <label class="inline-flex items-center gap-1.5 cursor-pointer"><input type="radio" name="trendsPort" value="onne" class="accent-sky-600" onchange="renderTrends()"> <span>Onne</span></label>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <p class="text-[10px] uppercase tracking-wide text-slate-500 mb-1.5">Stages to compare</p>
+        <div class="flex flex-wrap gap-2 text-xs" id="trendsStageChecks"></div>
+      </div>
+
+      <div class="relative" style="height:280px">
+        <canvas id="trendsChart"></canvas>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      <div class="card p-3">
+        <h3 class="text-xs font-semibold text-slate-800 mb-2">Improvement snapshot</h3>
+        <p class="text-[10px] text-slate-500 mb-2">First → latest quarter change (median hrs). Negative = faster release.</p>
+        <ul class="text-[11px] space-y-1.5" id="trendsDeltaList"></ul>
+      </div>
+      <div class="card p-3">
+        <h3 class="text-xs font-semibold text-slate-800 mb-2">Total median release (selected scope)</h3>
+        <div class="relative" style="height:160px"><canvas id="trendsTotalChart"></canvas></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= SHIPMENTS ================= -->
+  <section id="panel-shipments" class="tab-panel hidden space-y-3">
+    <div class="flex flex-wrap gap-2">
+      <input type="text" id="shipSearch" placeholder="Search BL / Container..." class="border border-slate-300 rounded-lg px-2.5 py-1.5 text-xs flex-1 min-w-[140px]" oninput="filterShipments()" />
+      <select id="shipStatus" class="border border-slate-300 rounded-lg px-2 py-1.5 text-xs" onchange="filterShipments()">
+        <option value="">All Status</option>
+        <option value="Released">Released</option>
+        <option value="On Hold">On Hold</option>
+        <option value="In Progress">In Progress</option>
+      </select>
+      <select id="shipAnomaly" class="border border-slate-300 rounded-lg px-2 py-1.5 text-xs" onchange="filterShipments()">
+        <option value="">All</option>
+        <option value="1">Anomalies only</option>
+      </select>
+    </div>
+    <div class="overflow-x-auto card">
+      <table class="w-full text-xs">
+        <thead class="bg-slate-50 text-slate-500 text-left">
+          <tr>
+            <th class="px-3 py-2 font-medium">BL</th>
+            <th class="px-3 py-2 font-medium">Container</th>
+            <th class="px-3 py-2 font-medium">Cargo</th>
+            <th class="px-3 py-2 font-medium">Total hrs</th>
+            <th class="px-3 py-2 font-medium">Status</th>
+            <th class="px-3 py-2 font-medium"></th>
+          </tr>
+        </thead>
+        <tbody id="shipTableBody"></tbody>
+      </table>
+    </div>
+    <div id="timelinePanel" class="card p-4 hidden">
+      <div class="flex justify-between items-center mb-3">
+        <h3 class="text-sm font-semibold" id="tlTitle">Shipment timeline</h3>
+        <button onclick="closeTimeline()" class="text-slate-400 hover:text-slate-600 text-xs"><i class="fa-solid fa-xmark"></i> Close</button>
+      </div>
+      <div id="tlBody" class="space-y-0"></div>
+    </div>
+  </section>
+
+  <!-- ================= AGENCIES ================= -->
+  <section id="panel-agencies" class="tab-panel hidden space-y-3">
+    <p class="text-xs text-slate-500">Agency scorecards for selected port &amp; period (touch time and contribution to delay).</p>
+    <div id="agencyCards" class="grid gap-2.5 sm:grid-cols-2"></div>
+  </section>
+
+  <!-- ================= ANOMALIES ================= -->
+  <section id="panel-anomalies" class="tab-panel hidden space-y-3">
+    <div class="card p-3 text-xs text-slate-600">
+      Detection rules (illustrative): total dwell &gt; 2× median · stage hours well above peer median · multi-agency hold · missing early timestamps.
+    </div>
+    <div class="overflow-x-auto card">
+      <table class="w-full text-xs">
+        <thead class="bg-slate-50 text-slate-500 text-left">
+          <tr>
+            <th class="px-3 py-2 font-medium">BL</th>
+            <th class="px-3 py-2 font-medium">Total hrs</th>
+            <th class="px-3 py-2 font-medium">Primary flag</th>
+            <th class="px-3 py-2 font-medium">Severity</th>
+          </tr>
+        </thead>
+        <tbody id="anomalyTableBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ================= RECOMMENDATIONS / BENEFITS (D1) ================= -->
+  <section id="panel-recommendations" class="tab-panel hidden space-y-3">
+    <div class="card p-4">
+      <div class="flex flex-wrap items-start justify-between gap-2">
+        <div>
+          <h2 class="text-base font-bold text-slate-900 dark:text-slate-100">Recommendation &amp; Benefits Tracker</h2>
+          <p class="text-[11px] text-slate-500 mt-0.5">Workstream D — close the loop from recommendation to measured benefit</p>
+        </div>
+        <span class="text-[10px] px-2 py-1 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-100 dark:bg-emerald-950 dark:text-emerald-200 dark:border-emerald-800">D1 · Licensed module</span>
+      </div>
+      <div class="mt-3 flex flex-wrap gap-2 items-center text-[11px]">
+        <div class="flex items-center gap-1.5">
+          <label class="text-slate-500">Port</label>
+          <select id="recPortFilter" class="border border-slate-300 rounded-lg px-2 py-1 bg-white dark:bg-slate-900" onchange="renderRecommendations()">
+            <option value="all">All</option>
+            <option value="tincan">Tin Can</option>
+            <option value="lekki">Lekki</option>
+            <option value="onne">Onne</option>
+          </select>
+        </div>
+        <div class="flex flex-wrap gap-1" id="recStatusFilters">
+          <button type="button" data-status="all" class="rec-status-btn px-2 py-1 rounded-full border border-slate-200 bg-slate-100 text-slate-700 font-medium" onclick="setRecStatusFilter('all')">All</button>
+          <button type="button" data-status="proposed" class="rec-status-btn px-2 py-1 rounded-full border border-slate-200 text-slate-600" onclick="setRecStatusFilter('proposed')">Proposed</button>
+          <button type="button" data-status="in_progress" class="rec-status-btn px-2 py-1 rounded-full border border-slate-200 text-slate-600" onclick="setRecStatusFilter('in_progress')">In progress</button>
+          <button type="button" data-status="implemented" class="rec-status-btn px-2 py-1 rounded-full border border-slate-200 text-slate-600" onclick="setRecStatusFilter('implemented')">Implemented</button>
+          <button type="button" data-status="verified" class="rec-status-btn px-2 py-1 rounded-full border border-slate-200 text-slate-600" onclick="setRecStatusFilter('verified')">Verified</button>
+        </div>
+        <input id="recSearch" type="search" placeholder="Search interventions…" class="border border-slate-300 rounded-lg px-2 py-1 flex-1 min-w-[140px] bg-white dark:bg-slate-900" oninput="renderRecommendations()" />
+      </div>
+    </div>
+    <div id="recList" class="space-y-3"></div>
+    <div class="card p-3 border-dashed border-2 border-slate-200 dark:border-slate-600 text-center text-[11px] text-slate-500">
+      <i class="fa-solid fa-plus mr-1"></i> New recommendation — wire to corrective-action workflow (B2 backlog)
+    </div>
+    <p class="text-[10px] text-slate-400 text-center">Illustrative interventions · Expected vs measured dwell from demo dataset · Not official programme status</p>
+  </section>
+
+  <!-- ================= ALERTS / NOTIFICATIONS ================= -->
+  <section id="panel-notifications" class="tab-panel hidden space-y-3">
+    <div class="card p-4">
+      <div class="flex flex-wrap items-start justify-between gap-2">
+        <div>
+          <h2 class="text-base font-bold text-slate-900 dark:text-slate-100">Assurance alerts</h2>
+          <p class="text-[11px] text-slate-500 mt-0.5">Email-first routing for benefit assurance · Demo preview (no live send)</p>
+        </div>
+        <span class="text-[10px] px-2 py-1 rounded-lg bg-sky-50 text-sky-800 border border-sky-100 dark:bg-sky-950 dark:text-sky-200">Licensed · notifications</span>
+      </div>
+      <p class="text-[11px] text-slate-600 mt-2 leading-relaxed">Recipients resolve from the contact directory (email + phone). AEO parties only receive scoped events that affect their facilitation rights. Policy: <code class="bg-slate-100 dark:bg-slate-800 px-1 rounded">docs/NOTIFICATION_POLICY.md</code></p>
+    </div>
+    <div class="card p-3">
+      <h3 class="text-xs font-semibold text-slate-800 dark:text-slate-200 mb-2">Preview by intervention</h3>
+      <div class="flex flex-wrap gap-2 items-center text-[11px] mb-3">
+        <label class="text-slate-500">Intervention</label>
+        <select id="notifRecSelect" class="border border-slate-300 rounded-lg px-2 py-1 bg-white dark:bg-slate-900 flex-1 min-w-[180px]" onchange="renderNotificationPreview()"></select>
+        <label class="text-slate-500">Event</label>
+        <select id="notifEventSelect" class="border border-slate-300 rounded-lg px-2 py-1 bg-white dark:bg-slate-900" onchange="renderNotificationPreview()"></select>
+      </div>
+      <div id="notifPreview" class="space-y-2 text-[11px]"></div>
+    </div>
+    <div class="card p-3 overflow-x-auto">
+      <h3 class="text-xs font-semibold text-slate-800 dark:text-slate-200 mb-2">Contact directory (illustrative)</h3>
+      <div id="contactDirectory" class="text-[11px]"></div>
+    </div>
+    <p class="text-[10px] text-slate-400 text-center">Demo mode · Intended recipients logged only · SMTP / push / SMS providers not connected (backlog N1)</p>
+  </section>
+
+  <!-- ================= ABOUT ================= -->
+  <section id="panel-about" class="tab-panel hidden space-y-4">
+    <div class="card p-4">
+      <div class="flex items-start gap-3 mb-3">
+        <div class="w-11 h-11 rounded-xl bg-sky-600 text-white flex items-center justify-center shadow shrink-0"><i class="fa-solid fa-binoculars"></i></div>
+        <div>
+          <h2 class="text-base font-bold text-slate-900">Why this monitor exists</h2>
+          <p class="text-[12px] text-slate-600 mt-1 leading-relaxed">Nigeria’s National Single Window (NNSW) TRS Intelligence &amp; Trade Assurance platform turns periodic WCO-style Time Release Studies into a living decision system — so border delays are measured, attributed, and acted on, not only reported.</p>
+        </div>
+      </div>
+      <p class="text-[11px] text-slate-500 border-l-2 border-sky-300 pl-3">Aligned with WCO TRS Guide v4 (2025), WTO TFA Art. 7.6, AfCFTA trade-facilitation aims, and the NNSW / NRS digital architecture.</p>
+    </div>
+
+    <div class="card p-4 bg-emerald-50 border border-emerald-100">
+      <p class="text-[10px] uppercase tracking-wide text-emerald-800 font-semibold mb-1">North Star</p>
+      <p class="text-sm text-emerald-900"><strong>24-hour median release</strong> for routine import consignments — with staged near-term and medium-term trajectories visible in Executive KPIs and Trends.</p>
+    </div>
+
+    <div>
+      <h3 class="text-xs font-semibold text-slate-800 mb-2 px-0.5">Six capabilities this platform delivers</h3>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+        <div class="card p-3"><p class="text-xs font-semibold text-slate-800 flex items-center gap-1.5"><i class="fa-solid fa-route text-sky-600"></i> End-to-end measurement</p><p class="text-[11px] text-slate-600 mt-1">Port-to-gate timelines with median and p95, not single-point averages.</p></div>
+        <div class="card p-3"><p class="text-xs font-semibold text-slate-800 flex items-center gap-1.5"><i class="fa-solid fa-bullseye text-rose-600"></i> Delay attribution</p><p class="text-[11px] text-slate-600 mt-1">Stage, agency, and process bottlenecks with share of total dwell.</p></div>
+        <div class="card p-3"><p class="text-xs font-semibold text-slate-800 flex items-center gap-1.5"><i class="fa-solid fa-building-columns text-violet-600"></i> Agency scorecards</p><p class="text-[11px] text-slate-600 mt-1">Peer benchmarks (e.g. Lomé, Tema) and accountability views.</p></div>
+        <div class="card p-3"><p class="text-xs font-semibold text-slate-800 flex items-center gap-1.5"><i class="fa-solid fa-robot text-amber-600"></i> AI anomaly detection</p><p class="text-[11px] text-slate-600 mt-1">Flags unusual dwell so operators look critically, not only retrospectively.</p></div>
+        <div class="card p-3"><p class="text-xs font-semibold text-slate-800 flex items-center gap-1.5"><i class="fa-solid fa-list-check text-emerald-600"></i> Corrective-action path</p><p class="text-[11px] text-slate-600 mt-1">Workstreams A–D in-app; Benefits tab tracks owners, deadlines, expected vs measured dwell, and assurance status.</p></div>
+        <div class="card p-3"><p class="text-xs font-semibold text-slate-800 flex items-center gap-1.5"><i class="fa-solid fa-shield-halved text-slate-700"></i> Independent assurance</p><p class="text-[11px] text-slate-600 mt-1">Trade assurance posture complementary to NNSW operational systems — not a substitute for them.</p></div>
+      </div>
+    </div>
+
+    <div class="card p-4">
+      <h3 class="text-xs font-semibold text-slate-800 mb-2">Strategic context (summary)</h3>
+      <ul class="text-[11px] text-slate-700 space-y-1.5 list-disc pl-4">
+        <li>Periodic TRS exercises are necessary but insufficient for continuous improvement.</li>
+        <li>This monitor diagnoses where time is spent, who owns the dwell, and whether performance is moving toward the 24h North Star.</li>
+        <li>It is designed to sit within Nigeria’s NES / NNSW digital architecture as an intelligence and assurance layer.</li>
+        <li>Economic stakes: lower trade costs, more predictable release, and credible facilitation evidence for partners and investors.</li>
+      </ul>
+      <p class="text-[10px] text-slate-500 mt-3">Full write-up: <code class="bg-slate-100 px-1 rounded">docs/STRATEGIC_CONTEXT.md</code> · Delivery backlog: <code class="bg-slate-100 px-1 rounded">docs/TODO.md</code> on the project branch.</p>
+    </div>
+
+    <div class="card p-3 overflow-x-auto">
+      <h3 class="text-xs font-semibold text-slate-800 mb-2">Workstream coverage (A–D)</h3>
+      <table class="w-full text-[11px]">
+        <thead class="bg-slate-50 text-slate-500 text-left"><tr>
+          <th class="px-2 py-1.5">Workstream</th><th class="px-2 py-1.5">Focus</th><th class="px-2 py-1.5">In app?</th>
+        </tr></thead>
+        <tbody class="text-slate-700">
+          <tr class="border-t border-slate-100"><td class="px-2 py-1.5 font-medium">A</td><td class="px-2 py-1.5">Measure &amp; visualise release times</td><td class="px-2 py-1.5 text-emerald-700">Yes — Executive / Trends</td></tr>
+          <tr class="border-t border-slate-100"><td class="px-2 py-1.5 font-medium">B</td><td class="px-2 py-1.5">Attribute delays (stage / agency)</td><td class="px-2 py-1.5 text-emerald-700">Yes — Network / Agencies</td></tr>
+          <tr class="border-t border-slate-100"><td class="px-2 py-1.5 font-medium">C</td><td class="px-2 py-1.5">Detect anomalies &amp; quality gaps</td><td class="px-2 py-1.5 text-emerald-700">Yes — Anomalies / Observatory</td></tr>
+          <tr class="border-t border-slate-100"><td class="px-2 py-1.5 font-medium">D</td><td class="px-2 py-1.5">Recommendations &amp; benefits tracking</td><td class="px-2 py-1.5 text-emerald-700">Yes — Benefits tab (D1)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="text-[10px] text-slate-400 text-center pb-2">Illustrative data only · Not official NRS / NNSW statistics · Methodology: WCO TRS Guide v4 (2025)</p>
+  </section>
+
+</main>
+
+<footer class="px-4 py-5 text-center text-[10px] text-slate-400 border-t border-slate-200 mt-2">
+  <span id="footerDisclaimer">Illustrative data only. Not actual government or NRS statistics.</span>
+</footer>
+</div>
+
+<script>
+Chart.register(ChartDataLabels);
+
+let META = null;
+let PORT_DATA = {};
+let SHIPMENTS = [];
+let APP_CONFIG = null;
+let RECOMMENDATIONS = null;
+let CONTACTS = null;
+let NOTIF_RULES = null;
+let currentPort = 'tincan';
+let currentQuarter = '2026-Q2';
+let stageBarChart = null;
+let delayDonut = null;
+let obsStageChart = null;
+let networkInstance = null;
+let networkEdgesCache = [];
+let recStatusFilter = 'all';
+let currentTheme = 'system';
+const STATUS_LABELS = { proposed: 'Proposed', in_progress: 'In progress', implemented: 'Implemented', verified: 'Verified' };
+
+const STAGE_ICONS = ['fa-ship', 'fa-file-lines', 'fa-user-check', 'fa-magnifying-glass', 'fa-warehouse'];
+const STAGE_SHORT_LABELS = {
+  arrival: 'Port Arrival & Initial Processing',
+  permits: 'Agency Permits & Documentation',
+  customs: 'Customs Assessment & Payment',
+  inspection: 'Inspection & Release Coordination',
+  gateout: 'Port Operations & Gate-Out'
+};
+
+async function loadData() {
+  const [meta, tincan, lekki, onne, ships, appConfig, recs, contacts, notifRules] = await Promise.all([
+    fetch('data/meta.json').then(r => r.json()),
+    fetch('data/tincan.json').then(r => r.json()),
+    fetch('data/lekki.json').then(r => r.json()),
+    fetch('data/onne.json').then(r => r.json()),
+    fetch('data/shipments.json').then(r => r.json()),
+    fetch('data/app-config.json').then(r => r.json()),
+    fetch('data/recommendations.json').then(r => r.json()),
+    fetch('data/contacts.json').then(r => r.json()),
+    fetch('data/notification-rules.json').then(r => r.json())
+  ]);
+  META = meta;
+  PORT_DATA = { tincan, lekki, onne };
+  SHIPMENTS = ships.shipments || ships;
+  APP_CONFIG = appConfig;
+  RECOMMENDATIONS = recs;
+  CONTACTS = contacts;
+  NOTIF_RULES = notifRules;
+
+  const portSel = document.getElementById('portSelect');
+  const qSel = document.getElementById('quarterSelect');
+  META.ports.forEach(p => {
+    const o = document.createElement('option');
+    o.value = p.id;
+    o.textContent = p.name;
+    portSel.appendChild(o);
+  });
+  META.quarters.forEach(q => {
+    const o = document.createElement('option');
+    o.value = q;
+    o.textContent = q;
+    qSel.appendChild(o);
+  });
+  portSel.value = currentPort;
+  qSel.value = currentQuarter;
+
+  document.getElementById('hdrTitle').textContent = META.title;
+  document.getElementById('hdrSub').textContent = META.subtitle;
+  document.getElementById('footerDisclaimer').textContent = META.disclaimer;
+
+  initTheme();
+  applyLicenseAndBuildTabs();
+  renderAll();
+}
+
+function isModuleLicensed(mod) {
+  if (!APP_CONFIG || !APP_CONFIG.license) return !!mod.alwaysOn;
+  const lic = APP_CONFIG.license;
+  const expired = lic.expires && (new Date(lic.expires + 'T23:59:59Z') < new Date());
+  if (expired && !mod.alwaysOn) return false;
+  if (mod.alwaysOn) return true;
+  return (lic.modules || []).includes(mod.licenseKey);
+}
+
+function applyLicenseAndBuildTabs() {
+  const nav = document.getElementById('tabNav');
+  const banner = document.getElementById('licenseBanner');
+  const lic = APP_CONFIG.license;
+  const expired = lic.expires && (new Date(lic.expires + 'T23:59:59Z') < new Date());
+  const daysLeft = Math.ceil((new Date(lic.expires + 'T23:59:59Z') - new Date()) / 86400000);
+  const chip = document.getElementById('chipLicenseText');
+  if (expired) {
+    chip.textContent = 'Expired';
+    document.getElementById('chipLicense').className = 'inline-flex items-center gap-1 bg-rose-50 text-rose-800 border border-rose-200 px-2 py-1 rounded-lg dark:bg-rose-950 dark:text-rose-200';
+    banner.classList.remove('hidden');
+    banner.innerHTML = '<i class="fa-solid fa-triangle-exclamation mr-1"></i> Licence expired (' + lic.key + '). Core tabs remain; licensed modules locked. Renew key to restore Benefits and other add-ons.';
+  } else {
+    chip.textContent = (daysLeft >= 0 ? daysLeft + 'd left' : 'Active');
+    banner.classList.add('hidden');
+  }
+
+  const modules = (APP_CONFIG.modules || []).slice().sort((a, b) => a.order - b.order);
+  nav.innerHTML = '';
+  let firstLicensed = null;
+  modules.forEach((mod, idx) => {
+    const ok = isModuleLicensed(mod);
+    if (ok && !firstLicensed) firstLicensed = mod.id;
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.id = 'tab-' + mod.id;
+    btn.className = 'tab-btn px-3 py-2.5 whitespace-nowrap text-slate-600' + (ok ? '' : ' license-locked');
+    btn.innerHTML = '<i class="fa-solid ' + mod.icon + ' mr-1"></i>' + mod.label + (ok ? '' : ' <i class="fa-solid fa-lock text-[9px] opacity-70"></i>');
+    if (ok) {
+      btn.onclick = function() { showTab(mod.id); };
+    } else {
+      btn.title = 'Module not in current licence';
+      btn.onclick = function() {
+        banner.classList.remove('hidden');
+        banner.innerHTML = '<i class="fa-solid fa-lock mr-1"></i> Module <strong>' + mod.label + '</strong> requires licence key for <code>' + mod.licenseKey + '</code>. Update data/app-config.json (LIC1: cryptographic keys backlog).';
+      };
+    }
+    nav.appendChild(btn);
+  });
+  // default active tab
+  const defaultId = firstLicensed || 'executive';
+  showTab(defaultId);
+}
+
+function initTheme() {
+  const saved = localStorage.getItem('trs-theme') || (APP_CONFIG && APP_CONFIG.themeDefault) || 'system';
+  setTheme(saved);
+}
+
+function resolveTheme(mode) {
+  if (mode === 'dark') return 'dark';
+  if (mode === 'light') return 'light';
+  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+}
+
+function setTheme(mode) {
+  currentTheme = mode;
+  localStorage.setItem('trs-theme', mode);
+  const resolved = resolveTheme(mode);
+  document.documentElement.classList.toggle('dark', resolved === 'dark');
+  ['system', 'light', 'dark'].forEach(function(m) {
+    const el = document.getElementById('theme-' + m);
+    if (!el) return;
+    if (m === mode) {
+      el.classList.add('bg-emerald-100', 'text-emerald-800');
+      el.classList.remove('text-slate-500');
+    } else {
+      el.classList.remove('bg-emerald-100', 'text-emerald-800');
+      el.classList.add('text-slate-500');
+    }
+  });
+}
+
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function() {
+  if (currentTheme === 'system') setTheme('system');
+});
+
+function setRecStatusFilter(status) {
+  recStatusFilter = status;
+  document.querySelectorAll('.rec-status-btn').forEach(function(b) {
+    const active = b.getAttribute('data-status') === status;
+    b.classList.toggle('bg-slate-100', active);
+    b.classList.toggle('font-medium', active);
+    b.classList.toggle('text-slate-700', active);
+    b.classList.toggle('text-slate-600', !active);
+  });
+  renderRecommendations();
+}
+
+function renderRecommendations() {
+  if (!RECOMMENDATIONS) return;
+  const list = document.getElementById('recList');
+  if (!list) return;
+  const portF = (document.getElementById('recPortFilter') || {}).value || 'all';
+  const q = ((document.getElementById('recSearch') || {}).value || '').toLowerCase().trim();
+  let items = RECOMMENDATIONS.items || [];
+  if (portF !== 'all') items = items.filter(function(it) { return it.port === portF || it.port === 'all'; });
+  if (recStatusFilter !== 'all') items = items.filter(function(it) { return it.status === recStatusFilter; });
+  if (q) items = items.filter(function(it) {
+    return (it.title + ' ' + it.owner + ' ' + (it.description || '')).toLowerCase().indexOf(q) >= 0;
+  });
+
+  if (!items.length) {
+    list.innerHTML = '<div class="card p-6 text-center text-slate-500 text-sm">No interventions match these filters.</div>';
+    return;
+  }
+
+  list.innerHTML = items.map(function(it) {
+    const measured = Math.max(0, (it.beforeHours - it.afterHours));
+    const expected = it.expectedReductionHours || 0;
+    const pct = expected > 0 ? Math.min(100, Math.round((measured / expected) * 100)) : 0;
+    const statusClass = 'status-' + it.status;
+    const badgeClass = 'badge-' + it.status;
+    const statusLabel = STATUS_LABELS[it.status] || it.status;
+    return (
+      '<div class="rec-card flex">' +
+        '<div class="rec-bar ' + statusClass + '"></div>' +
+        '<div class="flex-1 p-3 min-w-0">' +
+          '<div class="flex flex-wrap items-start justify-between gap-2">' +
+            '<h3 class="text-sm font-semibold text-slate-900 dark:text-slate-100 leading-snug">' + it.title + '</h3>' +
+            '<span class="text-[10px] px-2 py-0.5 rounded-full font-medium ' + badgeClass + '">' + statusLabel + '</span>' +
+          '</div>' +
+          '<div class="mt-2 flex flex-wrap gap-1.5 text-[10px]">' +
+            '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-slate-50 border border-slate-200 text-slate-600 dark:bg-slate-800 dark:border-slate-600 dark:text-slate-300"><i class="fa-solid fa-user-tie"></i> ' + it.owner + '</span>' +
+            '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-slate-50 border border-slate-200 text-slate-600 dark:bg-slate-800 dark:border-slate-600 dark:text-slate-300"><i class="fa-regular fa-calendar"></i> ' + it.deadline + '</span>' +
+            '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-slate-50 border border-slate-200 text-slate-600 dark:bg-slate-800 dark:border-slate-600 dark:text-slate-300"><i class="fa-solid fa-bullseye"></i> Expected −' + expected.toFixed(1) + ' h ' + (it.metricLabel || '') + '</span>' +
+          '</div>' +
+          '<div class="mt-3 grid grid-cols-3 gap-2 items-end">' +
+            '<div><p class="text-[9px] uppercase tracking-wide text-slate-400">Before</p><p class="text-lg font-bold text-slate-800 dark:text-slate-100">' + it.beforeHours.toFixed(1) + ' <span class="text-xs font-normal text-slate-500">h</span></p><p class="text-[9px] text-slate-400">' + (it.metricLabel || '') + '</p></div>' +
+            '<div class="text-center text-slate-400 text-sm"><i class="fa-solid fa-arrow-right"></i></div>' +
+            '<div class="text-right"><p class="text-[9px] uppercase tracking-wide text-slate-400">After</p><p class="text-lg font-bold text-slate-800 dark:text-slate-100">' + it.afterHours.toFixed(1) + ' <span class="text-xs font-normal text-slate-500">h</span></p><p class="text-[10px] font-semibold text-emerald-600 dark:text-emerald-400">−' + measured.toFixed(1) + ' h measured</p></div>' +
+          '</div>' +
+          '<div class="mt-2">' +
+            '<div class="flex justify-between text-[9px] text-slate-500 mb-0.5"><span>Expected vs measured</span><span>' + pct + '% of expected · −' + measured.toFixed(1) + ' / −' + expected.toFixed(1) + ' h</span></div>' +
+            '<div class="h-1.5 rounded-full bg-slate-100 dark:bg-slate-700 overflow-hidden"><div class="h-full rounded-full ' + statusClass + '" style="width:' + pct + '%"></div></div>' +
+          '</div>' +
+          (it.description ? '<p class="mt-2 text-[10px] text-slate-500 leading-relaxed">' + it.description + '</p>' : '') +
+        '</div>' +
+      '</div>'
+    );
+  }).join('');
+}
+
+function getQ(port, quarter) {
+  return PORT_DATA[port].quarters[quarter];
+}
+
+function getPriorQuarter(q) {
+  const idx = META.quarters.indexOf(q);
+  if (idx <= 0) return null;
+  return META.quarters[idx - 1];
+}
+
+function onFilterChange() {
+  currentPort = document.getElementById('portSelect').value;
+  currentQuarter = document.getElementById('quarterSelect').value;
+  renderAll();
+}
+
+function resolveBaseline(q) {
+  const mode = document.getElementById('compareSelect').value;
+  if (mode === 'none') return null;
+  if (mode === 'prior') {
+    const pq = getPriorQuarter(currentQuarter);
+    return pq ? getQ(currentPort, pq) : null;
+  }
+  // fixed baseline quarter if present for this port
+  return PORT_DATA[currentPort].quarters[mode] || null;
+}
+
+function deltaHtml(current, baseline, unit) {
+  if (baseline == null || baseline === current) return '<span class="text-slate-400">—</span>';
+  const d = current - baseline;
+  const pct = baseline ? Math.round((1 - current / baseline) * 100) : 0;
+  if (d < 0) {
+    return `<span class="text-emerald-600 font-medium">↓ ${Math.abs(d)}${unit} (${pct}% vs baseline)</span>`;
+  }
+  if (d > 0) {
+    return `<span class="text-rose-600 font-medium">↑ ${d}${unit} vs baseline</span>`;
+  }
+  return '<span class="text-slate-400">unchanged</span>';
+}
+
+function renderAll() {
+  if (typeof renderRecommendations === 'function') renderRecommendations();
+  const q = getQ(currentPort, currentQuarter);
+  const baseline = resolveBaseline(q);
+  const stages = META.stages;
+  const hours = stages.map(s => q.stageHours[s.id]);
+  const total = q.totalHours;
+  const priorTotal = baseline ? baseline.totalHours : q.priorTotalHours;
+
+  // Header chips
+  document.getElementById('chipQuarter').textContent = currentQuarter + ' (Illustrative)';
+  document.getElementById('chipPort').textContent = PORT_DATA[currentPort].portName + ' – Imports';
+  document.getElementById('chipSample').textContent = q.sampleSize.toLocaleString() + ' shipments';
+
+  // KPIs
+  document.getElementById('kpiTotal').innerHTML = total + ' <span class="text-sm font-normal text-slate-500">hrs</span>';
+  document.getElementById('kpiDelta').innerHTML = deltaHtml(total, priorTotal, ' hrs');
+  document.getElementById('kpiSample').textContent = q.sampleSize.toLocaleString();
+  const topBn = (q.bottlenecks || [])[0];
+  document.getElementById('kpiBottleneck').textContent = topBn ? topBn.title : '—';
+  document.getElementById('kpiBottleneckDetail').textContent = topBn
+    ? topBn.delayHours + ' hrs · ' + topBn.pct + '% of total'
+    : '—';
+  document.getElementById('kpiAnomaly').textContent = q.anomalyCount;
+
+  // Timeline total + compare
+  const days = (total / 24).toFixed(1);
+  document.getElementById('timelineTotal').textContent = total + ' hours (' + days + ' days)';
+  document.getElementById('timelineCompare').innerHTML = priorTotal != null
+    ? deltaHtml(total, priorTotal, ' hrs')
+    : '';
+
+  // Stage icons + names
+  document.getElementById('timelineIcons').innerHTML = stages.map((s, i) => `
+    <div class="text-center px-0.5">
+      <div class="w-8 h-8 mx-auto rounded-full text-white flex items-center justify-center text-[11px] shadow-sm" style="background:${s.color}">
+        <i class="fa-solid ${STAGE_ICONS[i]}"></i>
+      </div>
+      <p class="mt-1.5 text-[9px] font-semibold text-slate-700 leading-tight">${i + 1}. ${s.name.split('&')[0].trim()}</p>
+      <p class="text-[8px] text-slate-400 leading-tight mt-0.5 hidden sm:block">${s.name.includes('&') ? s.name.split('&')[1].trim() : ''}</p>
+    </div>`).join('');
+
+  // Segmented bar
+  document.getElementById('timelineBar').innerHTML = stages.map((s, i) =>
+    `<div style="width:${(hours[i] / total * 100).toFixed(2)}%;background:${s.color}" title="${s.short}: ${hours[i]}h"></div>`
+  ).join('');
+
+  // Hour pills – same horizontal line under stages
+  document.getElementById('timelineHours').innerHTML = stages.map((s, i) =>
+    `<div class="text-center"><span class="stage-pill" style="background:${s.color}">${hours[i]} hrs</span></div>`
+  ).join('');
+
+  // Bottleneck cards – delay hours AND share on the SAME line
+  const bnColors = { permits: '#10b981', customs: '#8b5cf6', gateout: '#334155', arrival: '#2563eb', inspection: '#f59e0b' };
+  // Map bottleneck stage -> column index (0..4) and render arrows under the timeline
+  const stageIdx = { arrival:0, permits:1, customs:2, inspection:3, gateout:4 };
+  const bnByCol = {0:null,1:null,2:null,3:null,4:null};
+  (q.bottlenecks || []).forEach((b, idx) => {
+    const col = stageIdx[b.stage] != null ? stageIdx[b.stage] : Math.min(idx + 1, 4);
+    bnByCol[col] = { ...b, idx: idx + 1 };
+  });
+  document.getElementById('bottleneckCards').innerHTML = [0,1,2,3,4].map(col => {
+    const b = bnByCol[col];
+    if (!b) return '<div class="hidden sm:block"></div>';
+    return `<div class="bn-card relative pt-3">
+      <div class="absolute left-1/2 -top-1 -translate-x-1/2 flex flex-col items-center pointer-events-none">
+        <div class="w-0 h-0 border-l-[6px] border-r-[6px] border-b-[8px] border-l-transparent border-r-transparent border-b-rose-400"></div>
+        <div class="w-0.5 h-2 bg-rose-300"></div>
+      </div>
+      <p class="font-semibold text-rose-800 flex items-start gap-1">
+        <i class="fa-solid fa-triangle-exclamation mt-0.5 shrink-0"></i>
+        <span>Bottleneck ${b.idx}: ${b.title}</span>
+      </p>
+      <p class="text-rose-700 mt-1 leading-snug">${b.desc}</p>
+      <p class="mt-1.5 font-semibold text-rose-600 flex flex-wrap items-center justify-between gap-1">
+        <span>Avg. delay: ${b.delayHours} hrs</span>
+        <span class="bg-rose-100 text-rose-800 px-1.5 py-0.5 rounded whitespace-nowrap">${b.pct}% of total</span>
+      </p>
+    </div>`;
+  }).join('');
+
+  // Horizontal bar chart — actual median + target markers + % to meet / surplus
+  if (stageBarChart) stageBarChart.destroy();
+  const barLabels = stages.map(s => STAGE_SHORT_LABELS[s.id] || s.short);
+  const stageTargets = stages.map(s => {
+    if (META.stageTargets && META.stageTargets[s.id] != null) return META.stageTargets[s.id];
+    // fallback: proportional share of north-star total
+    const ns = META.northStarHours || 24;
+    const share = total > 0 ? (q.stageHours[s.id] / total) : (1 / stages.length);
+    return Math.max(1, Math.round(ns * share));
+  });
+  const maxBar = Math.max(...hours, ...stageTargets, 1);
+  const gapLabels = hours.map((h, i) => {
+    const tgt = stageTargets[i];
+    if (tgt == null || tgt <= 0) return h + 'h';
+    if (h > tgt) {
+      const needPct = Math.round(((h - tgt) / h) * 100);
+      return h + 'h · need ↓' + needPct + '% to target';
+    }
+    if (h < tgt) {
+      const underPct = Math.round(((tgt - h) / tgt) * 100);
+      return h + 'h · ✓ ' + underPct + '% under target';
+    }
+    return h + 'h · on target';
+  });
+  stageBarChart = new Chart(document.getElementById('stageBarChart'), {
+    type: 'bar',
+    data: {
+      labels: barLabels,
+      datasets: [
+        {
+          label: 'Median hours',
+          data: hours,
+          backgroundColor: stages.map((s, i) => hours[i] > stageTargets[i] ? s.color + 'cc' : s.color),
+          borderColor: stages.map(s => s.color),
+          borderWidth: 1,
+          borderRadius: 4,
+          barThickness: 18,
+          order: 2
+        },
+        {
+          // Target markers as scatter points on the same category axis
+          label: 'Target',
+          type: 'scatter',
+          data: stageTargets.map((tgt, i) => ({ x: tgt, y: barLabels[i] })),
+          pointStyle: 'rectRot',
+          pointRadius: 7,
+          pointHoverRadius: 9,
+          backgroundColor: '#0f172a',
+          borderColor: '#f8fafc',
+          borderWidth: 2,
+          order: 1
+        }
+      ]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      maintainAspectRatio: false,
+      layout: { padding: { right: 8 } },
+      plugins: {
+        legend: {
+          display: true,
+          position: 'bottom',
+          labels: {
+            boxWidth: 10,
+            font: { size: 9 },
+            filter: function(item) { return item.text === 'Median hours' || item.text === 'Target'; }
+          }
+        },
+        tooltip: {
+          callbacks: {
+            label: function(ctx) {
+              if (ctx.dataset.type === 'scatter' || ctx.dataset.label === 'Target') {
+                return 'Target: ' + ctx.raw.x + 'h';
+              }
+              const i = ctx.dataIndex;
+              const h = hours[i];
+              const tgt = stageTargets[i];
+              if (h > tgt) return 'Median ' + h + 'h · need ' + Math.round(((h - tgt) / h) * 100) + '% improvement to meet ' + tgt + 'h target';
+              if (h < tgt) return 'Median ' + h + 'h · ' + Math.round(((tgt - h) / tgt) * 100) + '% under ' + tgt + 'h target (surpassed)';
+              return 'Median ' + h + 'h · on target (' + tgt + 'h)';
+            }
+          }
+        },
+        datalabels: {
+          display: function(ctx) { return ctx.dataset.label === 'Median hours'; },
+          anchor: 'end',
+          align: 'right',
+          clamp: true,
+          font: { size: 9, weight: '600' },
+          formatter: function(v, ctx) {
+            return gapLabels[ctx.dataIndex];
+          },
+          color: function(ctx) {
+            const i = ctx.dataIndex;
+            return hours[i] > stageTargets[i] ? '#b91c1c' : '#047857';
+          }
+        }
+      },
+      scales: {
+        x: {
+          beginAtZero: true,
+          max: maxBar + Math.max(18, Math.round(maxBar * 0.45)),
+          grid: { color: '#f1f5f9' },
+          ticks: { font: { size: 9 } },
+          title: { display: true, text: 'Hours (diamond = stage target)', font: { size: 9 }, color: '#64748b' }
+        },
+        y: {
+          type: 'category',
+          grid: { display: false },
+          ticks: { font: { size: 9 } }
+        }
+      }
+    }
+  });
+
+  // Doughnut – order matches image-ish (gateout, permits, customs, arrival, inspection)
+  const donutOrder = [4, 1, 2, 0, 3];
+  if (delayDonut) delayDonut.destroy();
+  delayDonut = new Chart(document.getElementById('delayDonut'), {
+    type: 'doughnut',
+    data: {
+      labels: donutOrder.map(i => stages[i].short),
+      datasets: [{
+        data: donutOrder.map(i => hours[i]),
+        backgroundColor: donutOrder.map(i => stages[i].color),
+        borderWidth: 0
+      }]
+    },
+    options: {
+      cutout: '68%',
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        datalabels: { display: false }
+      }
+    }
+  });
+  document.getElementById('donutCenterHrs').textContent = total + ' hrs';
+  document.getElementById('donutLegend').innerHTML = donutOrder.map(i => {
+    const pct = Math.round(hours[i] / total * 100);
+    return `<div class="flex items-start gap-1.5">
+      <span class="w-2.5 h-2.5 rounded-sm mt-0.5 shrink-0" style="background:${stages[i].color}"></span>
+      <span><span class="font-medium text-slate-700">${STAGE_SHORT_LABELS[stages[i].id] || stages[i].short}</span><br>
+      <span class="text-slate-500">${hours[i]} hrs (${pct}%)</span></span>
+    </div>`;
+  }).join('');
+
+  // Takeaways
+  document.getElementById('takeawaysList').innerHTML = (q.takeaways || []).map(t => `<li>${t}</li>`).join('');
+  document.getElementById('aiInsight').textContent = q.aiInsight || '—';
+
+  // Benchmarks
+  const bm = q.benchmarks || {};
+  document.getElementById('benchmarks').innerHTML = `
+    <div class="bg-slate-50 rounded-lg p-2"><p class="text-slate-500">Lomé</p><p class="font-bold text-slate-800">${bm.lome ?? '—'}h</p></div>
+    <div class="bg-slate-50 rounded-lg p-2"><p class="text-slate-500">Tema</p><p class="font-bold text-slate-800">${bm.tema ?? '—'}h</p></div>
+    <div class="bg-emerald-50 rounded-lg p-2 border border-emerald-100"><p class="text-emerald-700">North Star</p><p class="font-bold text-emerald-700">${bm.northStar ?? META.northStarHours}h</p></div>`;
+
+  renderObservatory();
+  renderNetwork();
+  renderTrends();
+  renderShipments();
+  renderAgencies();
+  renderAnomalies();
+}
+
+
+function renderObservatory() {
+  const q = getQ(currentPort, currentQuarter);
+  const baseline = resolveBaseline(q);
+  const priorTotal = baseline ? baseline.totalHours : q.priorTotalHours;
+  const obs = (META && META.observatory) || {};
+  document.getElementById('obsTitle').textContent = obs.title || 'Nigeria Trade Release Executive';
+  document.getElementById('obsSubtitle').textContent = obs.subtitle || 'TRS Study Workspace · Executive Overview';
+  document.getElementById('obsStudy').textContent = (PORT_DATA[currentPort].portName || currentPort) + ' — Imports';
+  document.getElementById('obsPeriod').textContent = currentQuarter;
+  document.getElementById('obsMedian').textContent = q.totalHours + ' hrs';
+  document.getElementById('obsMedianDelta').innerHTML = deltaHtml(q.totalHours, priorTotal, ' hrs');
+  document.getElementById('obsP95').textContent = (q.p95Hours != null ? q.p95Hours : Math.round(q.totalHours * 2)) + ' hrs';
+  document.getElementById('obsSample').textContent = (q.validatedSample != null ? q.validatedSample : q.sampleSize).toLocaleString();
+  document.getElementById('obsCompleteness').textContent = (q.timestampCompleteness != null ? q.timestampCompleteness : 92) + '%';
+  if (q.methodologyNote) document.getElementById('obsMethodNote').textContent = q.methodologyNote;
+
+  const stages = META.stages;
+  const medians = q.stageMedians || q.stageHours;
+  const vals = stages.map(s => medians[s.id] || 0);
+  const labels = stages.map(s => s.short);
+  if (obsStageChart) obsStageChart.destroy();
+  obsStageChart = new Chart(document.getElementById('obsStageChart'), {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [{
+        data: vals,
+        backgroundColor: stages.map(s => s.color),
+        borderRadius: 6,
+        barPercentage: 0.7
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        datalabels: {
+          anchor: 'end',
+          align: 'top',
+          font: { size: 10, weight: '600' },
+          formatter: v => v + ' hrs',
+          color: '#334155'
+        }
+      },
+      scales: {
+        y: { beginAtZero: true, grid: { color: '#f1f5f9' }, ticks: { font: { size: 10 } } },
+        x: { grid: { display: false }, ticks: { font: { size: 10 } } }
+      }
+    }
+  });
+}
+
+
+function renderNetwork() {
+  const q = getQ(currentPort, currentQuarter);
+  const stages = META.stages;
+  const hours = stages.map(s => q.stageHours[s.id]);
+  const total = q.totalHours || 1;
+  const agencies = q.agencies || [];
+  const portName = PORT_DATA[currentPort].portName || currentPort;
+  const bottlenecks = (q.bottlenecks || []).map(b => (typeof b === 'string' ? b : (b.id || b.stage || b.name || ''))).map(String);
+  const meanH = hours.reduce((a,b)=>a+b,0) / (hours.length || 1);
+  const isAnomalyStage = (sid, h) => {
+    if (bottlenecks.some(b => b.toLowerCase().includes(sid) || (META.stages.find(s=>s.id===sid)||{}).short && b.toLowerCase().includes(((META.stages.find(s=>s.id===sid)||{}).short||'').toLowerCase()))) return true;
+    if (h >= meanH * 1.35 && h === Math.max(...hours)) return true;
+    return false;
+  };
+
+  const nodes = [];
+  const edges = [];
+  networkEdgesCache = [];
+
+  // Icon helpers (Font Awesome 6 Free solid via unicode)
+  const fa = (code, color, size) => ({ face: "'Font Awesome 6 Free'", code: code, weight: '900', color: color, size: size || 30 });
+
+  nodes.push({
+    id: 'trader', label: 'Traders', group: 'trader',
+    title: 'Import consignments / declarants',
+    shape: 'icon', icon: fa('\uf508', '#059669', 36),
+    font: { size: 11, face: 'Inter', vadjust: 4 }
+  });
+  nodes.push({
+    id: 'port', label: portName, group: 'port',
+    title: 'Port of entry',
+    shape: 'icon', icon: fa('\uf21a', '#0284c7', 34),
+    font: { size: 11, face: 'Inter', vadjust: 4 }
+  });
+
+  stages.forEach((s, i) => {
+    const h = hours[i];
+    const anom = isAnomalyStage(s.id, h);
+    const stageIcons = { arrival: '\uf13d', permits: '\uf15c', customs: '\uf3c5', inspection: '\uf06e', gateout: '\uf0d1' };
+    const code = stageIcons[s.id] || '\uf0ae';
+    nodes.push({
+      id: 'stage_' + s.id,
+      label: (anom ? '⚠ ' : '') + (i+1) + '. ' + s.short + '\n' + h + 'h',
+      group: 'stage',
+      title: 'Step ' + (i+1) + ' · ' + s.name + ' · median ' + h + ' hrs (' + Math.round(h/total*100) + '% of total)' + (anom ? ' · ANOMALY dwell' : ''),
+      shape: 'icon',
+      icon: fa(code, anom ? '#dc2626' : s.color, anom ? 38 : 32),
+      font: { color: anom ? '#b91c1c' : '#334155', size: 11, face: 'Inter', vadjust: 2 },
+      borderWidth: anom ? 3 : 1,
+      color: anom ? { border: '#dc2626', background: '#fef2f2' } : undefined
+    });
+  });
+
+  for (let i = 0; i < stages.length - 1; i++) {
+    const h = hours[i];
+    const w = Math.max(1, Math.round(h / 8));
+    const anom = isAnomalyStage(stages[i].id, h);
+    edges.push({
+      from: 'stage_' + stages[i].id,
+      to: 'stage_' + stages[i+1].id,
+      label: h + 'h',
+      title: stages[i].short + ' → ' + stages[i+1].short + ': median ' + h + ' hrs',
+      width: w,
+      color: { color: anom ? '#f87171' : '#94a3b8', highlight: '#334155' },
+      arrows: { to: { enabled: true, scaleFactor: 0.6 } },
+      font: { size: 9, color: '#64748b', strokeWidth: 0 }
+    });
+    networkEdgesCache.push({ from: stages[i].short, to: stages[i+1].short, type: 'Process sequence', delay: h, share: Math.round(h/total*100) + '%' });
+  }
+
+  edges.push({ from: 'trader', to: 'stage_arrival', label: 'lodge', title: 'Trader lodges entry / docs', width: 2, dashes: true, color: { color: '#10b981' }, arrows: { to: true } });
+  edges.push({ from: 'port', to: 'stage_arrival', label: 'berth', title: 'Vessel/cargo arrival at port', width: 2, color: { color: '#0ea5e9' }, arrows: { to: true } });
+  networkEdgesCache.push({ from: 'Traders', to: 'Arrival', type: 'Declaration', delay: '—', share: '—' });
+
+  agencies.forEach((a, ai) => {
+    const statusColor = (a.status === 'watch' || a.status === 'critical') ? '#dc2626' : (a.status === 'good' ? '#10b981' : '#8b5cf6');
+    const id = 'agency_' + (a.id || ai);
+    nodes.push({
+      id: id,
+      label: a.name || a.id || ('Agency ' + (ai+1)),
+      group: 'agency',
+      title: (a.name || '') + ' · avg ' + (a.avgHours != null ? a.avgHours : '—') + 'h · status ' + (a.status || '—'),
+      shape: 'icon',
+      icon: fa('\uf3ff', statusColor, 28),
+      font: { size: 10, face: 'Inter', vadjust: 2 }
+    });
+    const stageLink = a.stage || a.linkedStage || stages[Math.min(ai, stages.length-1)].id;
+    const delay = a.avgHours != null ? a.avgHours : 8;
+    edges.push({
+      from: id,
+      to: 'stage_' + stageLink,
+      label: (delay) + 'h',
+      title: (a.name || 'Agency') + ' ↔ stage (median/avg interaction ' + delay + 'h)',
+      width: Math.max(1.5, Math.min(8, delay / 4)),
+      dashes: true,
+      color: { color: statusColor },
+      arrows: { to: { enabled: true, scaleFactor: 0.5 }, from: { enabled: true, scaleFactor: 0.4 } },
+      font: { size: 8, color: '#64748b', strokeWidth: 0 }
+    });
+    networkEdgesCache.push({ from: a.name || id, to: stageLink, type: 'Agency touchpoint', delay: delay, share: '—' });
+  });
+
+  // Stage summary panel (right)
+  const sumEl = document.getElementById('networkStageSummary');
+  if (sumEl) {
+    let sum = 0;
+    sumEl.innerHTML = stages.map((s, i) => {
+      const h = hours[i];
+      sum += h;
+      const anom = isAnomalyStage(s.id, h);
+      return '<li class="flex items-center justify-between gap-2 ' + (anom ? 'text-rose-700 font-medium' : '') + '">' +
+        '<span class="flex items-center gap-1.5">' +
+        (anom ? '<i class="fa-solid fa-triangle-exclamation text-rose-600" title="Anomaly dwell"></i>' : '<i class="fa-solid fa-circle text-[6px]" style="color:' + s.color + '"></i>') +
+        '<span class="text-slate-400 font-mono text-[10px]">' + (i+1) + '.</span> ' + s.short + '</span>' +
+        '<span>' + h + 'h <span class="text-slate-400 font-normal">(' + Math.round(h/total*100) + '%)</span></span></li>';
+    }).join('');
+    const sumNode = document.getElementById('networkStageSum');
+    if (sumNode) sumNode.textContent = sum + 'h';
+    const totNode = document.getElementById('networkTotalMedian');
+    if (totNode) totNode.textContent = (q.totalHours != null ? q.totalHours + 'h' : '—');
+  }
+
+  const insights = [
+    'Metric basis: <strong>median</strong> stage hours (WCO TRS v4), not arithmetic mean — unless an agency card explicitly shows avg.',
+    'Sum of stage medians can differ from overall median release time (stages are not strictly additive).',
+    portName + ' · ' + currentQuarter + ' · total median release <strong>' + (q.totalHours || '—') + 'h</strong>.'
+  ];
+  const anomStages = stages.filter((s,i) => isAnomalyStage(s.id, hours[i]));
+  if (anomStages.length) {
+    insights.unshift('<span class="text-rose-700"><i class="fa-solid fa-triangle-exclamation"></i> Anomaly focus: ' + anomStages.map(s => s.short).join(', ') + ' — elevated dwell vs peer stages / bottlenecks.</span>');
+  }
+  document.getElementById('networkInsights').innerHTML = insights.map(x => '<li class="flex gap-1.5"><span class="text-sky-600">•</span><span>' + x + '</span></li>').join('');
+
+  document.getElementById('networkEdgeTable').innerHTML = networkEdgesCache.map(e =>
+    '<tr class="border-t border-slate-100"><td class="px-2 py-1.5">' + e.from + '</td><td class="px-2 py-1.5">' + e.to + '</td><td class="px-2 py-1.5 text-slate-500">' + e.type + '</td><td class="px-2 py-1.5 font-semibold">' + e.delay + '</td><td class="px-2 py-1.5">' + e.share + '</td></tr>'
+  ).join('');
+
+  const container = document.getElementById('networkGraph');
+  if (networkInstance) { networkInstance.destroy(); networkInstance = null; }
+  networkInstance = new vis.Network(container, { nodes: new vis.DataSet(nodes), edges: new vis.DataSet(edges) }, {
+    physics: { barnesHut: { gravitationalConstant: -3200, springLength: 120, springConstant: 0.04 }, stabilization: { iterations: 120 } },
+    interaction: { hover: true, tooltipDelay: 80 },
+    edges: { smooth: { type: 'continuous' } },
+    nodes: { borderWidth: 1 }
+  });
+
+  networkInstance.on('selectNode', function(params) {
+    if (!params.nodes.length) return;
+    const id = params.nodes[0];
+    const n = nodes.find(x => x.id === id);
+    if (n && n.title) {
+      document.getElementById('networkInsights').insertAdjacentHTML('afterbegin',
+        '<li class="flex gap-1.5 bg-sky-50 rounded px-1.5 py-1"><span class="text-sky-600">→</span><span><strong>' + String(n.label || '').replace(/\n/g, ' ') + '</strong>: ' + n.title + '</span></li>');
+    }
+    if (id && String(id).startsWith('stage_')) {
+      const stageId = String(id).replace('stage_', '');
+      const idx = stages.findIndex(s => s.id === stageId);
+      showNetworkStageTrend(stageId, idx >= 0 ? idx + 1 : null);
+    }
+  });
+
+  // Default trend: first stage
+  if (stages.length) showNetworkStageTrend(stages[0].id, 1);
+}
+
+/** Illustrative operational events (not official). Shown under stage trend. */
+const NETWORK_REMARKABLE_EVENTS = [
+  { date: '2025-03-12', title: 'Tin Can berth maintenance closure', detail: 'Partial gate/yard closure reduced throughput; Arrival & Gate-Out dwell rose for ~10 days.' },
+  { date: '2025-06-01', title: 'Nigeria Single Window (NSW) module rollout', detail: 'Electronic permit routing went live for selected agencies — Permits median improved from Q2.' },
+  { date: '2025-09-18', title: 'Heightened security screening window', detail: 'Temporary enhanced inspection protocol after threat advisory; Inspection stage spiked in Q3.' },
+  { date: '2026-01-15', title: 'New Customs CG operational directives', detail: 'Risk-based selectivity guidance refreshed; Customs assessment medians eased into 2026-Q1.' },
+  { date: '2026-04-02', title: 'Lekki deep-water crane upgrade online', detail: 'Additional STS capacity cut Gate-Out queueing for Lekki consignments.' }
+];
+
+let networkStageTrendChart = null;
+
+function showNetworkStageTrend(stageId, stepNum) {
+  if (!META || !PORT_DATA) return;
+  const stages = META.stages;
+  const stage = stages.find(s => s.id === stageId) || stages[0];
+  if (!stage) return;
+  const step = stepNum != null ? stepNum : (stages.findIndex(s => s.id === stage.id) + 1);
+  const quarters = META.quarters || [];
+  const series = quarters.map(qid => {
+    const q = getQ(currentPort, qid);
+    if (!q || !q.stageHours) return null;
+    const v = q.stageHours[stage.id];
+    return v != null ? v : null;
+  });
+
+  const titleEl = document.getElementById('networkStageTrendTitle');
+  if (titleEl) titleEl.textContent = 'Step ' + step + ' · ' + stage.short + ' — median trend';
+
+  const ctx = document.getElementById('networkStageTrendChart');
+  if (!ctx || typeof Chart === 'undefined') return;
+  if (networkStageTrendChart) networkStageTrendChart.destroy();
+  networkStageTrendChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: quarters,
+      datasets: [{
+        label: stage.short + ' median (h)',
+        data: series,
+        borderColor: stage.color || '#0ea5e9',
+        backgroundColor: 'transparent',
+        tension: 0.3,
+        pointRadius: 3,
+        borderWidth: 2
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: function(c) { return (c.parsed.y != null ? c.parsed.y + 'h median' : '—'); } } }
+      },
+      scales: {
+        y: { beginAtZero: true, ticks: { font: { size: 9 } }, title: { display: true, text: 'hrs', font: { size: 9 } } },
+        x: { ticks: { font: { size: 9 } } }
+      }
+    }
+  });
+
+  // Three remarkable events (prefer those near trend movement; else first three)
+  const evEl = document.getElementById('networkStageEvents');
+  if (evEl) {
+    const events = NETWORK_REMARKABLE_EVENTS.slice(0, 3);
+    evEl.innerHTML = events.map(e =>
+      '<li class="flex gap-2">' +
+        '<span class="shrink-0 font-mono text-[10px] text-slate-500 w-[4.5rem]">' + e.date + '</span>' +
+        '<span><strong class="text-slate-800">' + e.title + '</strong> — <span class="text-slate-600">' + e.detail + '</span></span>' +
+      '</li>'
+    ).join('');
+  }
+}
+
+
+
+function filterShipments() { renderShipments(); }
+
+function renderShipments() {
+  const q = (document.getElementById('shipSearch').value || '').toLowerCase();
+  const st = document.getElementById('shipStatus').value;
+  const an = document.getElementById('shipAnomaly').value;
+  let list = SHIPMENTS.filter(s => s.port === currentPort);
+  if (q) list = list.filter(s => (s.bl || '').toLowerCase().includes(q) || (s.container || '').toLowerCase().includes(q));
+  if (st) list = list.filter(s => s.status === st);
+  if (an === '1') list = list.filter(s => s.anomaly);
+  document.getElementById('shipTableBody').innerHTML = list.slice(0, 50).map(s => `
+    <tr class="border-t border-slate-100 hover:bg-slate-50 ${s.anomaly ? 'anomaly-row' : ''}">
+      <td class="px-3 py-2 font-medium">${s.bl}</td>
+      <td class="px-3 py-2 text-slate-500">${s.container}</td>
+      <td class="px-3 py-2">${s.cargo || ''}</td>
+      <td class="px-3 py-2 font-semibold ${s.anomaly ? 'text-rose-600' : ''}">${s.total}</td>
+      <td class="px-3 py-2">${s.status}</td>
+      <td class="px-3 py-2"><button class="text-sky-600 hover:underline text-[10px]" onclick='showShipmentTimeline(${JSON.stringify(s).replace(/'/g, "&#39;")})'>Timeline</button></td>
+    </tr>`).join('') || '<tr><td colspan="6" class="px-3 py-4 text-center text-slate-400">No shipments match.</td></tr>';
+}
+
+function showShipmentTimeline(s) {
+  const stages = META.stages;
+  document.getElementById('timelinePanel').classList.remove('hidden');
+  document.getElementById('tlTitle').textContent = s.bl + ' · ' + s.container + ' · ' + s.total + ' hrs';
+  document.getElementById('tlBody').innerHTML = (s.stageHours || []).map((h, i) => {
+    const isLong = h > (getQ(currentPort, currentQuarter).stageHours[stages[i].id] * 1.25);
+    return `<div class="flex gap-3">
+      <div class="flex flex-col items-center">
+        <div style="width:12px;height:12px;border-radius:50%;background:${isLong ? '#f43f5e' : stages[i].color}"></div>
+        ${i < s.stageHours.length - 1 ? '<div style="width:2px;flex:1;background:#e2e8f0;margin:2px 0"></div>' : ''}
+      </div>
+      <div class="pb-3 flex-1">
+        <div class="flex justify-between">
+          <p class="font-medium text-xs">${stages[i].name}</p>
+          <p class="text-xs font-semibold ${isLong ? 'text-rose-600' : ''}">${h} hrs</p>
+        </div>
+        ${isLong ? '<p class="text-[10px] text-rose-600 mt-0.5"><i class="fa-solid fa-flag"></i> Above stage median</p>' : ''}
+      </div>
+    </div>`;
+  }).join('');
+  document.getElementById('timelinePanel').scrollIntoView({ behavior: 'smooth' });
+}
+
+function closeTimeline() {
+  document.getElementById('timelinePanel').classList.add('hidden');
+}
+
+function renderAgencies() {
+  const q = getQ(currentPort, currentQuarter);
+  document.getElementById('agencyCards').innerHTML = (q.agencies || []).map(a => {
+    const tone = a.status === 'Good' ? 'text-emerald-600 bg-emerald-50' :
+      a.status === 'Critical' ? 'text-rose-600 bg-rose-50' : 'text-amber-600 bg-amber-50';
+    return `<div class="card p-3">
+      <div class="flex justify-between items-start gap-2">
+        <h3 class="text-sm font-semibold">${a.name}</h3>
+        <span class="text-[10px] font-bold px-1.5 py-0.5 rounded ${tone}">${a.status}</span>
+      </div>
+      <p class="text-[11px] text-slate-500 mt-1.5">Avg touch: <strong>${a.avgHours} hrs</strong> · Share of delay: <strong>${a.share}%</strong></p>
+    </div>`;
+  }).join('') || '<p class="text-xs text-slate-500">No agency data for this selection.</p>';
+}
+
+function renderAnomalies() {
+  const list = SHIPMENTS.filter(s => s.port === currentPort && s.anomaly).sort((a, b) => b.total - a.total);
+  document.getElementById('anomalyTableBody').innerHTML = list.map(s => {
+    let primary = 'Elevated total dwell', severity = 'Medium';
+    if (s.total > 160) { primary = 'Extreme dwell'; severity = 'High'; }
+    else if (s.stageHours && s.stageHours[4] > 45) { primary = 'Gate-out bottleneck'; severity = 'High'; }
+    else if (s.stageHours && s.stageHours[1] > 40) { primary = 'Agency permits delay'; severity = 'Medium'; }
+    const sev = severity === 'High'
+      ? '<span class="text-[10px] px-1.5 py-0.5 rounded-full bg-rose-100 text-rose-800">High</span>'
+      : '<span class="text-[10px] px-1.5 py-0.5 rounded-full bg-amber-100 text-amber-800">Medium</span>';
+    return `<tr class="border-t border-slate-100 hover:bg-slate-50">
+      <td class="px-3 py-2 font-medium">${s.bl}</td>
+      <td class="px-3 py-2 font-semibold text-rose-600">${s.total}</td>
+      <td class="px-3 py-2">${primary}</td>
+      <td class="px-3 py-2">${sev}</td>
+    </tr>`;
+  }).join('') || '<tr><td colspan="4" class="px-3 py-4 text-center text-slate-400">No anomalies in sample for this port.</td></tr>';
+}
+
+
+let trendsChartInstance = null;
+let trendsTotalChartInstance = null;
+
+function renderTrends() {
+  if (!META || !PORT_DATA) return;
+  const stages = META.stages;
+  const quarters = META.quarters || [];
+  const portRadio = document.querySelector('input[name="trendsPort"]:checked');
+  const portScope = portRadio ? portRadio.value : 'all';
+
+  // Build stage checkboxes once
+  const box = document.getElementById('trendsStageChecks');
+  if (box && !box.dataset.ready) {
+    box.innerHTML = stages.map((s,i) =>
+      '<label class="inline-flex items-center gap-1 px-2 py-1 rounded-full border border-slate-200 bg-white cursor-pointer">' +
+      '<input type="checkbox" class="accent-sky-600 trends-stage" value="' + s.id + '" ' + (i < 3 ? 'checked' : '') + ' onchange="renderTrends()">' +
+      '<span class="w-2 h-2 rounded-full" style="background:' + s.color + '"></span>' + s.short + '</label>'
+    ).join('') +
+    '<label class="inline-flex items-center gap-1 px-2 py-1 rounded-full border border-slate-200 bg-white cursor-pointer">' +
+    '<input type="checkbox" class="accent-sky-600 trends-stage" value="__total__" checked onchange="renderTrends()">' +
+    '<span class="w-2 h-2 rounded-full bg-slate-800"></span>Total release</label>';
+    box.dataset.ready = '1';
+  }
+
+  const selected = Array.from(document.querySelectorAll('.trends-stage:checked')).map(el => el.value);
+  const portIds = portScope === 'all' ? Object.keys(PORT_DATA) : [portScope];
+
+  function stageSeries(stageId) {
+    return quarters.map(qid => {
+      const vals = portIds.map(pid => {
+        const q = getQ(pid, qid);
+        if (!q) return null;
+        if (stageId === '__total__') return q.totalHours;
+        return (q.stageHours && q.stageHours[stageId] != null) ? q.stageHours[stageId] : null;
+      }).filter(v => v != null);
+      if (!vals.length) return null;
+      return Math.round((vals.reduce((a,b)=>a+b,0) / vals.length) * 10) / 10;
+    });
+  }
+
+  const colors = {};
+  stages.forEach(s => colors[s.id] = s.color);
+  colors['__total__'] = '#0f172a';
+
+  const datasets = selected.map(sid => {
+    const label = sid === '__total__' ? 'Total median release' : ((stages.find(s => s.id === sid) || {}).short || sid);
+    return {
+      label: label,
+      data: stageSeries(sid),
+      borderColor: colors[sid] || '#64748b',
+      backgroundColor: 'transparent',
+      tension: 0.25,
+      pointRadius: 3,
+      borderWidth: sid === '__total__' ? 2.5 : 2
+    };
+  });
+
+  const ctx = document.getElementById('trendsChart');
+  if (trendsChartInstance) trendsChartInstance.destroy();
+  trendsChartInstance = new Chart(ctx, {
+    type: 'line',
+    data: { labels: quarters, datasets: datasets },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } },
+        tooltip: { callbacks: { label: function(c) { return c.dataset.label + ': ' + c.parsed.y + 'h (median)'; } } }
+      },
+      scales: {
+        y: { title: { display: true, text: 'Median hours', font: { size: 10 } }, beginAtZero: true },
+        x: { ticks: { font: { size: 10 } } }
+      }
+    }
+  });
+
+  // Delta list first → last
+  const deltaEl = document.getElementById('trendsDeltaList');
+  if (deltaEl) {
+    const rows = stages.map(s => {
+      const series = stageSeries(s.id);
+      const first = series.find(v => v != null);
+      const last = [...series].reverse().find(v => v != null);
+      if (first == null || last == null) return null;
+      const d = Math.round((last - first) * 10) / 10;
+      const cls = d < 0 ? 'text-emerald-600' : (d > 0 ? 'text-rose-600' : 'text-slate-500');
+      const arrow = d < 0 ? '↓' : (d > 0 ? '↑' : '→');
+      return '<li class="flex justify-between gap-2"><span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full" style="background:' + s.color + '"></span>' + s.short + '</span><span class="' + cls + ' font-semibold">' + arrow + ' ' + d + 'h <span class="text-slate-400 font-normal">(' + first + ' → ' + last + ')</span></span></li>';
+    }).filter(Boolean);
+    // total
+    const tseries = stageSeries('__total__');
+    const tf = tseries.find(v => v != null);
+    const tl = [...tseries].reverse().find(v => v != null);
+    if (tf != null && tl != null) {
+      const d = Math.round((tl - tf) * 10) / 10;
+      const cls = d < 0 ? 'text-emerald-700' : 'text-rose-700';
+      rows.push('<li class="flex justify-between gap-2 pt-1 border-t border-slate-100 font-semibold"><span>Total release</span><span class="' + cls + '">' + (d < 0 ? '↓' : '↑') + ' ' + d + 'h <span class="text-slate-400 font-normal">(' + tf + ' → ' + tl + ')</span></span></li>');
+    }
+    deltaEl.innerHTML = rows.join('') || '<li class="text-slate-400">No data</li>';
+  }
+
+  // Total-only small chart
+  const tctx = document.getElementById('trendsTotalChart');
+  if (trendsTotalChartInstance) trendsTotalChartInstance.destroy();
+  trendsTotalChartInstance = new Chart(tctx, {
+    type: 'bar',
+    data: {
+      labels: quarters,
+      datasets: [{
+        label: 'Total median',
+        data: stageSeries('__total__'),
+        backgroundColor: '#0ea5e9',
+        borderRadius: 4
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: { y: { beginAtZero: true, ticks: { font: { size: 9 } } }, x: { ticks: { font: { size: 9 } } } }
+    }
+  });
+}
+
+
+function contactById(id) {
+  return (CONTACTS && CONTACTS.contacts || []).find(function(c) { return c.id === id; });
+}
+
+function resolveRecipients(intervention, eventRule) {
+  if (!intervention || !eventRule || !CONTACTS) return [];
+  const byId = {};
+  (intervention.contactIds || []).forEach(function(id) {
+    const c = contactById(id);
+    if (c && c.active) byId[c.id] = c;
+  });
+  // role-based from directory scoped by port/stage
+  const port = intervention.port;
+  const stage = intervention.stage;
+  (CONTACTS.contacts || []).forEach(function(c) {
+    if (!c.active) return;
+    const roles = c.roles || [];
+    const roleMatch = (eventRule.recipients || []).some(function(r) { return roles.indexOf(r) >= 0; });
+    if (!roleMatch) return;
+    const portOk = !c.ports || c.ports.indexOf(port) >= 0 || port === 'all' || (c.ports || []).length === 0;
+    const stageOk = !c.stages || !stage || c.stages.indexOf(stage) >= 0;
+    if (portOk && stageOk) byId[c.id] = c;
+  });
+  // AEO gate
+  const includeAeo = eventRule.includeAeo;
+  Object.keys(byId).forEach(function(id) {
+    const c = byId[id];
+    if (c.type === 'aeo' || (c.roles || []).indexOf('aeo_representative') >= 0) {
+      const allowed = includeAeo === true || (includeAeo === 'if_aeo_relevant' && intervention.aeoRelevant);
+      if (!allowed) delete byId[id];
+    }
+  });
+  return Object.keys(byId).map(function(k) { return byId[k]; });
+}
+
+function channelsForContact(c, eventRule) {
+  const out = [];
+  (eventRule.channels || []).forEach(function(ch) {
+    if (ch === 'email' && c.notifyEmail) out.push('email');
+    if (ch === 'push' && c.notifyPush) out.push('push');
+    if (ch === 'sms' && c.notifySms) out.push('sms');
+  });
+  return out;
+}
+
+function initNotificationControls() {
+  const recSel = document.getElementById('notifRecSelect');
+  const evSel = document.getElementById('notifEventSelect');
+  if (!recSel || !evSel || !RECOMMENDATIONS || !NOTIF_RULES) return;
+  recSel.innerHTML = (RECOMMENDATIONS.items || []).map(function(it) {
+    return '<option value="' + it.id + '">' + it.title + '</option>';
+  }).join('');
+  evSel.innerHTML = (NOTIF_RULES.events || []).map(function(ev) {
+    return '<option value="' + ev.id + '">' + ev.label + ' (' + ev.severity + ')</option>';
+  }).join('');
+}
+
+function renderNotificationPreview() {
+  const box = document.getElementById('notifPreview');
+  const dir = document.getElementById('contactDirectory');
+  if (!box) return;
+  if (!RECOMMENDATIONS || !NOTIF_RULES || !CONTACTS) {
+    box.innerHTML = '<p class="text-slate-500">Contacts / rules not loaded.</p>';
+    return;
+  }
+  initNotificationControls();
+  const recId = (document.getElementById('notifRecSelect') || {}).value;
+  const evId = (document.getElementById('notifEventSelect') || {}).value;
+  const intervention = (RECOMMENDATIONS.items || []).find(function(it) { return it.id === recId; }) || RECOMMENDATIONS.items[0];
+  const eventRule = (NOTIF_RULES.events || []).find(function(ev) { return ev.id === evId; }) || NOTIF_RULES.events[0];
+  if (document.getElementById('notifRecSelect') && intervention) document.getElementById('notifRecSelect').value = intervention.id;
+  if (document.getElementById('notifEventSelect') && eventRule) document.getElementById('notifEventSelect').value = eventRule.id;
+
+  const recipients = resolveRecipients(intervention, eventRule);
+  if (!recipients.length) {
+    box.innerHTML = '<p class="text-slate-500">No recipients for this intervention / event under current rules (check AEO scope and preferences).</p>';
+  } else {
+    box.innerHTML = recipients.map(function(c) {
+      const ch = channelsForContact(c, eventRule);
+      const chLabel = ch.length ? ch.join(', ') : 'none (preferences off)';
+      return '<div class="flex flex-wrap items-start justify-between gap-2 p-2 rounded-lg border border-slate-200 dark:border-slate-600">' +
+        '<div><p class="font-semibold text-slate-800 dark:text-slate-100">' + c.name + '</p>' +
+        '<p class="text-slate-500">' + c.organisation + ' · ' + (c.type || '') + '</p>' +
+        '<p class="text-slate-600 mt-0.5"><i class="fa-regular fa-envelope mr-1"></i>' + c.email + ' · <i class="fa-solid fa-phone mr-1"></i>' + c.phone + '</p></div>' +
+        '<div class="text-right"><span class="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">' + chLabel + '</span>' +
+        '<p class="text-[9px] text-slate-400 mt-1">severity: ' + eventRule.severity + '</p></div></div>';
+    }).join('');
+  }
+
+  if (dir) {
+    const rows = (CONTACTS.contacts || []).map(function(c) {
+      return '<tr class="border-t border-slate-100 dark:border-slate-700"><td class="px-2 py-1.5 font-medium text-slate-800 dark:text-slate-200">' + c.name + '</td>' +
+        '<td class="px-2 py-1.5">' + c.type + '</td>' +
+        '<td class="px-2 py-1.5">' + (c.ports || []).join(', ') + '</td>' +
+        '<td class="px-2 py-1.5">' + c.email + '</td>' +
+        '<td class="px-2 py-1.5">' + c.phone + '</td>' +
+        '<td class="px-2 py-1.5">' + [c.notifyEmail && 'E', c.notifyPush && 'P', c.notifySms && 'S'].filter(Boolean).join(' ') + '</td></tr>';
+    }).join('');
+    dir.innerHTML = '<table class="w-full text-left"><thead class="bg-slate-50 dark:bg-slate-900 text-slate-500"><tr>' +
+      '<th class="px-2 py-1">Contact</th><th class="px-2 py-1">Type</th><th class="px-2 py-1">Ports</th><th class="px-2 py-1">Email</th><th class="px-2 py-1">Phone</th><th class="px-2 py-1">Pref</th></tr></thead><tbody>' + rows + '</tbody></table>';
+  }
+}
+
+
+function showTab(name) {
+  const panel = document.getElementById('panel-' + name);
+  if (!panel) return;
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.add('hidden'));
+  panel.classList.remove('hidden');
+  document.querySelectorAll('.tab-btn').forEach(b => {
+    b.classList.remove('tab-active');
+    b.classList.add('text-slate-600');
+  });
+  const btn = document.getElementById('tab-' + name);
+  if (btn) {
+    btn.classList.add('tab-active');
+    btn.classList.remove('text-slate-600');
+  }
+  if (name === 'network' && networkInstance) { setTimeout(function(){ networkInstance.fit({ animation: true }); }, 80); }
+  if (name === 'trends') { renderTrends(); }
+  if (name === 'network') { renderNetwork(); }
+  if (name === 'recommendations') { renderRecommendations(); }
+  if (name === 'notifications') { renderNotificationPreview(); }
+}
+
+loadData().catch(err => {
+  document.querySelector('main').innerHTML = '<div class="card p-6 text-center text-rose-600"><p class="font-semibold">Failed to load data files</p><p class="text-xs mt-2">' + err.message + '</p><p class="text-xs mt-2 text-slate-500">Serve over HTTP (Netlify). file:// will not work with fetch.</p></div>';
+});
+</script>
+</body>
+</html>

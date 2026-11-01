@@ -1,0 +1,113 @@
+{
+  "updated": "2026-10-31",
+  "disclaimer": "Illustrative interventions only. Not official NNSW / NRS programme status.",
+  "statuses": [
+    "proposed",
+    "in_progress",
+    "implemented",
+    "verified"
+  ],
+  "items": [
+    {
+      "id": "rec-001",
+      "title": "Joint inspection scheduling \u2014 Tin Can",
+      "port": "tincan",
+      "stage": "inspection",
+      "owner": "NCS + OGA lead",
+      "deadline": "2026-12-15",
+      "status": "proposed",
+      "metricLabel": "inspection median",
+      "beforeHours": 18.4,
+      "afterHours": 14.1,
+      "expectedReductionHours": 6.0,
+      "measuredNote": "based on pilot data",
+      "description": "Coordinate Customs and OGA physical exams into single time-slots to cut double-handling and queue time.",
+      "contactIds": [
+        "c-ncs-tincan",
+        "c-oga-permits"
+      ],
+      "aeoRelevant": false
+    },
+    {
+      "id": "rec-002",
+      "title": "Non-intrusive scanning expansion \u2014 Lekki",
+      "port": "lekki",
+      "stage": "inspection",
+      "owner": "NCS + Terminal lead",
+      "deadline": "2027-02-28",
+      "status": "in_progress",
+      "metricLabel": "inspection + queuing",
+      "beforeHours": 22.7,
+      "afterHours": 16.2,
+      "expectedReductionHours": 8.5,
+      "measuredNote": "partial rollout",
+      "description": "Add NII capacity and shift low-risk lanes from physical exam to scan-based release.",
+      "contactIds": [
+        "c-ncs-lekki",
+        "c-terminal-lekki"
+      ],
+      "aeoRelevant": false
+    },
+    {
+      "id": "rec-003",
+      "title": "AEO scale-up for low-risk traders",
+      "port": "all",
+      "stage": "customs",
+      "owner": "NCS lead",
+      "deadline": "2027-04-30",
+      "status": "implemented",
+      "metricLabel": "clearance median",
+      "beforeHours": 16.8,
+      "afterHours": 12.3,
+      "expectedReductionHours": 5.5,
+      "measuredNote": "post AEO cohort",
+      "description": "Expand Authorised Economic Operator coverage so compliant traders clear under simplified controls.",
+      "contactIds": [
+        "c-ncs-aeo",
+        "c-aeo-alpha",
+        "c-aeo-beta"
+      ],
+      "aeoRelevant": true
+    },
+    {
+      "id": "rec-004",
+      "title": "NNSW process synchronisation \u2014 permits stage",
+      "port": "all",
+      "stage": "permits",
+      "owner": "NCS + Permit Agencies",
+      "deadline": "2027-03-31",
+      "status": "verified",
+      "metricLabel": "permit-to-release",
+      "beforeHours": 11.2,
+      "afterHours": 8.6,
+      "expectedReductionHours": 3.0,
+      "measuredNote": "verified sample",
+      "description": "Align OGA permit clocks with NNSW submission events to remove idle waits between sequential approvals.",
+      "contactIds": [
+        "c-oga-permits",
+        "c-nnsw-assurance"
+      ],
+      "aeoRelevant": false
+    },
+    {
+      "id": "rec-005",
+      "title": "Gate-out slotting \u2014 Onne peak hours",
+      "port": "onne",
+      "stage": "gateout",
+      "owner": "Terminal + NPA ops",
+      "deadline": "2026-11-30",
+      "status": "in_progress",
+      "metricLabel": "gate-out median",
+      "beforeHours": 9.5,
+      "afterHours": 7.8,
+      "expectedReductionHours": 2.5,
+      "measuredNote": "early trial",
+      "description": "Pre-book truck slots after release to cut yard dwell and gate queues at peak.",
+      "contactIds": [
+        "c-onne-terminal",
+        "c-nnsw-assurance"
+      ],
+      "aeoRelevant": false
+    }
+  ]
+}

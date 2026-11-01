@@ -1,0 +1,552 @@
+{
+  "portId": "lekki",
+  "portName": "Lekki Deep Sea Port",
+  "quarters": {
+    "2025-Q1": {
+      "sampleSize": 420,
+      "stageHours": {
+        "arrival": 16,
+        "permits": 30,
+        "customs": 22,
+        "inspection": 11,
+        "gateout": 28
+      },
+      "totalHours": 107,
+      "priorTotalHours": 118,
+      "bottlenecks": [
+        {
+          "stage": "permits",
+          "title": "Agency Permits",
+          "desc": "PGA coordination still sequential for many consignments.",
+          "delayHours": 30,
+          "pct": 28
+        },
+        {
+          "stage": "customs",
+          "title": "Payment Processing",
+          "desc": "Assessment-to-payment hand-off lag.",
+          "delayHours": 7,
+          "pct": 7
+        },
+        {
+          "stage": "gateout",
+          "title": "Port Gate-Out",
+          "desc": "New terminal ramp-up; truck staging constraints.",
+          "delayHours": 28,
+          "pct": 26
+        }
+      ],
+      "agencies": [
+        {
+          "name": "NAFDAC",
+          "avgHours": 12,
+          "share": 20,
+          "status": "Moderate"
+        },
+        {
+          "name": "SON",
+          "avgHours": 10,
+          "share": 16,
+          "status": "Good"
+        },
+        {
+          "name": "NAQS",
+          "avgHours": 8,
+          "share": 11,
+          "status": "Good"
+        },
+        {
+          "name": "Customs (Assessment)",
+          "avgHours": 14,
+          "share": 18,
+          "status": "Needs attention"
+        },
+        {
+          "name": "Terminal Operator",
+          "avgHours": 22,
+          "share": 24,
+          "status": "Needs attention"
+        }
+      ],
+      "benchmarks": {
+        "lome": 58,
+        "tema": 82,
+        "northStar": 24
+      },
+      "anomalyCount": 18,
+      "aiInsight": "Lekki outperforms Tin Can on gate-out and inspection; permits remain the largest single stage.",
+      "takeaways": [
+        "Median 107 hrs \u2014 better than Tin Can baseline.",
+        "Permits still the top bottleneck.",
+        "Deep-water capacity reducing vessel-side dwell.",
+        "Scale AEO and joint inspection to close gap to regional peers."
+      ],
+      "p95Hours": 209,
+      "timestampCompleteness": 90.0,
+      "validatedSample": 394,
+      "stageMedians": {
+        "arrival": 15,
+        "permits": 28,
+        "customs": 20,
+        "inspection": 10,
+        "gateout": 26
+      },
+      "methodologyNote": "WCO TRS Guide Version 4 (2025): median preferred; stage medians need not sum to overall median; arrival\u2192physical release (gate-out)."
+    },
+    "2025-Q2": {
+      "sampleSize": 445,
+      "stageHours": {
+        "arrival": 15,
+        "permits": 28,
+        "customs": 21,
+        "inspection": 10,
+        "gateout": 26
+      },
+      "totalHours": 100,
+      "priorTotalHours": 107,
+      "bottlenecks": [
+        {
+          "stage": "permits",
+          "title": "Agency Permits",
+          "desc": "PGA queues improving but still material.",
+          "delayHours": 28,
+          "pct": 28
+        },
+        {
+          "stage": "customs",
+          "title": "Payment Processing",
+          "desc": "Payment confirmation lag.",
+          "delayHours": 6,
+          "pct": 6
+        },
+        {
+          "stage": "gateout",
+          "title": "Port Gate-Out",
+          "desc": "Truck call-up and staging.",
+          "delayHours": 26,
+          "pct": 26
+        }
+      ],
+      "agencies": [
+        {
+          "name": "NAFDAC",
+          "avgHours": 11,
+          "share": 19,
+          "status": "Moderate"
+        },
+        {
+          "name": "SON",
+          "avgHours": 9,
+          "share": 15,
+          "status": "Good"
+        },
+        {
+          "name": "NAQS",
+          "avgHours": 7,
+          "share": 10,
+          "status": "Good"
+        },
+        {
+          "name": "Customs (Assessment)",
+          "avgHours": 13,
+          "share": 17,
+          "status": "Needs attention"
+        },
+        {
+          "name": "Terminal Operator",
+          "avgHours": 20,
+          "share": 23,
+          "status": "Needs attention"
+        }
+      ],
+      "benchmarks": {
+        "lome": 55,
+        "tema": 78,
+        "northStar": 24
+      },
+      "anomalyCount": 15,
+      "aiInsight": "Consistent QoQ improvement; structure similar to Tin Can but at lower absolute levels.",
+      "takeaways": [
+        "Median 100 hrs (\u22127% QoQ).",
+        "Permits + gate-out ~54% of total.",
+        "Stronger scanning adoption than older terminals.",
+        "Maintain focus on PGA SLAs."
+      ],
+      "p95Hours": 195,
+      "timestampCompleteness": 91.2,
+      "validatedSample": 418,
+      "stageMedians": {
+        "arrival": 14,
+        "permits": 26,
+        "customs": 19,
+        "inspection": 9,
+        "gateout": 24
+      },
+      "methodologyNote": "WCO TRS Guide Version 4 (2025): median preferred; stage medians need not sum to overall median; arrival\u2192physical release (gate-out)."
+    },
+    "2025-Q3": {
+      "sampleSize": 460,
+      "stageHours": {
+        "arrival": 14,
+        "permits": 27,
+        "customs": 20,
+        "inspection": 10,
+        "gateout": 25
+      },
+      "totalHours": 96,
+      "priorTotalHours": 100,
+      "bottlenecks": [
+        {
+          "stage": "permits",
+          "title": "Agency Permits",
+          "desc": "PGA processing still sequential for non-facilitated traders.",
+          "delayHours": 27,
+          "pct": 28
+        },
+        {
+          "stage": "customs",
+          "title": "Payment Processing",
+          "desc": "Cross-system confirmation.",
+          "delayHours": 6,
+          "pct": 6
+        },
+        {
+          "stage": "gateout",
+          "title": "Port Gate-Out",
+          "desc": "Staging and gate throughput.",
+          "delayHours": 25,
+          "pct": 26
+        }
+      ],
+      "agencies": [
+        {
+          "name": "NAFDAC",
+          "avgHours": 11,
+          "share": 19,
+          "status": "Moderate"
+        },
+        {
+          "name": "SON",
+          "avgHours": 9,
+          "share": 15,
+          "status": "Good"
+        },
+        {
+          "name": "NAQS",
+          "avgHours": 7,
+          "share": 10,
+          "status": "Good"
+        },
+        {
+          "name": "Customs (Assessment)",
+          "avgHours": 13,
+          "share": 17,
+          "status": "Needs attention"
+        },
+        {
+          "name": "Terminal Operator",
+          "avgHours": 19,
+          "share": 22,
+          "status": "Needs attention"
+        }
+      ],
+      "benchmarks": {
+        "lome": 52,
+        "tema": 75,
+        "northStar": 24
+      },
+      "anomalyCount": 14,
+      "aiInsight": "Lekki continues to lead Tin Can; gap to Lom\u00e9 still ~40\u201350 hrs.",
+      "takeaways": [
+        "Median 96 hrs (\u22124% QoQ).",
+        "Permits remain the largest stage.",
+        "Deep-sea design advantages visible on vessel and yard metrics.",
+        "Push joint inspection and AEO expansion."
+      ],
+      "p95Hours": 187,
+      "timestampCompleteness": 92.4,
+      "validatedSample": 432,
+      "stageMedians": {
+        "arrival": 13,
+        "permits": 25,
+        "customs": 18,
+        "inspection": 9,
+        "gateout": 23
+      },
+      "methodologyNote": "WCO TRS Guide Version 4 (2025): median preferred; stage medians need not sum to overall median; arrival\u2192physical release (gate-out)."
+    },
+    "2025-Q4": {
+      "sampleSize": 475,
+      "stageHours": {
+        "arrival": 14,
+        "permits": 26,
+        "customs": 19,
+        "inspection": 9,
+        "gateout": 24
+      },
+      "totalHours": 92,
+      "priorTotalHours": 96,
+      "bottlenecks": [
+        {
+          "stage": "permits",
+          "title": "Agency Permits",
+          "desc": "PGA turnaround still the primary friction.",
+          "delayHours": 26,
+          "pct": 28
+        },
+        {
+          "stage": "customs",
+          "title": "Payment Processing",
+          "desc": "Payment lag reduced.",
+          "delayHours": 5,
+          "pct": 5
+        },
+        {
+          "stage": "gateout",
+          "title": "Port Gate-Out",
+          "desc": "Gate and staging constraints.",
+          "delayHours": 24,
+          "pct": 26
+        }
+      ],
+      "agencies": [
+        {
+          "name": "NAFDAC",
+          "avgHours": 10,
+          "share": 18,
+          "status": "Moderate"
+        },
+        {
+          "name": "SON",
+          "avgHours": 8,
+          "share": 14,
+          "status": "Good"
+        },
+        {
+          "name": "NAQS",
+          "avgHours": 7,
+          "share": 10,
+          "status": "Good"
+        },
+        {
+          "name": "Customs (Assessment)",
+          "avgHours": 12,
+          "share": 16,
+          "status": "Moderate"
+        },
+        {
+          "name": "Terminal Operator",
+          "avgHours": 18,
+          "share": 21,
+          "status": "Needs attention"
+        }
+      ],
+      "benchmarks": {
+        "lome": 50,
+        "tema": 72,
+        "northStar": 24
+      },
+      "anomalyCount": 12,
+      "aiInsight": "Steady improvement; structural profile unchanged \u2014 permits and gate-out dominate.",
+      "takeaways": [
+        "Median 92 hrs (\u22124% QoQ).",
+        "Closest Nigerian port to regional peers so far.",
+        "Further PGA digitalisation needed to break 80-hr barrier.",
+        "Continue scanning expansion."
+      ],
+      "p95Hours": 179,
+      "timestampCompleteness": 93.6,
+      "validatedSample": 446,
+      "stageMedians": {
+        "arrival": 13,
+        "permits": 24,
+        "customs": 17,
+        "inspection": 8,
+        "gateout": 22
+      },
+      "methodologyNote": "WCO TRS Guide Version 4 (2025): median preferred; stage medians need not sum to overall median; arrival\u2192physical release (gate-out)."
+    },
+    "2026-Q1": {
+      "sampleSize": 490,
+      "stageHours": {
+        "arrival": 13,
+        "permits": 25,
+        "customs": 18,
+        "inspection": 9,
+        "gateout": 23
+      },
+      "totalHours": 88,
+      "priorTotalHours": 92,
+      "bottlenecks": [
+        {
+          "stage": "permits",
+          "title": "Agency Permits",
+          "desc": "PGA complementary permits remain the top delay source.",
+          "delayHours": 25,
+          "pct": 28
+        },
+        {
+          "stage": "customs",
+          "title": "Payment Processing",
+          "desc": "Assessment and payment confirmation.",
+          "delayHours": 5,
+          "pct": 6
+        },
+        {
+          "stage": "gateout",
+          "title": "Port Gate-Out",
+          "desc": "Truck appointment and gate throughput.",
+          "delayHours": 23,
+          "pct": 26
+        }
+      ],
+      "agencies": [
+        {
+          "name": "NAFDAC",
+          "avgHours": 10,
+          "share": 18,
+          "status": "Moderate"
+        },
+        {
+          "name": "SON",
+          "avgHours": 8,
+          "share": 14,
+          "status": "Good"
+        },
+        {
+          "name": "NAQS",
+          "avgHours": 6,
+          "share": 9,
+          "status": "Good"
+        },
+        {
+          "name": "Customs (Assessment)",
+          "avgHours": 12,
+          "share": 16,
+          "status": "Moderate"
+        },
+        {
+          "name": "Terminal Operator",
+          "avgHours": 17,
+          "share": 20,
+          "status": "Needs attention"
+        }
+      ],
+      "benchmarks": {
+        "lome": 48,
+        "tema": 72,
+        "northStar": 24
+      },
+      "anomalyCount": 11,
+      "aiInsight": "Lekki is the best-performing of the three ports; still ~40 hrs above Lom\u00e9 median.",
+      "takeaways": [
+        "Median 88 hrs (\u22124% QoQ).",
+        "Permits + gate-out \u2248 54% of total.",
+        "Best path to North Star among Nigerian ports.",
+        "Prioritise PGA SLA enforcement and digital gate call-up."
+      ],
+      "p95Hours": 172,
+      "timestampCompleteness": 94.8,
+      "validatedSample": 460,
+      "stageMedians": {
+        "arrival": 12,
+        "permits": 23,
+        "customs": 17,
+        "inspection": 8,
+        "gateout": 21
+      },
+      "methodologyNote": "WCO TRS Guide Version 4 (2025): median preferred; stage medians need not sum to overall median; arrival\u2192physical release (gate-out)."
+    },
+    "2026-Q2": {
+      "sampleSize": 510,
+      "stageHours": {
+        "arrival": 12,
+        "permits": 23,
+        "customs": 17,
+        "inspection": 8,
+        "gateout": 21
+      },
+      "totalHours": 81,
+      "priorTotalHours": 88,
+      "bottlenecks": [
+        {
+          "stage": "permits",
+          "title": "Agency Permits",
+          "desc": "PGA processing improved with NNSW Phase-2.",
+          "delayHours": 23,
+          "pct": 28
+        },
+        {
+          "stage": "customs",
+          "title": "Payment Processing",
+          "desc": "Faster payment confirmation.",
+          "delayHours": 4,
+          "pct": 5
+        },
+        {
+          "stage": "gateout",
+          "title": "Port Gate-Out",
+          "desc": "Remaining gate and staging friction.",
+          "delayHours": 21,
+          "pct": 26
+        }
+      ],
+      "agencies": [
+        {
+          "name": "NAFDAC",
+          "avgHours": 9,
+          "share": 17,
+          "status": "Moderate"
+        },
+        {
+          "name": "SON",
+          "avgHours": 7,
+          "share": 13,
+          "status": "Good"
+        },
+        {
+          "name": "NAQS",
+          "avgHours": 6,
+          "share": 9,
+          "status": "Good"
+        },
+        {
+          "name": "Customs (Assessment)",
+          "avgHours": 11,
+          "share": 15,
+          "status": "Moderate"
+        },
+        {
+          "name": "Terminal Operator",
+          "avgHours": 16,
+          "share": 19,
+          "status": "Needs attention"
+        }
+      ],
+      "benchmarks": {
+        "lome": 46,
+        "tema": 68,
+        "northStar": 24
+      },
+      "anomalyCount": 9,
+      "aiInsight": "Strong sequential improvement; Lekki is closing on Tema-level performance.",
+      "takeaways": [
+        "Median 81 hrs (\u22128% QoQ).",
+        "First Nigerian port under 90 hrs median in this series.",
+        "Permits still the largest single stage.",
+        "Continue NNSW integration and scanning share growth."
+      ],
+      "p95Hours": 158,
+      "timestampCompleteness": 96.0,
+      "validatedSample": 479,
+      "stageMedians": {
+        "arrival": 11,
+        "permits": 21,
+        "customs": 16,
+        "inspection": 7,
+        "gateout": 19
+      },
+      "methodologyNote": "WCO TRS Guide Version 4 (2025): median preferred; stage medians need not sum to overall median; arrival\u2192physical release (gate-out)."
+    }
+  }
+}
