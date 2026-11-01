@@ -1,22 +1,28 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Nigeria NSW | TRS v0.8.1</title></head>
-<body><p style="font-family:system-ui;padding:2rem;color:#334155">Loading TRS dashboard…</p>
-<script>
-(async function(){
-  let b64 = '';
-  for (let i = 0; i < 8; i++) {
-    const t = await fetch('r' + i + '.txt').then(r => {
-      if (!r.ok) throw new Error('Failed to load r' + i + '.txt: ' + r.status);
-      return r.text();
-    });
-    b64 += t.replace(/\s+/g, '');
-  }
-  if (!/^[A-Za-z0-9+/=]+$/.test(b64)) throw new Error('Invalid base64 payload (length ' + b64.length + ')');
-  const bin = Uint8Array.from(atob(b64), c => c.charCodeAt(0));
-  const stream = new Blob([bin]).stream().pipeThrough(new DecompressionStream('deflate'));
-  const html = await new Response(stream).text();
-  document.open(); document.write(html); document.close();
-})().catch(e => {
-  document.body.innerHTML = '<pre style="padding:1rem;color:#b91c1c;white-space:pre-wrap">' + String(e) + '\n' + (e.stack || '') + '</pre>';
-});
-</script></body></html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nigeria NSW | Time Release Study</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { darkMode: 'class' };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <script src="https://unpkg.com/vis-network@9.1.9/standalone/umd/vis-network.min.js"></script>
+  <style>
+    body { font-family: Inter, system-ui, -apple-system, sans-serif; }
+    .card { background: #fff; border-radius: 0.75rem; box-shadow: 0 1px 2px rgba(0,0,0,.04); border: 1px solid #e2e8f0; }
+    .dark .card { background: #1e293b; border-color: #334155; box-shadow: none; }
+  </style>
+</head>
+<body class="bg-slate-100 text-slate-900">
+  <p style="padding:2rem;font-family:system-ui">Uploading full SPA… if you still see this, the large file push was truncated. Use local artifacts/trs-prototype/index.html.</p>
+  <script>
+  // Temporary stub — full SPA push follows if tool accepts size
+  console.warn('Full SPA content may need alternate upload path');
+  </script>
+</body>
+</html>
