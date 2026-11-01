@@ -3,26 +3,67 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Nigeria NSW | Time Release Study</title>
+  <title>Nigeria NSW | TRS v0.8.1</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = { darkMode: 'class' };
-  </script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+  <script>tailwind.config = { darkMode: 'class' };</script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-  <script src="https://unpkg.com/vis-network@9.1.9/standalone/umd/vis-network.min.js"></script>
-  <style>
-    body { font-family: Inter, system-ui, -apple-system, sans-serif; }
-    .card { background: #fff; border-radius: 0.75rem; box-shadow: 0 1px 2px rgba(0,0,0,.04); border: 1px solid #e2e8f0; }
-    .dark .card { background: #1e293b; border-color: #334155; box-shadow: none; }
-  </style>
 </head>
-<body class="bg-slate-100 text-slate-900">
-  <p style="padding:2rem;font-family:system-ui">Uploading full SPA… if you still see this, the large file push was truncated. Use local artifacts/trs-prototype/index.html.</p>
+<body class="bg-slate-100 text-slate-900 min-h-screen">
+  <header class="bg-white border-b border-slate-200 px-4 py-3">
+    <div class="max-w-3xl mx-auto flex items-center justify-between gap-3">
+      <div>
+        <p class="text-xs font-semibold text-emerald-700 uppercase tracking-wide">Nigeria NSW</p>
+        <h1 class="text-lg font-bold text-slate-900">Time Release Study · v0.8.1</h1>
+      </div>
+      <span id="chipLicense" class="text-xs bg-emerald-50 text-emerald-800 border border-emerald-100 px-2 py-1 rounded-lg">Licence…</span>
+    </div>
+  </header>
+  <main class="max-w-3xl mx-auto p-4 space-y-4">
+    <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
+      <h2 class="font-semibold text-slate-800 mb-2"><i class="fa-solid fa-key text-emerald-600 mr-1"></i> Subscription licence</h2>
+      <dl id="licBox" class="text-sm text-slate-600 space-y-1">Loading app-config…</dl>
+    </div>
+    <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
+      <h2 class="font-semibold text-slate-800 mb-2"><i class="fa-solid fa-puzzle-piece text-sky-600 mr-1"></i> Active modules</h2>
+      <ul id="modList" class="text-sm text-slate-600 grid grid-cols-2 gap-1"></ul>
+    </div>
+    <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 text-sm text-amber-900">
+      <p class="font-semibold mb-1"><i class="fa-solid fa-circle-info mr-1"></i> Binary payloads removed</p>
+      <p>The <code>r*.txt</code> / <code>p*.txt</code> zlib split files are gone. Licence and modules are driven only by <code>data/app-config.json</code>.</p>
+      <p class="mt-2">The full interactive SPA (~100&nbsp;KB <code>index.html</code>) lives at local <code>artifacts/trs-prototype/index.html</code>. Push it with git to replace this interim page:</p>
+      <pre class="mt-2 text-[11px] bg-white/70 p-2 rounded border border-amber-100 overflow-x-auto">git checkout v0.8.1
+cp path/to/artifacts/trs-prototype/index.html bsm-nnsw-trs/index.html
+git add bsm-nnsw-trs/index.html
+git commit -m "feat: full SPA as plain index.html (no payload loader)"
+git push origin v0.8.1</pre>
+    </div>
+  </main>
   <script>
-  // Temporary stub — full SPA push follows if tool accepts size
-  console.warn('Full SPA content may need alternate upload path');
+  (async () => {
+    try {
+      const cfg = await fetch('data/app-config.json').then(r => r.json());
+      const lic = cfg.license || {};
+      document.getElementById('chipLicense').textContent = (lic.key || 'Licence') + (lic.status ? ' · ' + lic.status : '');
+      const rows = [
+        ['Key', lic.key],
+        ['Type', lic.type || lic.format || '—'],
+        ['Status', lic.status || '—'],
+        ['Valid from', lic.validFrom || lic.issued || '—'],
+        ['Valid to', lic.validTo || lic.expires || '—'],
+        ['Modules in key', (lic.modules || []).join(', ')]
+      ];
+      document.getElementById('licBox').innerHTML = rows.map(([k,v]) =>
+        '<div class="flex gap-2"><dt class="w-28 text-slate-500">'+k+'</dt><dd class="font-medium text-slate-800">'+v+'</dd></div>'
+      ).join('');
+      const mods = (cfg.modules || []).slice().sort((a,b)=>a.order-b.order);
+      document.getElementById('modList').innerHTML = mods.map(m =>
+        '<li class="flex items-center gap-1.5"><i class="fa-solid fa-check text-emerald-600 text-xs"></i>' +
+        m.label + (m.alwaysOn ? '' : ' <span class="text-slate-400">(gated)</span>') + '</li>'
+      ).join('');
+    } catch (e) {
+      document.getElementById('licBox').textContent = String(e);
+    }
+  })();
   </script>
 </body>
 </html>
